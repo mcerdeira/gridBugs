@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=3 uid="uid://iwiu7dw0oln6"]
+
+[ext_resource type="Shader" uid="uid://dt6660j0fsfwi" path="res://scenes/f.gdshader" id="1_o5qli"]
+[ext_resource type="Script" uid="uid://cl0j1ius1hif0" path="res://scenes/main.gd" id="1_sugp2"]
+[ext_resource type="PackedScene" uid="uid://dsicdj3g23ub2" path="res://scenes/you.tscn" id="2_0wfyh"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0wfyh"]
+shader = ExtResource("1_o5qli")
+shader_parameter/amount = 0.2
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_sugp2")
+
+[node name="MainCamera" type="Camera2D" parent="."]
+anchor_mode = 0
+
+[node name="FX" type="ColorRect" parent="."]
+z_index = 4096
+material = SubResource("ShaderMaterial_0wfyh")
+offset_left = -64.0
+offset_top = -96.0
+offset_right = 1088.0
+offset_bottom = 752.0
+
+[node name="You" parent="." instance=ExtResource("2_0wfyh")]
+position = Vector2(512, 320)

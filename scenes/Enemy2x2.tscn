@@ -1,0 +1,35 @@
+[gd_scene load_steps=7 format=3 uid="uid://vc5rogp4d164"]
+
+[ext_resource type="Script" uid="uid://crrb3v0vqrig8" path="res://scenes/enemy_2x_2.gd" id="1_myil0"]
+[ext_resource type="Shader" uid="uid://dunkwwb3ilskm" path="res://scenes/hit.gdshader" id="2_i5aot"]
+[ext_resource type="Texture2D" uid="uid://dfpsuy5wuuirp" path="res://sprites/2x2.png" id="2_myil0"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_o0wx3"]
+resource_local_to_scene = true
+shader = ExtResource("2_i5aot")
+shader_parameter/on = false
+shader_parameter/color = Color(1, 1, 1, 1)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_jk6cw"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_myil0")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0uo27"]
+size = Vector2(64, 64)
+
+[node name="Enemy2x2" type="Area2D"]
+script = ExtResource("1_myil0")
+
+[node name="sprite" type="AnimatedSprite2D" parent="."]
+material = SubResource("ShaderMaterial_o0wx3")
+sprite_frames = SubResource("SpriteFrames_jk6cw")
+
+[node name="collider" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_0uo27")

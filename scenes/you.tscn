@@ -1,0 +1,32 @@
+[gd_scene load_steps=5 format=3 uid="uid://dsicdj3g23ub2"]
+
+[ext_resource type="Texture2D" uid="uid://bhy1v5877xlcd" path="res://sprites/you.png" id="1_0hrdx"]
+[ext_resource type="Script" uid="uid://c1k8ydwnaapva" path="res://scenes/you.gd" id="1_acr6o"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_acr6o"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_0hrdx")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_o5qli"]
+radius = 6.32456
+
+[node name="You" type="Area2D"]
+script = ExtResource("1_acr6o")
+
+[node name="sprite" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_acr6o")
+offset = Vector2(0, -4)
+
+[node name="collider" type="CollisionShape2D" parent="."]
+position = Vector2(0, 5)
+shape = SubResource("CircleShape2D_o5qli")
+
+[node name="mark" type="Marker2D" parent="."]
+position = Vector2(0, -20)
