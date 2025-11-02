@@ -1,0 +1,35 @@
+[gd_scene load_steps=6 format=3 uid="uid://dqgo5rdftp5m"]
+
+[ext_resource type="Script" uid="uid://cfs420wfcd2bs" path="res://scenes/enemy_bullet_a.gd" id="1_3f1r3"]
+[ext_resource type="Texture2D" uid="uid://cf6wawvn1xt3i" path="res://sprites/enemy_bullet_a1.png" id="2_ft3r5"]
+[ext_resource type="Texture2D" uid="uid://fo84hwp5mrfc" path="res://sprites/enemy_bullet_a2.png" id="3_ex3sv"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_d5jav"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_ft3r5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_ex3sv")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ft3r5"]
+radius = 7.0
+
+[node name="EnemyBulletA" type="Area2D"]
+script = ExtResource("1_3f1r3")
+
+[node name="sprite" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_d5jav")
+autoplay = "default"
+frame_progress = 0.221749
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_ft3r5")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]

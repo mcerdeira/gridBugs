@@ -1,0 +1,49 @@
+[gd_scene load_steps=8 format=3 uid="uid://elq4j3e7g4jl"]
+
+[ext_resource type="Texture2D" uid="uid://cci7bta862vca" path="res://sprites/crystals.png" id="1_0mmd5"]
+[ext_resource type="Script" uid="uid://g1v7vvljda2b" path="res://scenes/crystal.gd" id="1_g5hse"]
+[ext_resource type="Shader" uid="uid://k2pedknt6pkt" path="res://scripts/shine.gdshader" id="1_t4dcj"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_g5hse"]
+resource_local_to_scene = true
+shader = ExtResource("1_t4dcj")
+shader_parameter/shine_color = Color(1, 1, 1, 1)
+shader_parameter/shine_speed = 4.0
+shader_parameter/shine_size = 0.16
+shader_parameter/white = 0.0
+shader_parameter/on = true
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_t4dcj"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_0mmd5")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_t4dcj"]
+radius = 43.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_g5hse"]
+radius = 5.0
+
+[node name="Crystal" type="Area2D"]
+script = ExtResource("1_g5hse")
+
+[node name="sprite" type="AnimatedSprite2D" parent="."]
+material = SubResource("ShaderMaterial_g5hse")
+sprite_frames = SubResource("SpriteFrames_t4dcj")
+
+[node name="collider" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_t4dcj")
+
+[node name="get" type="Area2D" parent="."]
+
+[node name="collider" type="CollisionShape2D" parent="get"]
+shape = SubResource("CircleShape2D_g5hse")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="area_entered" from="get" to="." method="_on_get_area_entered"]

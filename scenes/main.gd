@@ -53,8 +53,8 @@ func get_random_pos() -> Vector2:
 func get_random_free_cell():
 	var cell := Vector2i()
 	while true:
-		cell.x = randi_range(1, GRID_W - 1)
-		cell.y = randi_range(1, GRID_H - 1)
+		cell.x = randi_range(2, GRID_W - 2)
+		cell.y = randi_range(2, GRID_H - 2)
 		if not Global.occupied_cells.has(cell):
 			return cell
 			

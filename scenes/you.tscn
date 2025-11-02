@@ -1,7 +1,15 @@
-[gd_scene load_steps=5 format=3 uid="uid://dsicdj3g23ub2"]
+[gd_scene load_steps=9 format=3 uid="uid://dsicdj3g23ub2"]
 
 [ext_resource type="Texture2D" uid="uid://bhy1v5877xlcd" path="res://sprites/you.png" id="1_0hrdx"]
 [ext_resource type="Script" uid="uid://c1k8ydwnaapva" path="res://scenes/you.gd" id="1_acr6o"]
+[ext_resource type="Shader" uid="uid://dunkwwb3ilskm" path="res://scenes/hit.gdshader" id="1_noupt"]
+[ext_resource type="Script" uid="uid://boap34u23153r" path="res://scenes/get_collector.gd" id="4_g0cpx"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_noupt"]
+resource_local_to_scene = true
+shader = ExtResource("1_noupt")
+shader_parameter/on = false
+shader_parameter/color = Color(1, 1, 1, 1)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_acr6o"]
 animations = [{
@@ -17,10 +25,14 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_o5qli"]
 radius = 6.32456
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_noupt"]
+radius = 17.0294
+
 [node name="You" type="Area2D"]
 script = ExtResource("1_acr6o")
 
 [node name="sprite" type="AnimatedSprite2D" parent="."]
+material = SubResource("ShaderMaterial_noupt")
 sprite_frames = SubResource("SpriteFrames_acr6o")
 offset = Vector2(0, -4)
 
@@ -30,3 +42,10 @@ shape = SubResource("CircleShape2D_o5qli")
 
 [node name="mark" type="Marker2D" parent="."]
 position = Vector2(0, -20)
+
+[node name="get_collector" type="Area2D" parent="."]
+script = ExtResource("4_g0cpx")
+
+[node name="collider" type="CollisionShape2D" parent="get_collector"]
+position = Vector2(0, -3)
+shape = SubResource("CircleShape2D_noupt")

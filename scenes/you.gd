@@ -2,10 +2,16 @@ extends Area2D
 var speed = 250.0
 var shoot_ttl_total = 0.1
 var shoot_ttl = shoot_ttl_total
+var life = 10
+var hit_tll = 0.0
 var bullet_scene = load("res://scenes/bullet.tscn")
 
 func _ready():
 	add_to_group("player")
+	Global.player = self
+	
+func get_gem():
+	pass
 	
 func shoot():
 	var bullet = bullet_scene.instantiate()
@@ -13,7 +19,23 @@ func shoot():
 	bullet.rotation_degrees = rotation_degrees 
 	get_tree().current_scene.add_child(bullet)
 	
+func die():
+	queue_free()
+	
+func hit(dmg):
+	if hit_tll <= 0:
+		$sprite.material.set_shader_parameter("on", 1)
+		hit_tll = 0.2
+		life -= dmg
+		if life <= 0:
+			die()
+	
 func _physics_process(delta: float) -> void:
+	if hit_tll >= 0:
+		hit_tll -= 1 * delta
+		if hit_tll <= 0:
+			$sprite.material.set_shader_parameter("on", 0)
+	
 	look_at(get_global_mouse_position())
 	rotation_degrees += 90
 	shoot_ttl -= 1 * delta
