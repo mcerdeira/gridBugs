@@ -22,7 +22,7 @@ func _physics_process(delta: float) -> void:
 		position += velocity * delta
 		
 		if global_position.distance_to(Global.player.global_position) <= 10:
-			Global.player.get_gem()
+			Global.get_gem()
 			queue_free()
 		
 	else:

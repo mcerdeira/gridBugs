@@ -13,10 +13,15 @@ var grid = {}
 var grid_nodes := {}  # Vector2i -> Node (referencia al enemigo)
 
 func _ready() -> void:
+	calc_time()
 	randomize()
 
 func _physics_process(delta: float) -> void:
-	Global.ENEMY_SPAWN_TTL -= 1 * delta
+	$player_level_lbl.text = "LVL " + str(Global.PLAYER_LEVEL)
+	$player_level.scale.x = Global.PLAYER_XP / Global.TOTAL_XP
+	Global.check_level_up()
+	
+	Global.ENEMY_SPAWN_TTL -= Global.PLAYER_LEVEL * delta
 	if Global.ENEMY_SPAWN_TTL <= 0:
 		Global.ENEMY_SPAWN_TTL = Global.ENEMY_SPAWN_TTL_TOTAL
 		spawn_enemy(get_random_pos())
@@ -54,7 +59,7 @@ func get_random_free_cell():
 	var cell := Vector2i()
 	while true:
 		cell.x = randi_range(2, GRID_W - 2)
-		cell.y = randi_range(2, GRID_H - 2)
+		cell.y = randi_range(3, GRID_H - 2)
 		if not Global.occupied_cells.has(cell):
 			return cell
 			
@@ -67,3 +72,12 @@ func spawn_enemy(cell: Vector2i, level: int = 1):
 	var enemy = enemy_scenes[level].instantiate()
 	enemy.position = cell
 	add_child(enemy)
+
+func _on_timer_timeout() -> void:
+	Global.TIME_LEFT -= 1
+	calc_time()
+
+func calc_time():
+	Global.minutes = int(Global.TIME_LEFT / 60)
+	Global.seconds = int(Global.TIME_LEFT % 60)
+	$time_elpased.text = "%d:%02d" % [Global.minutes, Global.seconds]

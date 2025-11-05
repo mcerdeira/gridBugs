@@ -1,12 +1,15 @@
-[gd_scene load_steps=5 format=3 uid="uid://iwiu7dw0oln6"]
+[gd_scene load_steps=8 format=3 uid="uid://iwiu7dw0oln6"]
 
 [ext_resource type="Shader" uid="uid://dt6660j0fsfwi" path="res://scenes/f.gdshader" id="1_o5qli"]
 [ext_resource type="Script" uid="uid://cl0j1ius1hif0" path="res://scenes/main.gd" id="1_sugp2"]
 [ext_resource type="PackedScene" uid="uid://dsicdj3g23ub2" path="res://scenes/you.tscn" id="2_0wfyh"]
+[ext_resource type="Texture2D" uid="uid://bshkfndl4xecq" path="res://sprites/player_level.png" id="4_jyhfs"]
+[ext_resource type="Texture2D" uid="uid://d3e8hh0mt1d7b" path="res://sprites/player_level_frame.png" id="5_tbgi4"]
+[ext_resource type="FontFile" uid="uid://baufptafjkcp6" path="res://fonts/prstartk.ttf" id="6_tefeu"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_0wfyh"]
 shader = ExtResource("1_o5qli")
-shader_parameter/amount = 0.2
+shader_parameter/amount = 0.1
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_sugp2")
@@ -24,3 +27,43 @@ offset_bottom = 752.0
 
 [node name="You" parent="." instance=ExtResource("2_0wfyh")]
 position = Vector2(512, 320)
+
+[node name="player_level_black" type="Sprite2D" parent="."]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(2, 23)
+texture = ExtResource("4_jyhfs")
+offset = Vector2(510, 0)
+
+[node name="player_level" type="Sprite2D" parent="."]
+position = Vector2(2, 23)
+scale = Vector2(1e-05, 1)
+texture = ExtResource("4_jyhfs")
+offset = Vector2(510, 0)
+
+[node name="player_level_frame" type="Sprite2D" parent="."]
+position = Vector2(2, 23)
+texture = ExtResource("5_tbgi4")
+offset = Vector2(510, 0)
+
+[node name="player_level_lbl" type="Label" parent="."]
+offset_left = 6.0
+offset_top = 9.0
+offset_right = 290.0
+offset_bottom = 37.0
+theme_override_fonts/font = ExtResource("6_tefeu")
+text = "LVL"
+vertical_alignment = 1
+
+[node name="time_elpased" type="Label" parent="."]
+offset_top = 40.0
+offset_right = 1024.0
+offset_bottom = 68.0
+theme_override_fonts/font = ExtResource("6_tefeu")
+text = "1:01"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Timer" type="Timer" parent="."]
+autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

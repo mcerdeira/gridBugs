@@ -1,6 +1,14 @@
 extends Node
 var FULLSCREEN = false
 var shaker_obj = null      
+var PLAYER_XP = 0.0
+var TOTAL_XP = 0.0
+var TOTAL_LIFE = 10.0
+var PLAYER_LEVEL = 1
+
+var TIME_LEFT = 5 * 60
+var minutes = 0
+var seconds = 0
 
 var ENEMY_BASE_LIFE = 5.0
 var ENEMY_SPAWN_TTL_TOTAL = 2.0
@@ -13,6 +21,29 @@ var player = null
 func init_vars():
 	BULLET_DMG = 1.0
 	occupied_cells = [] 
+	TOTAL_XP = calc_totalxp()
+	
+func check_level_up():
+	if Global.PLAYER_XP >= Global.TOTAL_XP:
+		PLAYER_LEVEL += 1
+		Global.PLAYER_XP = 0.0
+		TOTAL_XP = calc_totalxp()
+	
+func get_gem():
+	Global.PLAYER_XP += 1.0
+
+func calc_totalxp():
+	var next_level = PLAYER_LEVEL + 1
+	if(next_level == 20):
+		return (next_level*10)-5+600
+	if(next_level == 40):
+		return (next_level*13)-6+2400
+	if(next_level < 20):
+		return (next_level*10)-5
+	if(next_level > 20 < 40): 
+		return (next_level*13)-6
+	if(next_level > 40): 
+		return (next_level*16)-8
 
 func _ready():
 	init_vars()
