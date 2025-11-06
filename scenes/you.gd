@@ -20,6 +20,7 @@ func die():
 	queue_free()
 	
 func hit(dmg):
+	return
 	if hit_tll <= 0:
 		$sprite.material.set_shader_parameter("on", 1)
 		hit_tll = 0.2

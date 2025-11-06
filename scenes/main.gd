@@ -23,8 +23,19 @@ func _physics_process(delta: float) -> void:
 	
 	Global.ENEMY_SPAWN_TTL -= Global.PLAYER_LEVEL * delta
 	if Global.ENEMY_SPAWN_TTL <= 0:
+		check_merge()
 		Global.ENEMY_SPAWN_TTL = Global.ENEMY_SPAWN_TTL_TOTAL
 		spawn_enemy(get_random_pos())
+		
+func check_merge():
+	var results: Array = has_3x3_square()
+	var enemy1x1 = get_tree().get_nodes_in_group("enemy1x1")
+	if(results.size() > 0):
+		for r in results:
+			var cell = Global.occupied_cells[r]
+			for e in enemy1x1:
+				if e.position_in_occupied_cells == cell:
+					e.mark()
 		
 func get_random_pos() -> Vector2:
 	var cell : Vector2i
@@ -33,11 +44,11 @@ func get_random_pos() -> Vector2:
 		# Elegir una celda base ya ocupada
 		var base = Global.occupied_cells[randi() % Global.occupied_cells.size()]
 		
-		# Buscar una posición cercana dentro de un radio de 2 celdas, aleatoria
+		# Buscar una posición cercana dentro de un radio de 1 celdas, aleatoria
 		var found = false
 		for i in range(10): # hasta 10 intentos
-			var dx = randi_range(-2, 2)
-			var dy = randi_range(-2, 2)
+			var dx = randi_range(-1, 1)
+			var dy = randi_range(-1, 1)
 			var candidate = base + Vector2i(dx, dy)
 			
 			if candidate.x >= 0 and candidate.x < GRID_W and candidate.y >= 0 and candidate.y < GRID_H and not Global.occupied_cells.has(candidate):
@@ -52,8 +63,31 @@ func get_random_pos() -> Vector2:
 	
 	# Registrar celda usada
 	Global.occupied_cells.append(cell)
+	return cell
 	
-	return cell * CELL_SIZE
+func has_3x3_square() -> Array:
+	var cell_idx = -1
+	var result = []
+	for cell in Global.occupied_cells:
+		var x = int(cell.x)
+		var y = int(cell.y)
+		var found_square = true
+		for dx in range(3):
+			for dy in range(3):
+				var pos = Vector2i(x + dx, y + dy)
+				cell_idx = Global.occupied_cells.find(pos)
+				if cell_idx == -1:
+					found_square = false
+					break
+				else:
+					result.append(cell_idx)
+				
+			if not found_square:
+				result = []
+				break
+		if found_square:
+			return result
+	return []
 
 func get_random_free_cell():
 	var cell := Vector2i()
@@ -64,13 +98,11 @@ func get_random_free_cell():
 			return cell
 			
 func spawn_enemy(cell: Vector2i, level: int = 1):
-	if grid.has(cell):
-		return # ya ocupado
-
-	grid[cell] = level
+	grid[cell * CELL_SIZE] = level
 
 	var enemy = enemy_scenes[level].instantiate()
-	enemy.position = cell
+	enemy.position_in_occupied_cells = cell
+	enemy.position = cell * CELL_SIZE
 	add_child(enemy)
 
 func _on_timer_timeout() -> void:

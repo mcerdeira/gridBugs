@@ -11,7 +11,7 @@ var minutes = 0
 var seconds = 0
 
 var ENEMY_BASE_LIFE = 5.0
-var ENEMY_SPAWN_TTL_TOTAL = 2.0
+var ENEMY_SPAWN_TTL_TOTAL = 0.1#2.0
 var ENEMY_SPAWN_TTL = ENEMY_SPAWN_TTL_TOTAL
 var BULLET_TTL = 0.1
 var BULLET_DMG = 1.0

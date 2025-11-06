@@ -6,9 +6,17 @@ var shoot_ttl_total = 5.0
 var shoot_ttl = shoot_ttl_total
 var bullet_scene = load("res://scenes/enemy_bullet_a.tscn")
 var crystal_scene = load("res://scenes/crystal.tscn")
+var lbl_scene = load("res://scenes/dmg_lbl.tscn")
+var position_in_occupied_cells = Vector2i(-1, -1)
+var marked = false
 
 func _ready():
 	add_to_group("enemy")
+	add_to_group("enemy1x1")
+
+func mark():
+	marked = true
+	$sprite.animation = "new_animation"
 	
 func _physics_process(delta: float) -> void:
 	shoot_ttl -= 1 * delta
@@ -23,7 +31,7 @@ func _physics_process(delta: float) -> void:
 			$sprite.material.set_shader_parameter("on", 0)
 
 func die():
-	Global.occupied_cells.remove_at(Global.occupied_cells.find(global_position))
+	Global.occupied_cells.remove_at(Global.occupied_cells.find(position_in_occupied_cells))
 	if notify_death != null and is_instance_valid(notify_death):
 		notify_death.notify()
 	
@@ -32,6 +40,10 @@ func die():
 
 func hit(dmg):
 	if hit_tll <= 0:
+		var lbl = lbl_scene.instantiate()
+		lbl.global_position = global_position
+		lbl.dmg = dmg
+		get_tree().current_scene.add_child(lbl)
 		$sprite.material.set_shader_parameter("on", 1)
 		hit_tll = 0.2
 		life -= dmg
