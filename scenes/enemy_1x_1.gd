@@ -7,8 +7,9 @@ var shoot_ttl = shoot_ttl_total
 var bullet_scene = load("res://scenes/enemy_bullet_a.tscn")
 var crystal_scene = load("res://scenes/crystal.tscn")
 var lbl_scene = load("res://scenes/dmg_lbl.tscn")
-var position_in_occupied_cells = Vector2i(-1, -1)
 var marked = false
+var dead = false
+var idx = -1
 
 func _ready():
 	add_to_group("enemy")
@@ -16,27 +17,31 @@ func _ready():
 
 func mark():
 	marked = true
-	$sprite.animation = "new_animation"
+	visible = false
 	
 func _physics_process(delta: float) -> void:
-	shoot_ttl -= 1 * delta
-	if shoot_ttl <= 0:
-		shoot_ttl = shoot_ttl_total
-		if randi() % 10 == 0:
-			shoot()
-	
-	if hit_tll >= 0:
-		hit_tll -= 1 * delta
-		if hit_tll <= 0:
-			$sprite.material.set_shader_parameter("on", 0)
+	if !marked and !dead:
+		shoot_ttl -= 1 * delta
+		if shoot_ttl <= 0:
+			shoot_ttl = shoot_ttl_total
+			if randi() % 10 == 0:
+				shoot()
+		
+		if hit_tll >= 0:
+			hit_tll -= 1 * delta
+			if hit_tll <= 0:
+				$sprite.material.set_shader_parameter("on", 0)
 
 func die():
-	Global.occupied_cells.remove_at(Global.occupied_cells.find(position_in_occupied_cells))
+	#Registrar celda liberada
+	Global.occupied_cells_obj.remove_at(idx)
+	Global.occupied_cells.remove_at(idx)
 	if notify_death != null and is_instance_valid(notify_death):
 		notify_death.notify()
 	
 	spawn_crystals()
-	queue_free()
+	dead = true
+	visible = false
 
 func hit(dmg):
 	if hit_tll <= 0:
@@ -57,7 +62,7 @@ func shoot():
 	get_tree().current_scene.add_child(bullet)
 
 func spawn_crystals():
-	var count := randi_range(3, 7)  # cantidad aleatoria
+	var count := randi_range(3, 7)
 	for i in count:
 		var c = crystal_scene.instantiate()
 		c.global_position = global_position

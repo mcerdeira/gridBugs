@@ -16,6 +16,7 @@ var ENEMY_SPAWN_TTL = ENEMY_SPAWN_TTL_TOTAL
 var BULLET_TTL = 0.1
 var BULLET_DMG = 1.0
 var occupied_cells = [] 
+var occupied_cells_obj = []
 var player = null
 
 func init_vars():

@@ -30,34 +30,34 @@ position = Vector2(512, 320)
 
 [node name="player_level_black" type="Sprite2D" parent="."]
 modulate = Color(0, 0, 0, 1)
-position = Vector2(2, 23)
+position = Vector2(2, 16)
 texture = ExtResource("4_jyhfs")
 offset = Vector2(510, 0)
 
 [node name="player_level" type="Sprite2D" parent="."]
-position = Vector2(2, 23)
+position = Vector2(2, 16)
 scale = Vector2(1e-05, 1)
 texture = ExtResource("4_jyhfs")
 offset = Vector2(510, 0)
 
 [node name="player_level_frame" type="Sprite2D" parent="."]
-position = Vector2(2, 23)
+position = Vector2(2, 16)
 texture = ExtResource("5_tbgi4")
 offset = Vector2(510, 0)
 
 [node name="player_level_lbl" type="Label" parent="."]
 offset_left = 6.0
-offset_top = 9.0
+offset_top = 2.0
 offset_right = 290.0
-offset_bottom = 37.0
+offset_bottom = 30.0
 theme_override_fonts/font = ExtResource("6_tefeu")
 text = "LVL"
 vertical_alignment = 1
 
 [node name="time_elpased" type="Label" parent="."]
-offset_top = 40.0
+offset_top = 33.0
 offset_right = 1024.0
-offset_bottom = 68.0
+offset_bottom = 61.0
 theme_override_fonts/font = ExtResource("6_tefeu")
 text = "1:01"
 horizontal_alignment = 1
