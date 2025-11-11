@@ -2,6 +2,7 @@ extends Node2D
 const CELL_SIZE = 32
 const GRID_W = 1024 / CELL_SIZE
 const GRID_H = 640 / CELL_SIZE
+var levelup_scene = load("res://scenes/LevelUpScene.tscn")
 
 var enemy_scenes = {
 	1: preload("res://scenes/Enemy1x1.tscn"),
@@ -17,15 +18,20 @@ func _ready() -> void:
 	randomize()
 
 func _physics_process(delta: float) -> void:
-	$player_level_lbl.text = "LVL " + str(Global.PLAYER_LEVEL)
-	$player_level.scale.x = Global.PLAYER_XP / Global.TOTAL_XP
-	Global.check_level_up()
-	
-	Global.ENEMY_SPAWN_TTL -= Global.PLAYER_LEVEL * delta
-	if Global.ENEMY_SPAWN_TTL <= 0:
-		check_merge()
-		Global.ENEMY_SPAWN_TTL = Global.ENEMY_SPAWN_TTL_TOTAL
-		spawn_enemy(get_random_pos())
+	if Global.check_level_up():
+		$player_level.scale.x = 1.0
+		var levelup = levelup_scene.instantiate()
+		levelup.global_position = Vector2(0, 60)
+		add_child(levelup)
+	else:
+		$player_level_lbl.text = "LVL " + str(Global.PLAYER_LEVEL)
+		$player_level.scale.x = Global.PLAYER_XP / Global.TOTAL_XP
+		
+		Global.ENEMY_SPAWN_TTL -= Global.PLAYER_LEVEL * delta
+		if Global.ENEMY_SPAWN_TTL <= 0:
+			#check_merge()
+			Global.ENEMY_SPAWN_TTL = Global.ENEMY_SPAWN_TTL_TOTAL
+			spawn_enemy(get_random_pos())
 		
 func check_merge():
 	var results: Array = has_3x3_square()

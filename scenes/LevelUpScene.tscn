@@ -1,0 +1,62 @@
+[gd_scene load_steps=3 format=3 uid="uid://i8an3fcvkmtg"]
+
+[ext_resource type="Script" uid="uid://cgf5q5pupvym8" path="res://scenes/level_up_scene.gd" id="1_dovoo"]
+[ext_resource type="PackedScene" uid="uid://badfgms6swvmr" path="res://scenes/slot.tscn" id="1_luhin"]
+
+[node name="LevelUpScene" type="Node2D"]
+process_mode = 3
+z_index = 4096
+script = ExtResource("1_dovoo")
+
+[node name="back" type="ColorRect" parent="."]
+process_mode = 3
+offset_left = 70.0
+offset_top = 10.0
+offset_right = 965.0
+offset_bottom = 389.0
+mouse_filter = 2
+color = Color(0, 0, 0, 0.294118)
+metadata/_edit_use_anchors_ = true
+
+[node name="title_lbl" type="Label" parent="."]
+process_mode = 3
+offset_left = 70.0
+offset_top = 15.0
+offset_right = 965.0
+offset_bottom = 66.0
+theme_override_font_sizes/font_size = 37
+text = "LEVEL UP!"
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="Slot" parent="." node_paths=PackedStringArray("other1", "other2") instance=ExtResource("1_luhin")]
+process_mode = 3
+position = Vector2(103, 80)
+id = 1
+other1 = NodePath("../Slot2")
+other2 = NodePath("../Slot3")
+
+[node name="Slot2" parent="." node_paths=PackedStringArray("other1", "other2") instance=ExtResource("1_luhin")]
+process_mode = 3
+position = Vector2(103, 156)
+id = 2
+other1 = NodePath("../Slot")
+other2 = NodePath("../Slot3")
+
+[node name="Slot3" parent="." node_paths=PackedStringArray("other1", "other2") instance=ExtResource("1_luhin")]
+process_mode = 3
+position = Vector2(103, 236)
+id = 3
+other1 = NodePath("../Slot")
+other2 = NodePath("../Slot2")
+
+[node name="btn_aceptar" type="Button" parent="."]
+process_mode = 3
+offset_left = 406.0
+offset_top = 314.0
+offset_right = 618.0
+offset_bottom = 364.0
+text = "ACEPTAR"
+metadata/_edit_use_anchors_ = true
+
+[connection signal="pressed" from="btn_aceptar" to="." method="_on_btn_aceptar_pressed"]

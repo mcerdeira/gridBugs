@@ -1,6 +1,6 @@
 extends Area2D
-var speed = 250.0
-var shoot_ttl_total = 0.1
+var speed = Global.TOTAL_SPEED
+var shoot_ttl_total = Global.SHOOT_TTL_TOTAL
 var shoot_ttl = shoot_ttl_total
 var life = Global.TOTAL_LIFE
 var hit_tll = 0.0
@@ -9,6 +9,14 @@ var bullet_scene = load("res://scenes/bullet.tscn")
 func _ready():
 	add_to_group("player")
 	Global.player = self
+	
+func max_shoot_ttl():
+	var ten = Global.SHOOT_TTL_TOTAL * 0.10
+	Global.SHOOT_TTL_TOTAL -= ten
+	shoot_ttl_total = Global.SHOOT_TTL_TOTAL
+	
+func max_collect_up():
+	$get_collector/collider.shape.radius *= 1.0
 	
 func shoot():
 	var bullet = bullet_scene.instantiate()
