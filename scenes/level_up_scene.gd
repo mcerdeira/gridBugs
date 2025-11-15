@@ -14,5 +14,17 @@ func _ready() -> void:
 	$Slot.set_sel(false)
 
 func _on_btn_aceptar_pressed() -> void:
-	get_tree().paused = false
-	queue_free()
+	var some = false
+	if $Slot.selected:
+		some = true
+		$Slot.execute_action()
+	elif $Slot2.selected:
+		some = true
+		$Slot2.execute_action()
+	elif $Slot3.selected:
+		some = true
+		$Slot3.execute_action()
+		
+	if some:
+		get_tree().paused = false
+		queue_free()

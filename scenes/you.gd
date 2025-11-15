@@ -16,19 +16,21 @@ func max_shoot_ttl():
 	shoot_ttl_total = Global.SHOOT_TTL_TOTAL
 	
 func max_collect_up():
-	$get_collector/collider.shape.radius *= 1.0
+	Global.COLLECT_RADIUS *= 1.10
+	$get_collector/collider.shape.radius *= 1.10
 	
 func shoot():
-	var bullet = bullet_scene.instantiate()
-	bullet.global_position = $mark.global_position
-	bullet.rotation_degrees = rotation_degrees 
-	get_tree().current_scene.add_child(bullet)
+	if !Global.GAME_OVER:
+		var bullet = bullet_scene.instantiate()
+		bullet.global_position = $mark.global_position
+		bullet.rotation_degrees = rotation_degrees 
+		get_tree().current_scene.add_child(bullet)
 	
 func die():
-	queue_free()
+	Global.GAME_OVER = true
+	visible = false
 	
 func hit(dmg):
-	return
 	if hit_tll <= 0:
 		$sprite.material.set_shader_parameter("on", 1)
 		hit_tll = 0.2
@@ -38,27 +40,47 @@ func hit(dmg):
 			die()
 	
 func _physics_process(delta: float) -> void:
-	$life_bar.global_position = Vector2(global_position.x - 16, global_position.y + 20)
-	$life_black.global_position = Vector2(global_position.x - 16, global_position.y + 20)
-	
-	if hit_tll >= 0:
-		hit_tll -= 1 * delta
-		if hit_tll <= 0:
-			$sprite.material.set_shader_parameter("on", 0)
-	
-	look_at(get_global_mouse_position())
-	rotation_degrees += 90
-	shoot_ttl -= 1 * delta
-	if shoot_ttl <= 0:
-		shoot_ttl = shoot_ttl_total
-		shoot()
-	
-	if Input.is_action_pressed("up"):
-		global_position.y -= speed * delta
-	elif Input.is_action_pressed("down"):
-		global_position.y += speed * delta
+	if !Global.GAME_OVER:
+		$life_bar.global_position = Vector2(global_position.x - 16, global_position.y + 20)
+		$life_black.global_position = Vector2(global_position.x - 16, global_position.y + 20)
 		
-	if Input.is_action_pressed("left"):
-		global_position.x -= speed * delta
-	elif Input.is_action_pressed("right"):
-		global_position.x += speed * delta
+		if hit_tll >= 0:
+			hit_tll -= 1 * delta
+			if hit_tll <= 0:
+				$sprite.material.set_shader_parameter("on", 0)
+		
+		look_at(get_global_mouse_position())
+		rotation_degrees += 90
+		shoot_ttl -= 1 * delta
+		if shoot_ttl <= 0:
+			shoot_ttl = shoot_ttl_total
+			shoot()
+		
+		if Input.is_action_pressed("up"):
+			global_position.y -= speed * delta
+		elif Input.is_action_pressed("down"):
+			global_position.y += speed * delta
+			
+		if Input.is_action_pressed("left"):
+			global_position.x -= speed * delta
+		elif Input.is_action_pressed("right"):
+			global_position.x += speed * delta
+		
+		_limit_to_screen()
+	
+func _limit_to_screen() -> void:
+	var rect = get_viewport_rect()
+	var margin_side = 8
+	var margin_bottom = 8
+	var margin_top = 32 + 8
+
+	global_position.x = clamp(
+		global_position.x,
+		rect.position.x + margin_side,
+		rect.size.x - margin_side
+	)
+	global_position.y = clamp(
+		global_position.y,
+		rect.position.y + margin_top,
+		rect.size.y - margin_bottom
+	)

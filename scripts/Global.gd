@@ -1,11 +1,22 @@
 extends Node
+const CELL_SIZE = 32
+const GRID_W = 1024 / CELL_SIZE
+const GRID_H = 640 / CELL_SIZE
+
+var GAME_OVER = false
+
+var CELL_EMPTY = 0
+var CELL_ENEMY = 1
+var CELL_EGG = 2
 var FULLSCREEN = false
 var shaker_obj = null      
 var PLAYER_XP = 0.0
 var TOTAL_XP = 0.0
 var TOTAL_LIFE = 10.0
 var PLAYER_LEVEL = 1
+var TIME_SIZE = 1.0
 var SHOOT_TTL_TOTAL = 0.3
+var COLLECT_RADIUS = 20.0
 
 var TIME_LEFT = 5 * 60
 var minutes = 0
@@ -17,8 +28,8 @@ var ENEMY_SPAWN_TTL = ENEMY_SPAWN_TTL_TOTAL
 var BULLET_TTL = 0.1
 var BULLET_DMG = 1.0
 var TOTAL_SPEED = 150.0
-var occupied_cells = [] 
-var occupied_cells_obj = []
+var occupied_cells = []
+var ash_cells = []
 var player = null
 
 var GUNS = []
@@ -26,42 +37,42 @@ var ITEMS = []
 
 var item_range_up = {
 	"name": "Range Up",
-	"action": func(): self.range_up(),
+	"action": func(): range_up(),
 	"increase": " (+10%)",
 	"depends": null
 }
 
 var item_dmg_up = {
 	"name": "Damage Up",
-	"action": func(): self.dmg_up(),
-	"increase": " (+10%)",
+	"action": func(): dmg_up(),
+	"increase": " (+15%)",
 	"depends": null
 }
 
 var item_max_life_up = {
 	"name": "Max Life Up",
-	"action": func(): self.max_life_up(),
+	"action": func(): max_life_up(),
 	"increase": " (+10%)",
 	"depends": null
 }
 
 var item_max_speed_up = {
 	"name": "Max Speed Up",
-	"action": func(): self.max_speed_up(),
+	"action": func(): max_speed_up(),
 	"increase": " (+10%)",
 	"depends": null
 }
 
 var item_collect_range_up = {
 	"name": "Collect Range Up",
-	"action": func(): self.max_speed_up(),
-	"increase": " (+10%)",
+	"action": func(): max_speed_up(),
+	"increase": " (+20%)",
 	"depends": null
 }
 
 var item_max_shoot_ttl = {
 	"name": "Shoot Cadence Up",
-	"action": func(): self.max_shoot_ttl(),
+	"action": func(): max_shoot_ttl(),
 	"increase": " (+10%)",
 	"depends": null
 }
@@ -79,16 +90,19 @@ func max_life_up():
 	Global.TOTAL_LIFE *= 1.10
 
 func range_up():
-	BULLET_TTL *= 1.10
+	BULLET_TTL *= 1.20
 	
 func dmg_up():
-	BULLET_DMG *= 1.10
+	BULLET_DMG *= 1.15
 
 func init_vars():
 	BULLET_DMG = 1.0
-	occupied_cells = [] 
+	for w in Global.GRID_W:
+		for h in Global.GRID_H:
+			occupied_cells.append([Vector2i(w * 32, h * 32), Global.CELL_EMPTY])
+			ash_cells.append(null)
+			
 	TOTAL_XP = calc_totalxp()
-	
 	ITEMS.append(item_dmg_up)
 	ITEMS.append(item_range_up)
 	ITEMS.append(item_max_life_up)
@@ -98,6 +112,7 @@ func init_vars():
 	
 func check_level_up():
 	if Global.PLAYER_XP >= Global.TOTAL_XP:
+		TIME_SIZE *= 1.10
 		PLAYER_LEVEL += 1
 		Global.PLAYER_XP = 0.0
 		TOTAL_XP = calc_totalxp()

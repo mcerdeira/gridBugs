@@ -37,6 +37,28 @@ func _physics_process(delta: float) -> void:
 		timer += delta
 		if timer > lifetime:
 			queue_free()
+		
+	_handle_screen_bounce()
+	
+func _handle_screen_bounce() -> void:
+	var viewport_rect = get_viewport_rect()
+
+	var margin_x = 4  
+	var margin_y_u = 32
+	var margin_y_d = 4
+
+	# X
+	if global_position.x < viewport_rect.position.x + margin_x:
+		velocity.x = abs(velocity.x) 
+	elif global_position.x > viewport_rect.size.x - margin_x:
+		velocity.x = -abs(velocity.x)
+
+	# Y
+	if global_position.y < viewport_rect.position.y + margin_y_u:
+		velocity.y = abs(velocity.y)
+	elif global_position.y > viewport_rect.size.y - margin_y_d:
+		velocity.y = -abs(velocity.y)
+
 
 func _on_area_entered(area: Area2D) -> void:
 	if !attrackted and area and area.is_in_group("player"):

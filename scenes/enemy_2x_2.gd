@@ -9,7 +9,7 @@ var crystal_scene = load("res://scenes/crystal.tscn")
 var lbl_scene = load("res://scenes/dmg_lbl.tscn")
 var marked = false
 var dead = false
-var idx = -1
+var idx_s = []
 
 func _ready():
 	add_to_group("enemy")
@@ -34,8 +34,13 @@ func _physics_process(delta: float) -> void:
 
 func die():
 	#Registrar celda liberada
-	Global.occupied_cells_obj.remove_at(idx)
-	Global.occupied_cells.remove_at(idx)
+	for idx in idx_s:
+		Global.occupied_cells[idx][1] = Global.CELL_EGG
+		#var ash = ash_scene.instantiate()
+		#ash.idx = idx
+		#ash.position = position
+		#get_tree().current_scene.add_child(ash)
+	
 	if notify_death != null and is_instance_valid(notify_death):
 		notify_death.notify()
 	
