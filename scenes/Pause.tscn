@@ -64,6 +64,7 @@ text = "MAX LIFE:"
 horizontal_alignment = 2
 
 [node name="value" type="Label" parent="lbl_2"]
+layout_mode = 0
 offset_left = 83.0
 offset_right = 123.0
 offset_bottom = 23.0
@@ -78,6 +79,7 @@ text = "RANGE:"
 horizontal_alignment = 2
 
 [node name="value" type="Label" parent="lbl_3"]
+layout_mode = 0
 offset_left = 82.0
 offset_right = 122.0
 offset_bottom = 23.0
@@ -92,6 +94,7 @@ text = "SPEED:"
 horizontal_alignment = 2
 
 [node name="value" type="Label" parent="lbl_4"]
+layout_mode = 0
 offset_left = 83.0
 offset_right = 123.0
 offset_bottom = 23.0
@@ -106,6 +109,7 @@ text = "COLLECT:"
 horizontal_alignment = 2
 
 [node name="value" type="Label" parent="lbl_5"]
+layout_mode = 0
 offset_left = 83.0
 offset_right = 123.0
 offset_bottom = 23.0
@@ -120,6 +124,7 @@ text = "CADENCE:"
 horizontal_alignment = 2
 
 [node name="value" type="Label" parent="lbl_6"]
+layout_mode = 0
 offset_left = 87.0
 offset_right = 127.0
 offset_bottom = 23.0

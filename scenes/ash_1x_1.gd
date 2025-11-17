@@ -1,9 +1,10 @@
 extends Node2D
 var ttl = 45.0
-var idx = -1
+var idx_s = []
 
 func _physics_process(delta: float) -> void:
 	ttl -= 1 * delta
-	if ttl <= 0:
-		Global.occupied_cells.remove_at(idx)
-		queue_free()
+	for idx in idx_s:
+		if ttl <= 0:
+			Global.occupied_cells.remove_at(idx)
+			queue_free()

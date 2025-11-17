@@ -34,11 +34,12 @@ func _physics_process(delta: float) -> void:
 		if Global.ENEMY_SPAWN_TTL <= 0:
 			if !all_occupied_cells():
 				check_merge()
+				check_mergex2()
 				spawn_enemy(get_random_pos())
 				Global.ENEMY_SPAWN_TTL = Global.ENEMY_SPAWN_TTL_TOTAL
 		
 func check_merge():
-	var results: Array = has_square(2)
+	var results: Array = has_square(2, Global.CELL_EGG)
 	if(results.size() > 0):
 		var cc = 0
 		for r in results:
@@ -47,7 +48,25 @@ func check_merge():
 			var obj = Global.occupied_cells[r]
 			if cc == 0:
 				var enemy = enemy_scenes[2].instantiate()
-				enemy.position = Global.occupied_cells[r][0] + Vector2i(16, 16)
+				enemy.global_position = Global.occupied_cells[r][0] + Vector2i(16, 16)
+				enemy.idx_s = results
+				add_child(enemy)
+			
+			#Registrar celda usada
+			Global.occupied_cells[r][1] = Global.CELL_ENEMY
+			cc += 1
+			
+func check_mergex2():
+	var results: Array = has_square(4, Global.CELL_EGG_2)
+	if(results.size() > 0):
+		var cc = 0
+		for r in results:
+			Global.ash_cells[r].queue_free()
+			Global.ash_cells[r] = null
+			var obj = Global.occupied_cells[r]
+			if cc == 0:
+				var enemy = enemy_scenes[3].instantiate()
+				enemy.global_position = Global.occupied_cells[r][0] + Vector2i(32, 32)
 				enemy.idx_s = results
 				add_child(enemy)
 			
@@ -58,9 +77,12 @@ func check_merge():
 func get_random_pos() -> int:
 	var cell : Vector2i
 	var idx: int
-	if Global.occupied_cells.size() > 0 and randf() < 0.9:
+	var matches = find_by_int(Global.CELL_ENEMY)
+	if randf() < 0.7 and Global.occupied_cells.size() > 0 and matches.size() > 0:
 		# Elegir una celda base ya ocupada
-		var base = Global.occupied_cells[randi() % Global.occupied_cells.size()]
+		matches.shuffle()
+		var id_random = matches.pop_at(0)
+		var base = Global.occupied_cells[id_random]
 		
 		# Buscar una posición cercana dentro de un radio de 1 celdas, aleatoria
 		var found = false
@@ -85,7 +107,14 @@ func get_random_pos() -> int:
 	
 	return idx
 	
-func has_square(size: int) -> Array:
+func find_by_int(value: int) -> Array:
+	var matches = []
+	for i in Global.occupied_cells.size():
+		if Global.occupied_cells[i][1] == value:
+			matches.append(i)
+	return matches
+	
+func has_square(size: int, cell_kind: int) -> Array:
 	var cell_idx = -1
 	var result = []
 	for cell in Global.occupied_cells:
@@ -94,8 +123,8 @@ func has_square(size: int) -> Array:
 		var found_square = true
 		for dx in range(size):
 			for dy in range(size):
-				var pos = Vector2i(x + dx * 32, y + dy * 32)
-				cell_idx = Global.occupied_cells.find([pos, Global.CELL_EGG])
+				var pos = Vector2i(x + (dx * 32), y + (dy * 32))
+				cell_idx = Global.occupied_cells.find([pos, cell_kind])
 				if cell_idx == -1:
 					found_square = false
 					break
@@ -128,7 +157,7 @@ func get_random_free_cell():
 func spawn_enemy(idx: int, level: int = 1):
 	if idx != -1:
 		var enemy = enemy_scenes[level].instantiate()
-		enemy.position = Global.occupied_cells[idx][0]
+		enemy.global_position = Global.occupied_cells[idx][0]
 		enemy.idx_s = [idx]
 		add_child(enemy)
 		#Registrar celda usada

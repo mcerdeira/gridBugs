@@ -8,6 +8,9 @@ var GAME_OVER = false
 var CELL_EMPTY = 0
 var CELL_ENEMY = 1
 var CELL_EGG = 2
+var CELL_EGG_2 = 20
+var CELL_EGG_4 = 40
+
 var FULLSCREEN = false
 var shaker_obj = null      
 var PLAYER_XP = 0.0

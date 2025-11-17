@@ -35,13 +35,14 @@ func _physics_process(delta: float) -> void:
 
 func die():
 	#Registrar celda liberada
+	var ash = ash_scene.instantiate()
+	ash.idx_s = idx_s
+	ash.global_position = global_position
 	for idx in idx_s:
 		Global.occupied_cells[idx][1] = Global.CELL_EGG
-		var ash = ash_scene.instantiate()
-		ash.idx = idx
-		ash.position = position
 		Global.ash_cells[idx] = ash
-		get_tree().current_scene.add_child(ash)
+		
+	get_tree().current_scene.add_child(ash)
 	
 	if notify_death != null and is_instance_valid(notify_death):
 		notify_death.notify()
