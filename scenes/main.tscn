@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://iwiu7dw0oln6"]
+[gd_scene load_steps=9 format=3 uid="uid://iwiu7dw0oln6"]
 
 [ext_resource type="Shader" uid="uid://dt6660j0fsfwi" path="res://scenes/f.gdshader" id="1_o5qli"]
 [ext_resource type="Script" uid="uid://cl0j1ius1hif0" path="res://scenes/main.gd" id="1_sugp2"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://bshkfndl4xecq" path="res://sprites/player_level.png" id="4_jyhfs"]
 [ext_resource type="Texture2D" uid="uid://d3e8hh0mt1d7b" path="res://sprites/player_level_frame.png" id="5_tbgi4"]
 [ext_resource type="FontFile" uid="uid://baufptafjkcp6" path="res://fonts/prstartk.ttf" id="6_tefeu"]
+[ext_resource type="Script" uid="uid://537fs1np4mg3" path="res://scenes/grid.gd" id="7_o6xl0"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_0wfyh"]
 shader = ExtResource("1_o5qli")
@@ -66,5 +67,9 @@ vertical_alignment = 1
 
 [node name="Timer" type="Timer" parent="."]
 autostart = true
+
+[node name="Grid" type="Node2D" parent="."]
+z_index = -4096
+script = ExtResource("7_o6xl0")
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

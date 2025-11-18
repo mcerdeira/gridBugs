@@ -10,7 +10,6 @@ var lbl_scene = load("res://scenes/dmg_lbl.tscn")
 var ash_scene = load("res://scenes/Ash1x1.tscn")
 var marked = false
 var dead = false
-var idx_s = []
 
 func _ready():
 	add_to_group("enemy")
@@ -20,7 +19,7 @@ func mark():
 	marked = true
 	visible = false
 	
-func _physics_process(delta: float) -> void:
+func _physics_process(delta: float) -> void:	
 	if !marked and !dead:
 		shoot_ttl -= 1 * delta
 		if shoot_ttl <= 0:
@@ -34,16 +33,6 @@ func _physics_process(delta: float) -> void:
 				$sprite.material.set_shader_parameter("on", 0)
 
 func die():
-	#Registrar celda liberada
-	var ash = ash_scene.instantiate()
-	ash.idx_s = idx_s
-	ash.global_position = global_position
-	for idx in idx_s:
-		Global.occupied_cells[idx][1] = Global.CELL_EGG
-		Global.ash_cells[idx] = ash
-		
-	get_tree().current_scene.add_child(ash)
-	
 	if notify_death != null and is_instance_valid(notify_death):
 		notify_death.notify()
 	

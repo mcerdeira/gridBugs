@@ -5,12 +5,6 @@ const GRID_H = 640 / CELL_SIZE
 
 var GAME_OVER = false
 
-var CELL_EMPTY = 0
-var CELL_ENEMY = 1
-var CELL_EGG = 2
-var CELL_EGG_2 = 20
-var CELL_EGG_4 = 40
-
 var FULLSCREEN = false
 var shaker_obj = null      
 var PLAYER_XP = 0.0
@@ -31,8 +25,6 @@ var ENEMY_SPAWN_TTL = ENEMY_SPAWN_TTL_TOTAL
 var BULLET_TTL = 0.1
 var BULLET_DMG = 1.0
 var TOTAL_SPEED = 150.0
-var occupied_cells = []
-var ash_cells = []
 var player = null
 
 var GUNS = []
@@ -100,11 +92,6 @@ func dmg_up():
 
 func init_vars():
 	BULLET_DMG = 1.0
-	for w in Global.GRID_W:
-		for h in Global.GRID_H:
-			occupied_cells.append([Vector2i(w * 32, h * 32), Global.CELL_EMPTY])
-			ash_cells.append(null)
-			
 	TOTAL_XP = calc_totalxp()
 	ITEMS.append(item_dmg_up)
 	ITEMS.append(item_range_up)

@@ -7,7 +7,6 @@ var shoot_ttl = shoot_ttl_total
 var bullet_scene = load("res://scenes/enemy_bullet_a.tscn")
 var crystal_scene = load("res://scenes/crystal.tscn")
 var lbl_scene = load("res://scenes/dmg_lbl.tscn")
-var ash_scene = load("res://scenes/Ash2x2.tscn")
 var marked = false
 var dead = false
 var idx_s = []
@@ -34,16 +33,6 @@ func _physics_process(delta: float) -> void:
 				$sprite.material.set_shader_parameter("on", 0)
 
 func die():
-	#Registrar celda liberada
-	var ash = ash_scene.instantiate()
-	ash.idx_s = idx_s
-	ash.global_position = global_position
-	for idx in idx_s:
-		Global.occupied_cells[idx][1] = Global.CELL_EGG_2
-		Global.ash_cells[idx] = ash
-		
-	get_tree().current_scene.add_child(ash)
-	
 	if notify_death != null and is_instance_valid(notify_death):
 		notify_death.notify()
 	
