@@ -9,6 +9,7 @@ var enemy_scenes = {
 }
 
 func _ready() -> void:
+	Global.Main = self
 	calc_time()
 	randomize()
 
@@ -26,32 +27,27 @@ func _physics_process(delta: float) -> void:
 	else:
 		$player_level_lbl.text = "LVL " + str(Global.PLAYER_LEVEL)
 		$player_level.scale.x = Global.PLAYER_XP / Global.TOTAL_XP
-		
-		Global.ENEMY_SPAWN_TTL -= Global.TIME_SIZE * delta
-		if Global.ENEMY_SPAWN_TTL <= 0:
-			spawn_enemy(get_random_pos())
-			Global.ENEMY_SPAWN_TTL = Global.ENEMY_SPAWN_TTL_TOTAL
+
+func turn():
+	spawn_enemy(get_random_pos())
 			
 func place_free_point(position: Vector2) -> bool:
 	var space := get_viewport().get_world_2d().direct_space_state
 	var pq := PhysicsPointQueryParameters2D.new()
 	pq.position = position
-	pq.collide_with_bodies = true    # detectar PhysicsBody2D
-	pq.collide_with_areas = true     # si querés también Area2D
-	pq.collision_mask = 0x7FFFFFFF   # todas las capas por defecto
-	# pq.exclude = [ some_rid ]      # opcional: RIDs a excluir
+	pq.collide_with_bodies = true
+	pq.collide_with_areas = true  
+	pq.collision_mask = 1 << 14
 
-	var result := space.intersect_point(pq)  # devuelve Array[Dictionary]
-	return result.size() == 0   # true -> libre
+	var result := space.intersect_point(pq)
+	return result.size() == 0
 		
 func get_random_pos() -> Vector2:
 	var enemies = get_tree().get_nodes_in_group("enemy")
 	var candidate : Vector2
 	if randf() < 0.7 and enemies.size() > 0:
-		# Elegir una celda base ya ocupada
 		var base = enemies.pick_random()
-		
-		# Buscar una posición cercana dentro de un radio de 1 celdas, aleatoria
+	
 		var found = false
 		for i in range(10): # hasta 10 intentos
 			var dx = randi_range(-1, 1)

@@ -1,8 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://vc5rogp4d164"]
+[gd_scene load_steps=12 format=3 uid="uid://vc5rogp4d164"]
 
 [ext_resource type="Script" uid="uid://crrb3v0vqrig8" path="res://scenes/enemy_2x_2.gd" id="1_myil0"]
 [ext_resource type="Shader" uid="uid://dunkwwb3ilskm" path="res://scenes/hit.gdshader" id="2_i5aot"]
 [ext_resource type="Texture2D" uid="uid://dfpsuy5wuuirp" path="res://sprites/2x2.png" id="2_myil0"]
+[ext_resource type="Script" uid="uid://d37iargqpp776" path="res://scenes/ash_attrack.gd" id="4_o0wx3"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_o0wx3"]
 resource_local_to_scene = true
@@ -61,7 +62,12 @@ _data = {
 &"new_animation": SubResource("Animation_jh2ei")
 }
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_4m1ej"]
+radius = 215.335
+
 [node name="Enemy2x2" type="Area2D"]
+collision_layer = 8193
+collision_mask = 8193
 script = ExtResource("1_myil0")
 
 [node name="sprite" type="AnimatedSprite2D" parent="."]
@@ -77,3 +83,11 @@ libraries = {
 }
 autoplay = "new_animation"
 speed_scale = 5.0
+
+[node name="ash_attrack" type="Area2D" parent="."]
+script = ExtResource("4_o0wx3")
+
+[node name="collider" type="CollisionShape2D" parent="ash_attrack"]
+shape = SubResource("CircleShape2D_4m1ej")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]

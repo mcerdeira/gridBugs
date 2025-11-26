@@ -28,26 +28,30 @@ offset_bottom = 752.0
 mouse_filter = 1
 
 [node name="You" parent="." instance=ExtResource("2_0wfyh")]
-position = Vector2(512, 320)
+position = Vector2(256, 160)
 
 [node name="player_level_black" type="Sprite2D" parent="."]
+visible = false
 modulate = Color(0, 0, 0, 1)
 position = Vector2(2, 16)
 texture = ExtResource("4_jyhfs")
 offset = Vector2(510, 0)
 
 [node name="player_level" type="Sprite2D" parent="."]
+visible = false
 position = Vector2(2, 16)
 scale = Vector2(1e-05, 1)
 texture = ExtResource("4_jyhfs")
 offset = Vector2(510, 0)
 
 [node name="player_level_frame" type="Sprite2D" parent="."]
+visible = false
 position = Vector2(2, 16)
 texture = ExtResource("5_tbgi4")
 offset = Vector2(510, 0)
 
 [node name="player_level_lbl" type="Label" parent="."]
+visible = false
 offset_left = 6.0
 offset_top = 2.0
 offset_right = 290.0
@@ -57,6 +61,7 @@ text = "LVL"
 vertical_alignment = 1
 
 [node name="time_elpased" type="Label" parent="."]
+visible = false
 offset_top = 33.0
 offset_right = 1024.0
 offset_bottom = 61.0

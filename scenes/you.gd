@@ -4,6 +4,7 @@ var shoot_ttl_total = Global.SHOOT_TTL_TOTAL
 var shoot_ttl = shoot_ttl_total
 var life = Global.TOTAL_LIFE
 var hit_tll = 0.0
+var facing = "up"
 var bullet_scene = load("res://scenes/bullet.tscn")
 
 func _ready():
@@ -48,31 +49,43 @@ func _physics_process(delta: float) -> void:
 			hit_tll -= 1 * delta
 			if hit_tll <= 0:
 				$sprite.material.set_shader_parameter("on", 0)
-		
-		look_at(get_global_mouse_position())
-		rotation_degrees += 90
-		shoot_ttl -= 1 * delta
-		if shoot_ttl <= 0:
-			shoot_ttl = shoot_ttl_total
-			shoot()
-		
-		if Input.is_action_pressed("up"):
-			global_position.y -= speed * delta
-		elif Input.is_action_pressed("down"):
-			global_position.y += speed * delta
+				
+		if Input.is_action_just_pressed("up"):
+			if facing == "up":
+				global_position.y -= 32
+			else:
+				facing = "up"
+				rotation_degrees = 0
+			Global.Main.turn()
+		elif Input.is_action_just_pressed("down"):
+			if facing == "down":
+				global_position.y += 32
+			else:
+				facing = "down"
+				rotation_degrees = 180
+			Global.Main.turn()
+		if Input.is_action_just_pressed("left"):
+			if facing == "left":
+				global_position.x -= 32
+			else:
+				facing = "left"
+				rotation_degrees = 270
+			Global.Main.turn()
+		elif Input.is_action_just_pressed("right"):
+			if facing == "right":
+				global_position.x += 32
+			else:
+				facing = "right"
+				rotation_degrees = 90
+			Global.Main.turn()
 			
-		if Input.is_action_pressed("left"):
-			global_position.x -= speed * delta
-		elif Input.is_action_pressed("right"):
-			global_position.x += speed * delta
-		
 		_limit_to_screen()
 	
 func _limit_to_screen() -> void:
 	var rect = get_viewport_rect()
-	var margin_side = 8
-	var margin_bottom = 8
-	var margin_top = 32 + 8
+	var margin_side = 32
+	var margin_bottom = 32
+	var margin_top = 32 
 
 	global_position.x = clamp(
 		global_position.x,

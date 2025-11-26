@@ -1,7 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://dmj1jsngwl4w6"]
+[gd_scene load_steps=8 format=3 uid="uid://dmj1jsngwl4w6"]
 
 [ext_resource type="Texture2D" uid="uid://cj0p0btm00cv8" path="res://sprites/1x1_ash.png" id="1_mx6hn"]
 [ext_resource type="Script" uid="uid://cpfq5e3fi1wnv" path="res://scenes/ash_1x_1.gd" id="1_y6mgn"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_y6mgn"]
+radius = 22.6385
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_y6mgn"]
 animations = [{
@@ -51,9 +54,20 @@ _data = {
 &"new_animation": SubResource("Animation_jh2ei")
 }
 
-[node name="Ash1x1" type="Node2D"]
+[node name="Ash1x1" type="Area2D"]
 z_index = -10
+scale = Vector2(0.4, 0.4)
 script = ExtResource("1_y6mgn")
+speed = null
+speed_min = null
+speed_max = null
+friction = null
+lifetime = null
+
+[node name="collider" type="CollisionShape2D" parent="."]
+scale = Vector2(1, 1)
+shape = SubResource("CircleShape2D_y6mgn")
+disabled = true
 
 [node name="sprite" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_y6mgn")
@@ -64,3 +78,5 @@ libraries = {
 }
 autoplay = "new_animation"
 speed_scale = 5.0
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]

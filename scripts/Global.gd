@@ -1,9 +1,10 @@
 extends Node
 const CELL_SIZE = 32
-const GRID_W = 1024 / CELL_SIZE
-const GRID_H = 640 / CELL_SIZE
+const GRID_W = 480 / CELL_SIZE
+const GRID_H = 288 / CELL_SIZE
 
 var GAME_OVER = false
+var Main = null
 
 var FULLSCREEN = false
 var shaker_obj = null      
@@ -20,8 +21,6 @@ var minutes = 0
 var seconds = 0
 
 var ENEMY_BASE_LIFE = 5.0
-var ENEMY_SPAWN_TTL_TOTAL = 2.0
-var ENEMY_SPAWN_TTL = ENEMY_SPAWN_TTL_TOTAL
 var BULLET_TTL = 0.1
 var BULLET_DMG = 1.0
 var TOTAL_SPEED = 150.0
