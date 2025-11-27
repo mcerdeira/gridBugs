@@ -22,7 +22,6 @@ func hit(dmg):
 			die()
 	
 func _physics_process(delta: float) -> void:
-	print(global_position)
 	if !Global.GAME_OVER:
 		$life_bar.global_position = Vector2(global_position.x - 16, global_position.y + 20)
 		$life_black.global_position = Vector2(global_position.x - 16, global_position.y + 20)

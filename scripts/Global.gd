@@ -1,7 +1,6 @@
 extends Node
 const CELL_SIZE = 32
-const GRID_W = 160 / CELL_SIZE
-const GRID_H = 160 / CELL_SIZE
+const GRID = Vector2(128, 32)
 
 enum GridType {
 	ENEMY,

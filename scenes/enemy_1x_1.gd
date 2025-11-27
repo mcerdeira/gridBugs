@@ -9,6 +9,11 @@ var level = 1
 
 func _ready():
 	add_to_group("enemy")
+	set_level(level)
+	
+func set_level(lvl):
+	level = lvl
+	$sprite.frame = lvl
 	
 func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("up"):
@@ -30,9 +35,9 @@ func _physics_process(delta: float) -> void:
 				
 func _limit_to_screen() -> void:
 	var rect = get_viewport_rect()
-	var margin_side = 32
-	var margin_bottom = 32
-	var margin_top = 32 
+	var margin_side = 64 + 64
+	var margin_bottom = 32 
+	var margin_top = 32
 
 	global_position.x = clamp(
 		global_position.x,

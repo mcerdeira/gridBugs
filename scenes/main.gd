@@ -1,10 +1,9 @@
 extends Node2D
 var levelup_scene = load("res://scenes/LevelUpScene.tscn")
 var pause_scene = load("res://scenes/Pause.tscn")
+var enemy_scenes = preload("res://scenes/Enemy1x1.tscn")
+var weapon_scenes = preload("res://scenes/weapon.tscn")
 
-var enemy_scenes = {
-	1: preload("res://scenes/Enemy1x1.tscn"),
-}
 
 func _ready() -> void:
 	Global.Main = self
@@ -27,7 +26,6 @@ func _physics_process(delta: float) -> void:
 		$player_level.scale.x = Global.PLAYER_XP / Global.TOTAL_XP
 
 func turn():
-	return
 	var where = get_random_free_cell()
 	var what = Global.pick_random([Global.GridType.ENEMY, Global.GridType.WEAPON, Global.GridType.ITEM])
 	
@@ -39,13 +37,16 @@ func turn():
 		spawn_item(where)
 		
 func spawn_weapon(pos: Vector2, level: int = 1):
-	pass
+	var weapon = weapon_scenes.instantiate()
+	weapon.level = level
+	weapon.global_position = pos
+	add_child(weapon)
 	
 func spawn_item(pos: Vector2, level: int = 1):
 	pass
 		
 func spawn_enemy(pos: Vector2, level: int = 1):
-	var enemy = enemy_scenes[level].instantiate()
+	var enemy = enemy_scenes.instantiate()
 	enemy.level = level
 	enemy.global_position = pos
 	add_child(enemy)
@@ -60,39 +61,17 @@ func place_free_point(position: Vector2) -> bool:
 
 	var result := space.intersect_point(pq)
 	return result.size() == 0
-		
-func get_random_pos() -> Vector2:
-	var enemies = get_tree().get_nodes_in_group("enemy")
-	var candidate : Vector2
-	if randf() < 0.7 and enemies.size() > 0:
-		var base = enemies.pick_random()
-	
-		var found = false
-		for i in range(10): # hasta 10 intentos
-			var dx = randi_range(-1, 1)
-			var dy = randi_range(-1, 1)
-			candidate = base.global_position + Vector2(dx * 32, dy * 32)
-			
-			if candidate.x >= (Global.CELL_SIZE * 3) \
-					and candidate.y >= (Global.CELL_SIZE * 3) \
-					and candidate.x < ((Global.GRID_W - 3) * 32) \
-					and candidate.y < ((Global.GRID_H - 3) * 32):
-						if place_free_point(candidate):
-							found = true
-							break
-		
-		if not found:
-			candidate = get_random_free_cell()
-	else:
-		candidate = get_random_free_cell()
-	
-	return candidate
 	
 func get_random_free_cell():
 	var cell := Vector2()
+	var cell_size = 32
+	var min_pos = Vector2(128, 32)
+	var max_pos = min_pos + Vector2(32 * 8, 32 * 8)
+
 	for t in range(100):
-		cell.x = randi_range(3, Global.GRID_W - 3) * 32
-		cell.y = randi_range(3, Global.GRID_H - 3) * 32
+		var gx = randi_range(min_pos.x / cell_size, max_pos.x / cell_size) * cell_size
+		var gy = randi_range(min_pos.y / cell_size, max_pos.y / cell_size) * cell_size
+		cell = Vector2(gx, gy)
 		if place_free_point(cell):
 			return cell
 

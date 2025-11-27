@@ -1,8 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://do0a72qfb601h"]
+[gd_scene load_steps=11 format=3 uid="uid://do0a72qfb601h"]
 
-[ext_resource type="Texture2D" uid="uid://cq1msy1k1hudw" path="res://sprites/1x1.png" id="1_67igc"]
 [ext_resource type="Script" uid="uid://burdtbb0pl37p" path="res://scenes/enemy_1x_1.gd" id="1_jk6cw"]
 [ext_resource type="Shader" uid="uid://dunkwwb3ilskm" path="res://scenes/hit.gdshader" id="2_cshi6"]
+[ext_resource type="Texture2D" uid="uid://26xg3de8xqlr" path="res://sprites/enemy1.png" id="3_jh2ei"]
+[ext_resource type="Texture2D" uid="uid://brptd1kienj1d" path="res://sprites/enemy2.png" id="4_ytgif"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_jh2ei"]
 resource_local_to_scene = true
@@ -14,7 +15,10 @@ shader_parameter/color = Color(1, 1, 1, 1)
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("1_67igc")
+"texture": ExtResource("3_jh2ei")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_ytgif")
 }],
 "loop": true,
 "name": &"default",
