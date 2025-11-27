@@ -1,7 +1,14 @@
 extends Node
 const CELL_SIZE = 32
-const GRID_W = 480 / CELL_SIZE
-const GRID_H = 288 / CELL_SIZE
+const GRID_W = 160 / CELL_SIZE
+const GRID_H = 160 / CELL_SIZE
+
+enum GridType {
+	ENEMY,
+	PLAYER,
+	ITEM,
+	WEAPON,
+}
 
 var GAME_OVER = false
 var Main = null

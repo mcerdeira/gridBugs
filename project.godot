@@ -25,7 +25,6 @@ Music="*res://scripts/Music.gd"
 
 window/size/viewport_width=512
 window/size/viewport_height=320
-window/size/mode=3
 window/stretch/mode="canvas_items"
 
 [input]
@@ -69,4 +68,4 @@ death={
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0
-environment/defaults/default_clear_color=Color(0.111562, 9.87884e-06, 0.111561, 1)
+environment/defaults/default_clear_color=Color(0.271376, 0.303628, 0.304372, 1)

@@ -4,8 +4,6 @@ var pause_scene = load("res://scenes/Pause.tscn")
 
 var enemy_scenes = {
 	1: preload("res://scenes/Enemy1x1.tscn"),
-	2: preload("res://scenes/Enemy2x2.tscn"),
-	3: preload("res://scenes/Enemy4x4.tscn")
 }
 
 func _ready() -> void:
@@ -29,7 +27,28 @@ func _physics_process(delta: float) -> void:
 		$player_level.scale.x = Global.PLAYER_XP / Global.TOTAL_XP
 
 func turn():
-	spawn_enemy(get_random_pos())
+	return
+	var where = get_random_free_cell()
+	var what = Global.pick_random([Global.GridType.ENEMY, Global.GridType.WEAPON, Global.GridType.ITEM])
+	
+	if what == Global.GridType.ENEMY:
+		spawn_enemy(where)
+	elif what == Global.GridType.WEAPON:
+		spawn_weapon(where)
+	elif what == Global.GridType.ITEM:
+		spawn_item(where)
+		
+func spawn_weapon(pos: Vector2, level: int = 1):
+	pass
+	
+func spawn_item(pos: Vector2, level: int = 1):
+	pass
+		
+func spawn_enemy(pos: Vector2, level: int = 1):
+	var enemy = enemy_scenes[level].instantiate()
+	enemy.level = level
+	enemy.global_position = pos
+	add_child(enemy)
 			
 func place_free_point(position: Vector2) -> bool:
 	var space := get_viewport().get_world_2d().direct_space_state
@@ -76,11 +95,6 @@ func get_random_free_cell():
 		cell.y = randi_range(3, Global.GRID_H - 3) * 32
 		if place_free_point(cell):
 			return cell
-			
-func spawn_enemy(pos: Vector2, level: int = 1):
-	var enemy = enemy_scenes[level].instantiate()
-	enemy.global_position = pos
-	add_child(enemy)
 
 func _on_timer_timeout() -> void:
 	Global.TIME_LEFT -= 1
