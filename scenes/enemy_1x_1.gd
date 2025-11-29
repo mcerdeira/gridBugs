@@ -1,11 +1,11 @@
 extends Area2D
-var life = Global.ENEMY_BASE_LIFE
+var life = 1
 var hit_tll = 0.0
 var notify_death = null
 var crystal_scene = load("res://scenes/crystal.tscn")
 var lbl_scene = load("res://scenes/dmg_lbl.tscn")
 var dead = false
-var level = 1
+var level = 0
 
 func _ready():
 	add_to_group("enemy")
@@ -16,40 +16,11 @@ func set_level(lvl):
 	$sprite.frame = lvl
 	
 func _physics_process(delta: float) -> void:
-	if Input.is_action_just_pressed("up"):
-		global_position.y -= 32
-	elif Input.is_action_just_pressed("down"):
-		global_position.y += 32
-		
-	if Input.is_action_just_pressed("left"):
-		global_position.x -= 32
-	elif Input.is_action_just_pressed("right"):
-		global_position.x += 32
-	
-	_limit_to_screen()
-	
 	if hit_tll >= 0:
 		hit_tll -= 1 * delta
 		if hit_tll <= 0:
 			$sprite.material.set_shader_parameter("on", 0)
-				
-func _limit_to_screen() -> void:
-	var rect = get_viewport_rect()
-	var margin_side = 64 + 64
-	var margin_bottom = 32 
-	var margin_top = 32
-
-	global_position.x = clamp(
-		global_position.x,
-		rect.position.x + margin_side,
-		rect.size.x - margin_side
-	)
-	global_position.y = clamp(
-		global_position.y,
-		rect.position.y + margin_top,
-		rect.size.y - margin_bottom
-	)
-
+			
 func die():
 	if notify_death != null and is_instance_valid(notify_death):
 		notify_death.notify()

@@ -2,7 +2,7 @@ extends Node2D
 
 const CELL_SIZE : int = 32
 const CENTER := Vector2(256, 160)  # centro donde está el personaje
-const RANGE  : int = 4             # 2 celdas hacia arriba/abajo y 2 a los lados
+const RANGE  : int = 2             # 2 celdas hacia arriba/abajo y 2 a los lados
 
 func _draw():
 	# número de celdas por lado (por ejemplo RANGE=2 -> 5 celdas)

@@ -1,9 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://dsicdj3g23ub2"]
+[gd_scene load_steps=6 format=3 uid="uid://dsicdj3g23ub2"]
 
 [ext_resource type="Texture2D" uid="uid://bhy1v5877xlcd" path="res://sprites/you.png" id="1_0hrdx"]
 [ext_resource type="Script" uid="uid://c1k8ydwnaapva" path="res://scenes/you.gd" id="1_acr6o"]
 [ext_resource type="Shader" uid="uid://dunkwwb3ilskm" path="res://scenes/hit.gdshader" id="1_noupt"]
-[ext_resource type="Texture2D" uid="uid://mwhswi2u4mgd" path="res://sprites/player_life.png" id="5_rgsx2"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_g0cpx"]
 resource_local_to_scene = true
@@ -25,16 +24,3 @@ texture = ExtResource("1_0hrdx")
 
 [node name="collider" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_g0cpx")
-
-[node name="life_black" type="Sprite2D" parent="."]
-modulate = Color(0, 0, 0, 1)
-top_level = true
-position = Vector2(-16, 20)
-texture = ExtResource("5_rgsx2")
-offset = Vector2(16, 0)
-
-[node name="life_bar" type="Sprite2D" parent="."]
-top_level = true
-position = Vector2(-16, 20)
-texture = ExtResource("5_rgsx2")
-offset = Vector2(16, 0)

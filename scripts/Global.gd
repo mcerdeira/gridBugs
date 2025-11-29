@@ -1,137 +1,40 @@
 extends Node
 const CELL_SIZE = 32
-const GRID = Vector2(128, 32)
+const ROWS = 5
+const COLS = 5
+const OFFSET = Vector2(192, 96)
 
-enum GridType {
-	ENEMY,
-	PLAYER,
-	ITEM,
-	WEAPON,
-}
-
+var GRID_ELEMENTS = [] #rows,cols
 var GAME_OVER = false
 var Main = null
-
 var FULLSCREEN = false
 var shaker_obj = null      
-var PLAYER_XP = 0.0
-var TOTAL_XP = 0.0
-var TOTAL_LIFE = 10.0
-var PLAYER_LEVEL = 1
 var TIME_SIZE = 1.0
-var SHOOT_TTL_TOTAL = 0.3
-var COLLECT_RADIUS = 20.0
-
 var TIME_LEFT = 5 * 60
 var minutes = 0
 var seconds = 0
-
-var ENEMY_BASE_LIFE = 5.0
-var BULLET_TTL = 0.1
-var BULLET_DMG = 1.0
-var TOTAL_SPEED = 150.0
 var player = null
 
-var GUNS = []
-var ITEMS = []
-
-var item_range_up = {
-	"name": "Range Up",
-	"action": func(): range_up(),
-	"increase": " (+10%)",
-	"depends": null
+enum GridType { 
+	ENEMY,
+	WEAPON,
+	ITEM
 }
 
-var item_dmg_up = {
-	"name": "Damage Up",
-	"action": func(): dmg_up(),
-	"increase": " (+15%)",
-	"depends": null
+enum LegalMoves {
+	MOVEMENT,
+	MERGE,
+	ATTACK,
+	EXIT,
 }
 
-var item_max_life_up = {
-	"name": "Max Life Up",
-	"action": func(): max_life_up(),
-	"increase": " (+10%)",
-	"depends": null
-}
+func _ready() -> void:
+	for i in 5:
+		var row = []
+		for j in 5:
+			row.append(null)
+		GRID_ELEMENTS.append(row)
 
-var item_max_speed_up = {
-	"name": "Max Speed Up",
-	"action": func(): max_speed_up(),
-	"increase": " (+10%)",
-	"depends": null
-}
-
-var item_collect_range_up = {
-	"name": "Collect Range Up",
-	"action": func(): max_speed_up(),
-	"increase": " (+20%)",
-	"depends": null
-}
-
-var item_max_shoot_ttl = {
-	"name": "Shoot Cadence Up",
-	"action": func(): max_shoot_ttl(),
-	"increase": " (+10%)",
-	"depends": null
-}
-
-func max_shoot_ttl():
-	Global.player.max_shoot_ttl()
-
-func max_collect_up():
-	Global.player.max_collect_up()
-
-func max_speed_up():
-	Global.TOTAL_SPEED *= 1.10
-
-func max_life_up():
-	Global.TOTAL_LIFE *= 1.10
-
-func range_up():
-	BULLET_TTL *= 1.20
-	
-func dmg_up():
-	BULLET_DMG *= 1.15
-
-func init_vars():
-	BULLET_DMG = 1.0
-	TOTAL_XP = calc_totalxp()
-	ITEMS.append(item_dmg_up)
-	ITEMS.append(item_range_up)
-	ITEMS.append(item_max_life_up)
-	ITEMS.append(item_max_speed_up)
-	ITEMS.append(item_collect_range_up)
-	ITEMS.append(item_max_shoot_ttl)
-	
-func check_level_up():
-	if Global.PLAYER_XP >= Global.TOTAL_XP:
-		TIME_SIZE *= 1.10
-		PLAYER_LEVEL += 1
-		Global.PLAYER_XP = 0.0
-		TOTAL_XP = calc_totalxp()
-		return true
-	
-func get_gem():
-	Global.PLAYER_XP += 1.0
-
-func calc_totalxp():
-	var next_level = PLAYER_LEVEL + 1
-	if(next_level == 20):
-		return (next_level*10)-5+600
-	if(next_level == 40):
-		return (next_level*13)-6+2400
-	if(next_level < 20):
-		return (next_level*10)-5
-	if(next_level > 20 < 40): 
-		return (next_level*13)-6
-	if(next_level > 40): 
-		return (next_level*16)-8
-
-func _ready():
-	init_vars()
-		
 #func emit(_global_position, count, particle_obj = null, size = 1):
 	#var part = particle
 	#if particle_obj:
