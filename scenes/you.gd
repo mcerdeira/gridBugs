@@ -2,6 +2,7 @@ extends Area2D
 var life = 3
 var hit_tll = 0.0
 var facing = "up"
+var type = Global.GridType.PLAYER
 
 func _ready():
 	add_to_group("player")

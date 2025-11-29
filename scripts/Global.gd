@@ -10,7 +10,7 @@ var Main = null
 var FULLSCREEN = false
 var shaker_obj = null      
 var TIME_SIZE = 1.0
-var TIME_LEFT = 5 * 60
+var TIME_LEFT = 0
 var minutes = 0
 var seconds = 0
 var player = null
@@ -18,13 +18,15 @@ var player = null
 enum GridType { 
 	ENEMY,
 	WEAPON,
-	ITEM
+	ITEM,
+	PLAYER,
 }
 
 enum LegalMoves {
 	MOVEMENT,
 	MERGE,
 	ATTACK,
+	GET_WEAPON,
 	EXIT,
 }
 

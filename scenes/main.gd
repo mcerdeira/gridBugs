@@ -3,7 +3,7 @@ var player_scene = load("res://scenes/you.tscn")
 var pause_scene = load("res://scenes/Pause.tscn")
 var enemy_scenes = preload("res://scenes/Enemy1x1.tscn")
 var weapon_scenes = preload("res://scenes/weapon.tscn")
-
+var item_scenes = preload("res://scenes/item.tscn")
 
 func _ready() -> void:
 	calc_time()
@@ -48,13 +48,18 @@ func process_direction(direction):
 	if direction == "right":
 		for r in range(Global.ROWS):
 			for c in range(Global.COLS - 2, -1, -1):
-				var type = legal_movement(Global.GRID_ELEMENTS[r][c + 1])
+				var type = legal_movement(Global.GRID_ELEMENTS[r][c + 1], Global.GRID_ELEMENTS[r][c])
 				if type == Global.LegalMoves.MOVEMENT:
 					Global.GRID_ELEMENTS[r][c + 1] = Global.GRID_ELEMENTS[r][c]
 					Global.GRID_ELEMENTS[r][c] = null
 				elif type == Global.LegalMoves.MERGE:
-					pass
+					var level = Global.GRID_ELEMENTS[r][c + 1].level
+					Global.GRID_ELEMENTS[r][c + 1].set_level(level+1)
+					Global.GRID_ELEMENTS[r][c].queue_free()
+					Global.GRID_ELEMENTS[r][c] = null
 				elif type == Global.LegalMoves.ATTACK:
+					pass
+				elif type == Global.LegalMoves.GET_WEAPON:
 					pass
 				elif type == Global.LegalMoves.EXIT:
 					pass
@@ -62,13 +67,18 @@ func process_direction(direction):
 	if direction == "left":
 		for r in range(Global.ROWS):
 			for c in range(1, Global.COLS):
-				var type = legal_movement(Global.GRID_ELEMENTS[r][c - 1])
+				var type = legal_movement(Global.GRID_ELEMENTS[r][c - 1], Global.GRID_ELEMENTS[r][c])
 				if type == Global.LegalMoves.MOVEMENT:
 					Global.GRID_ELEMENTS[r][c - 1] = Global.GRID_ELEMENTS[r][c]
 					Global.GRID_ELEMENTS[r][c] = null
 				elif type == Global.LegalMoves.MERGE:
-					pass
+					var level = Global.GRID_ELEMENTS[r][c - 1].level
+					Global.GRID_ELEMENTS[r][c + 1].set_level(level+1)
+					Global.GRID_ELEMENTS[r][c].queue_free()
+					Global.GRID_ELEMENTS[r][c] = null
 				elif type == Global.LegalMoves.ATTACK:
+					pass
+				elif type == Global.LegalMoves.GET_WEAPON:
 					pass
 				elif type == Global.LegalMoves.EXIT:
 					pass
@@ -79,10 +89,12 @@ func process_direction(direction):
 	if direction == "down":
 		pass
 		
-func legal_movement(cell):
-	if cell == null:
+func legal_movement(cell_to, cell_from):
+	if cell_to == null:
 		return Global.LegalMoves.MOVEMENT
-
+	elif cell_from != null and cell_to != null and cell_from.type == cell_to.type and cell_from.level == cell_to.level:
+		return Global.LegalMoves.MERGE
+		
 func turn():
 	var what = Global.pick_random([Global.GridType.ENEMY, Global.GridType.WEAPON, Global.GridType.ITEM])
 	get_random_free_cell(what)
@@ -94,7 +106,10 @@ func spawn_weapon(level: int = 0):
 	return weapon
 	
 func spawn_item(level: int = 0):
-	pass
+	var item = item_scenes.instantiate()
+	item.level = level
+	add_child(item)
+	return item
 		
 func spawn_enemy(level: int = 0):
 	var enemy = enemy_scenes.instantiate()
@@ -124,10 +139,10 @@ func get_random_free_cell(what):
 				break
 
 func _on_timer_timeout() -> void:
-	Global.TIME_LEFT -= 1
+	Global.TIME_LEFT += 1
 	calc_time()
 
 func calc_time():
 	Global.minutes = int(Global.TIME_LEFT / 60)
 	Global.seconds = int(Global.TIME_LEFT % 60)
-	$time_elpased.text = "%d:%02d" % [Global.minutes, Global.seconds]
+	%time_elpased.text = "%d:%02d" % [Global.minutes, Global.seconds]

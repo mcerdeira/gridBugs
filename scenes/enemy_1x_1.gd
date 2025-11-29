@@ -6,6 +6,7 @@ var crystal_scene = load("res://scenes/crystal.tscn")
 var lbl_scene = load("res://scenes/dmg_lbl.tscn")
 var dead = false
 var level = 0
+var type = Global.GridType.ENEMY
 
 func _ready():
 	add_to_group("enemy")
