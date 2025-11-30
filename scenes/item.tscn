@@ -1,13 +1,21 @@
-[gd_scene load_steps=4 format=3 uid="uid://brvyqwbe4gg74"]
+[gd_scene load_steps=6 format=3 uid="uid://brvyqwbe4gg74"]
 
-[ext_resource type="Script" uid="uid://do42lcdpqy1l3" path="res://scenes/weapon.gd" id="1_vljjh"]
-[ext_resource type="Texture2D" uid="uid://dpnbwld04n6t" path="res://sprites/medikit.png" id="2_s8enn"]
+[ext_resource type="Script" uid="uid://drkuosn7vknnh" path="res://scenes/item.gd" id="1_s8enn"]
+[ext_resource type="Texture2D" uid="uid://e4nwg5jfqlu6" path="res://sprites/medikit1.png" id="2_vljjh"]
+[ext_resource type="Texture2D" uid="uid://db8du8sljmnj7" path="res://sprites/medikit2.png" id="3_ro5b8"]
+[ext_resource type="Texture2D" uid="uid://eepcgamnuuf8" path="res://sprites/medikit3.png" id="4_d265e"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_4gq7n"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("2_s8enn")
+"texture": ExtResource("2_vljjh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_ro5b8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_d265e")
 }],
 "loop": true,
 "name": &"default",
@@ -15,7 +23,7 @@ animations = [{
 }]
 
 [node name="Item" type="Node2D"]
-script = ExtResource("1_vljjh")
+script = ExtResource("1_s8enn")
 
 [node name="sprite" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_4gq7n")

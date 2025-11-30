@@ -73,7 +73,7 @@ func process_direction(direction):
 					Global.GRID_ELEMENTS[r][c] = null
 				elif type == Global.LegalMoves.MERGE:
 					var level = Global.GRID_ELEMENTS[r][c - 1].level
-					Global.GRID_ELEMENTS[r][c + 1].set_level(level+1)
+					Global.GRID_ELEMENTS[r][c - 1].set_level(level+1)
 					Global.GRID_ELEMENTS[r][c].queue_free()
 					Global.GRID_ELEMENTS[r][c] = null
 				elif type == Global.LegalMoves.ATTACK:
@@ -84,16 +84,53 @@ func process_direction(direction):
 					pass
 					
 	if direction == "up":
-		pass
+		for r in range(1, Global.ROWS):
+			for c in range(Global.COLS):
+				var type = legal_movement(Global.GRID_ELEMENTS[r - 1][c], Global.GRID_ELEMENTS[r][c])
+				if type == Global.LegalMoves.MOVEMENT:
+					Global.GRID_ELEMENTS[r - 1][c] = Global.GRID_ELEMENTS[r][c]
+					Global.GRID_ELEMENTS[r][c] = null
+				elif type == Global.LegalMoves.MERGE:
+					var level = Global.GRID_ELEMENTS[r - 1][c].level
+					Global.GRID_ELEMENTS[r - 1][c].set_level(level+1)
+					Global.GRID_ELEMENTS[r][c].queue_free()
+					Global.GRID_ELEMENTS[r][c] = null
+				elif type == Global.LegalMoves.ATTACK:
+					pass
+				elif type == Global.LegalMoves.GET_WEAPON:
+					pass
+				elif type == Global.LegalMoves.EXIT:
+					pass
 		
 	if direction == "down":
-		pass
+		for r in range(Global.ROWS - 2, -1, -1):
+			for c in range(Global.COLS):
+				var type = legal_movement(Global.GRID_ELEMENTS[r + 1][c], Global.GRID_ELEMENTS[r][c])
+				if type == Global.LegalMoves.MOVEMENT:
+					Global.GRID_ELEMENTS[r + 1][c] = Global.GRID_ELEMENTS[r][c]
+					Global.GRID_ELEMENTS[r][c] = null
+				elif type == Global.LegalMoves.MERGE:
+					var level = Global.GRID_ELEMENTS[r + 1][c].level
+					Global.GRID_ELEMENTS[r + 1][c].set_level(level+1)
+					Global.GRID_ELEMENTS[r][c].queue_free()
+					Global.GRID_ELEMENTS[r][c] = null
+				elif type == Global.LegalMoves.ATTACK:
+					pass
+				elif type == Global.LegalMoves.GET_WEAPON:
+					pass
+				elif type == Global.LegalMoves.EXIT:
+					pass
 		
 func legal_movement(cell_to, cell_from):
 	if cell_to == null:
 		return Global.LegalMoves.MOVEMENT
-	elif cell_from != null and cell_to != null and cell_from.type == cell_to.type and cell_from.level == cell_to.level:
-		return Global.LegalMoves.MERGE
+	elif cell_from != null and cell_to != null and cell_from.type == cell_to.type \
+		and cell_from.level == cell_to.level:
+			return Global.LegalMoves.MERGE
+	elif cell_from != null and cell_to != null \
+	 	and (cell_from.type == Global.GridType.PLAYER or cell_to.type == Global.GridType.PLAYER) \
+		and (cell_from.type == Global.GridType.ENEMY or cell_to.type == Global.GridType.ENEMY):
+			return Global.LegalMoves.ATTACK
 		
 func turn():
 	var what = Global.pick_random([Global.GridType.ENEMY, Global.GridType.WEAPON, Global.GridType.ITEM])

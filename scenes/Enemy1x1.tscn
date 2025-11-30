@@ -81,5 +81,4 @@ shape = SubResource("RectangleShape2D_0uo27")
 libraries = {
 &"": SubResource("AnimationLibrary_cvxa1")
 }
-autoplay = "new_animation"
 speed_scale = 5.0

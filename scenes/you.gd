@@ -22,6 +22,11 @@ func hit(dmg):
 	
 func _physics_process(delta: float) -> void:
 	if !Global.GAME_OVER:
+		if Input.is_action_just_pressed("left"):
+			$sprite.flip_h = true
+		elif Input.is_action_just_pressed("right"):
+			$sprite.flip_h = false
+		
 		if hit_tll >= 0:
 			hit_tll -= 1 * delta
 			if hit_tll <= 0:

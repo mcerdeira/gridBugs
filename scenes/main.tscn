@@ -1,9 +1,9 @@
-[gd_scene load_steps=16 format=3 uid="uid://iwiu7dw0oln6"]
+[gd_scene load_steps=19 format=3 uid="uid://iwiu7dw0oln6"]
 
 [ext_resource type="Shader" uid="uid://dt6660j0fsfwi" path="res://scenes/f.gdshader" id="1_o5qli"]
 [ext_resource type="Script" uid="uid://cl0j1ius1hif0" path="res://scenes/main.gd" id="1_sugp2"]
-[ext_resource type="Texture2D" uid="uid://bhy1v5877xlcd" path="res://sprites/you.png" id="4_ya4ey"]
 [ext_resource type="Texture2D" uid="uid://26xg3de8xqlr" path="res://sprites/enemy1.png" id="5_tefeu"]
+[ext_resource type="Texture2D" uid="uid://c1d8itkn4cvxd" path="res://sprites/player_spr_0.png" id="5_trceg"]
 [ext_resource type="Texture2D" uid="uid://dmyknjisbp8r" path="res://sprites/life.png" id="6_eb6dy"]
 [ext_resource type="Texture2D" uid="uid://brptd1kienj1d" path="res://sprites/enemy2.png" id="6_o6xl0"]
 [ext_resource type="FontFile" uid="uid://baufptafjkcp6" path="res://fonts/prstartk.ttf" id="6_tefeu"]
@@ -13,6 +13,9 @@
 [ext_resource type="Texture2D" uid="uid://c0xm3ct4vvdhy" path="res://sprites/no_weapon.png" id="9_trceg"]
 [ext_resource type="Texture2D" uid="uid://ctjbjgcfge2is" path="res://sprites/weapon3.png" id="9_ya4ey"]
 [ext_resource type="Texture2D" uid="uid://r5356rg237cd" path="res://sprites/map.png" id="10_choun"]
+[ext_resource type="Texture2D" uid="uid://6tw7qmrl0x23" path="res://sprites/key_item.png" id="13_a8y0u"]
+[ext_resource type="Texture2D" uid="uid://cw4bkmqj28exw" path="res://sprites/shield.png" id="14_jkv2x"]
+[ext_resource type="Texture2D" uid="uid://dbcl4jrh8gjvu" path="res://sprites/potion.png" id="15_jbj1t"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_0wfyh"]
 shader = ExtResource("1_o5qli")
@@ -77,6 +80,7 @@ offset_bottom = 320.0
 color = Color(0.14902, 0.145098, 0.168627, 1)
 
 [node name="You" type="Label" parent="Panel1"]
+layout_mode = 0
 offset_top = 8.0
 offset_right = 140.0
 offset_bottom = 18.0
@@ -88,7 +92,7 @@ vertical_alignment = 1
 
 [node name="You" type="Sprite2D" parent="Panel1/You"]
 position = Vector2(69, 32)
-texture = ExtResource("4_ya4ey")
+texture = ExtResource("5_trceg")
 
 [node name="Life" type="Sprite2D" parent="Panel1/You"]
 position = Vector2(36, 65)
@@ -103,9 +107,10 @@ position = Vector2(100, 65)
 texture = ExtResource("6_eb6dy")
 
 [node name="lbl_weapon" type="Label" parent="Panel1"]
-offset_top = 101.0
+layout_mode = 0
+offset_top = 123.0
 offset_right = 140.0
-offset_bottom = 112.0
+offset_bottom = 134.0
 theme_override_fonts/font = ExtResource("6_tefeu")
 theme_override_font_sizes/font_size = 8
 text = "Weapon"
@@ -126,51 +131,28 @@ theme_override_fonts/font = ExtResource("6_tefeu")
 theme_override_font_sizes/font_size = 8
 text = "dmg 1"
 
-[node name="lbl_next" type="Label" parent="Panel1"]
-offset_top = 173.0
+[node name="lbl_items" type="Label" parent="Panel1"]
+layout_mode = 0
+offset_top = 207.0
 offset_right = 140.0
-offset_bottom = 184.0
+offset_bottom = 218.0
 theme_override_fonts/font = ExtResource("6_tefeu")
 theme_override_font_sizes/font_size = 8
 text = "Items"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="item1" type="AnimatedSprite2D" parent="Panel1/lbl_next"]
-position = Vector2(39, 33)
-sprite_frames = SubResource("SpriteFrames_jyhfs")
-animation = &"weapons"
-frame = 2
+[node name="KeyItem" type="Sprite2D" parent="Panel1/lbl_items"]
+position = Vector2(37, 32)
+texture = ExtResource("13_a8y0u")
 
-[node name="item2" type="AnimatedSprite2D" parent="Panel1/lbl_next"]
-position = Vector2(71, 33)
-sprite_frames = SubResource("SpriteFrames_jyhfs")
-animation = &"weapons"
-frame = 2
+[node name="Shield" type="Sprite2D" parent="Panel1/lbl_items"]
+position = Vector2(69, 32)
+texture = ExtResource("14_jkv2x")
 
-[node name="item3" type="AnimatedSprite2D" parent="Panel1/lbl_next"]
-position = Vector2(103, 33)
-sprite_frames = SubResource("SpriteFrames_jyhfs")
-animation = &"weapons"
-frame = 2
-
-[node name="item4" type="AnimatedSprite2D" parent="Panel1/lbl_next"]
-position = Vector2(39, 72)
-sprite_frames = SubResource("SpriteFrames_jyhfs")
-animation = &"weapons"
-frame = 2
-
-[node name="item5" type="AnimatedSprite2D" parent="Panel1/lbl_next"]
-position = Vector2(71, 72)
-sprite_frames = SubResource("SpriteFrames_jyhfs")
-animation = &"weapons"
-frame = 2
-
-[node name="item6" type="AnimatedSprite2D" parent="Panel1/lbl_next"]
-position = Vector2(103, 72)
-sprite_frames = SubResource("SpriteFrames_jyhfs")
-animation = &"weapons"
-frame = 2
+[node name="Potion" type="Sprite2D" parent="Panel1/lbl_items"]
+position = Vector2(101, 32)
+texture = ExtResource("15_jbj1t")
 
 [node name="Panel2" type="ColorRect" parent="."]
 offset_left = 372.0
@@ -190,6 +172,7 @@ vertical_alignment = 1
 
 [node name="time_elpased" type="Label" parent="Panel2"]
 unique_name_in_owner = true
+layout_mode = 0
 offset_top = 48.0
 offset_right = 140.0
 offset_bottom = 64.0
@@ -200,6 +183,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="lbl_next" type="Label" parent="Panel2"]
+layout_mode = 0
 offset_top = 72.0
 offset_right = 140.0
 offset_bottom = 83.0
@@ -216,6 +200,7 @@ animation = &"weapons"
 frame = 2
 
 [node name="lbl_map" type="Label" parent="Panel2"]
+layout_mode = 0
 offset_top = 151.0
 offset_right = 140.0
 offset_bottom = 162.0

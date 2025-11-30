@@ -26,7 +26,6 @@ func die():
 	if notify_death != null and is_instance_valid(notify_death):
 		notify_death.notify()
 	
-	spawn_crystals()
 	queue_free()
 
 func hit(dmg):
@@ -40,10 +39,3 @@ func hit(dmg):
 		life -= dmg
 		if life <= 0:
 			die()
-	
-func spawn_crystals():
-	var count := randi_range(3, 7)
-	for i in count:
-		var c = crystal_scene.instantiate()
-		c.global_position = global_position
-		get_tree().current_scene.add_child(c)
