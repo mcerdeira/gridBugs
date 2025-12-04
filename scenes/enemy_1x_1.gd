@@ -5,7 +5,7 @@ var notify_death = null
 var crystal_scene = load("res://scenes/crystal.tscn")
 var lbl_scene = load("res://scenes/dmg_lbl.tscn")
 var dead = false
-var level = 0
+var level = 1
 var type = Global.GridType.ENEMY
 
 func _ready():
@@ -14,7 +14,7 @@ func _ready():
 	
 func set_level(lvl):
 	level = lvl
-	$sprite.frame = lvl
+	$sprite.frame = lvl - 1
 	
 func _physics_process(delta: float) -> void:
 	if hit_tll >= 0:

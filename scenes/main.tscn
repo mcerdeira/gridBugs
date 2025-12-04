@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://iwiu7dw0oln6"]
+[gd_scene load_steps=23 format=3 uid="uid://iwiu7dw0oln6"]
 
 [ext_resource type="Shader" uid="uid://dt6660j0fsfwi" path="res://scenes/f.gdshader" id="1_o5qli"]
 [ext_resource type="Script" uid="uid://cl0j1ius1hif0" path="res://scenes/main.gd" id="1_sugp2"]
@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://brptd1kienj1d" path="res://sprites/enemy2.png" id="6_o6xl0"]
 [ext_resource type="FontFile" uid="uid://baufptafjkcp6" path="res://fonts/prstartk.ttf" id="6_tefeu"]
 [ext_resource type="Texture2D" uid="uid://ds7634ji0ch46" path="res://sprites/weapon1.png" id="7_85g3d"]
+[ext_resource type="Texture2D" uid="uid://bvljh7btbpqjc" path="res://sprites/life_empty.png" id="7_muem4"]
 [ext_resource type="Script" uid="uid://537fs1np4mg3" path="res://scenes/grid.gd" id="7_o6xl0"]
 [ext_resource type="Texture2D" uid="uid://cr7f138myab8m" path="res://sprites/weapon2.png" id="8_choun"]
 [ext_resource type="Texture2D" uid="uid://c0xm3ct4vvdhy" path="res://sprites/no_weapon.png" id="9_trceg"]
@@ -20,6 +21,48 @@
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_0wfyh"]
 shader = ExtResource("1_o5qli")
 shader_parameter/amount = 0.1
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_jkv2x"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_eb6dy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_muem4")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_jbj1t"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_eb6dy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_muem4")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_muem4"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_eb6dy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_muem4")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_jyhfs"]
 animations = [{
@@ -94,17 +137,20 @@ vertical_alignment = 1
 position = Vector2(69, 32)
 texture = ExtResource("5_trceg")
 
-[node name="Life" type="Sprite2D" parent="Panel1/You"]
+[node name="Life" type="AnimatedSprite2D" parent="Panel1/You"]
+unique_name_in_owner = true
 position = Vector2(36, 65)
-texture = ExtResource("6_eb6dy")
+sprite_frames = SubResource("SpriteFrames_jkv2x")
 
-[node name="Life2" type="Sprite2D" parent="Panel1/You"]
+[node name="Life2" type="AnimatedSprite2D" parent="Panel1/You"]
+unique_name_in_owner = true
 position = Vector2(68, 65)
-texture = ExtResource("6_eb6dy")
+sprite_frames = SubResource("SpriteFrames_jbj1t")
 
-[node name="Life3" type="Sprite2D" parent="Panel1/You"]
+[node name="Life3" type="AnimatedSprite2D" parent="Panel1/You"]
+unique_name_in_owner = true
 position = Vector2(100, 65)
-texture = ExtResource("6_eb6dy")
+sprite_frames = SubResource("SpriteFrames_muem4")
 
 [node name="lbl_weapon" type="Label" parent="Panel1"]
 layout_mode = 0
@@ -117,12 +163,14 @@ text = "Weapon"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="sprite" type="AnimatedSprite2D" parent="Panel1/lbl_weapon"]
+[node name="weapon_sprite" type="AnimatedSprite2D" parent="Panel1/lbl_weapon"]
+unique_name_in_owner = true
 position = Vector2(71, 26)
 sprite_frames = SubResource("SpriteFrames_jyhfs")
 animation = &"weapons"
 
-[node name="lbl_dmg" type="Label" parent="Panel1/lbl_weapon/sprite"]
+[node name="lbl_dmg" type="Label" parent="Panel1/lbl_weapon/weapon_sprite"]
+unique_name_in_owner = true
 offset_left = -20.0
 offset_top = 20.0
 offset_right = 20.0

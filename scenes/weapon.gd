@@ -1,5 +1,5 @@
 extends Node2D
-var level = 0
+var level = 1
 var type = Global.GridType.WEAPON
 
 func _ready():
@@ -8,7 +8,7 @@ func _ready():
 	
 func set_level(lvl):
 	level = lvl
-	$sprite.frame = lvl
+	$sprite.frame = lvl - 1
 	
 func _physics_process(delta: float) -> void:
 	pass

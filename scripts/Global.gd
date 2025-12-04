@@ -14,6 +14,8 @@ var TIME_LEFT = 0
 var minutes = 0
 var seconds = 0
 var player = null
+var life = 3
+var DMG = 1
 
 enum GridType { 
 	ENEMY,
@@ -27,6 +29,7 @@ enum LegalMoves {
 	MERGE,
 	ATTACK,
 	GET_WEAPON,
+	GET_ITEM,
 	EXIT,
 }
 
