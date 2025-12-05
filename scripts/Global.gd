@@ -25,6 +25,7 @@ enum GridType {
 }
 
 enum LegalMoves {
+	NON,
 	MOVEMENT,
 	MERGE,
 	ATTACK,

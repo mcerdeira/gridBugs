@@ -102,7 +102,11 @@ func process_direction(direction):
 					enemy = null
 					movement = true
 				elif type == Global.LegalMoves.GET_WEAPON:
-					pass
+					var player = get_cell_by_type(Global.GRID_ELEMENTS[r][c + 1], Global.GRID_ELEMENTS[r][c], Global.GridType.PLAYER)
+					var weapon = get_cell_by_type(Global.GRID_ELEMENTS[r][c + 1], Global.GRID_ELEMENTS[r][c], Global.GridType.WEAPON)
+					Global.GRID_ELEMENTS[r][c + 1] = player
+					Global.GRID_ELEMENTS[r][c] = null
+					movement = true
 					
 				elif type == Global.LegalMoves.GET_ITEM:
 					pass
@@ -155,6 +159,8 @@ func process_direction(direction):
 				elif type == Global.LegalMoves.ATTACK:
 					var player = get_cell_by_type(Global.GRID_ELEMENTS[r - 1][c], Global.GRID_ELEMENTS[r][c], Global.GridType.PLAYER)
 					var enemy =  get_cell_by_type(Global.GRID_ELEMENTS[r - 1][c], Global.GRID_ELEMENTS[r][c], Global.GridType.ENEMY)
+					print(r)
+					print(c)
 					if Global.DMG <= enemy.level:
 						player.hit(1)
 					enemy.queue_free()
@@ -213,17 +219,19 @@ func legal_movement(cell_to, cell_from):
 		and cell_from.level == cell_to.level:
 			return Global.LegalMoves.MERGE
 	elif cell_from != null and cell_to != null \
-	 	and (cell_from.type == Global.GridType.PLAYER or cell_to.type == Global.GridType.PLAYER) \
-		and (cell_from.type == Global.GridType.ENEMY or cell_to.type == Global.GridType.ENEMY):
+	 	and ((cell_from.type == Global.GridType.PLAYER and cell_to.type == Global.GridType.ENEMY) \
+		or (cell_from.type == Global.GridType.ENEMY and cell_to.type == Global.GridType.PLAYER)):
 			return Global.LegalMoves.ATTACK
 	elif cell_from != null and cell_to != null \
-	 	and (cell_from.type == Global.GridType.PLAYER or cell_to.type == Global.GridType.ITEM) \
-		and (cell_from.type == Global.GridType.ITEM or cell_to.type == Global.GridType.PLAYER):
+	 	and ((cell_from.type == Global.GridType.PLAYER and cell_to.type == Global.GridType.ITEM) \
+		or (cell_from.type == Global.GridType.ITEM and cell_to.type == Global.GridType.PLAYER)):
 			return Global.LegalMoves.GET_ITEM
 	elif cell_from != null and cell_to != null \
-	 	and (cell_from.type == Global.GridType.PLAYER or cell_to.type == Global.GridType.WEAPON) \
-		and (cell_from.type == Global.GridType.WEAPON or cell_to.type == Global.GridType.PLAYER):
+	 	and ((cell_from.type == Global.GridType.PLAYER and cell_to.type == Global.GridType.WEAPON) \
+		or (cell_from.type == Global.GridType.WEAPON and cell_to.type == Global.GridType.PLAYER)):
 			return Global.LegalMoves.GET_WEAPON
+	else:
+		return Global.LegalMoves.NON
 		
 func turn():
 	var what = Global.pick_random([Global.GridType.ENEMY, Global.GridType.WEAPON, Global.GridType.ITEM])
