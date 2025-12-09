@@ -35,3 +35,5 @@ sprite_frames = SubResource("SpriteFrames_6nu22")
 
 [node name="collider" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_uxn4k")
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]

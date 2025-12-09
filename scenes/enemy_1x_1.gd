@@ -7,6 +7,7 @@ var lbl_scene = load("res://scenes/dmg_lbl.tscn")
 var dead = false
 var level = 1
 var type = Global.GridType.ENEMY
+var text = ""
 
 func _ready():
 	add_to_group("enemy")
@@ -15,6 +16,7 @@ func _ready():
 func set_level(lvl):
 	level = lvl
 	$sprite.frame = lvl - 1
+	text = "Enemy lvl: " + str(level)
 	
 func _physics_process(delta: float) -> void:
 	if hit_tll >= 0:
@@ -27,6 +29,10 @@ func die():
 		notify_death.notify()
 	
 	queue_free()
+	
+func get_texture():
+	var anim = $sprite
+	return anim.sprite_frames.get_frame_texture(anim.animation, anim.frame)
 
 func hit(dmg):
 	if hit_tll <= 0:
@@ -39,3 +45,6 @@ func hit(dmg):
 		life -= dmg
 		if life <= 0:
 			die()
+
+func _on_mouse_entered() -> void:
+	Global.Main.set_item_inspect(self)

@@ -13,7 +13,7 @@ func _ready() -> void:
 	var player = player_scene.instantiate()
 	Global.GRID_ELEMENTS[2][2] = player
 	add_child(player)
-	for i in range(10):
+	for i in range(9):
 		turn()
 		
 	%weapon_sprite.frame = Global.DMG - 1
@@ -73,9 +73,16 @@ func _physics_process(delta: float) -> void:
 		if direction != "":
 			var change = process_direction(direction)
 			if change:
+				var walk = Global.pick_random([Global.WalkSFX1, Global.WalkSFX2])
+				Global.play_sound(walk)
 				cputurn_ttl = 0.3
 				%weapon_sprite.frame = Global.DMG - 1
 				render_grid()
+				
+func set_item_inspect(node):
+	if node:
+		%item.texture = node.get_texture()
+		%description.text = node.text
 							
 func process_direction(direction):
 	var movement = false
@@ -234,8 +241,21 @@ func legal_movement(cell_to, cell_from):
 		return Global.LegalMoves.NON
 		
 func turn():
-	var what = Global.pick_random([Global.GridType.ENEMY, Global.GridType.WEAPON, Global.GridType.ITEM])
+	if Global.NEXT == null:
+		Global.NEXT = Global.pick_random([Global.GridType.ENEMY, Global.GridType.WEAPON, Global.GridType.ITEM])
+	
+	var what = Global.NEXT
 	get_random_free_cell(what)
+	Global.NEXT = Global.pick_random([Global.GridType.ENEMY, Global.GridType.WEAPON, Global.GridType.ITEM])
+	display_next()
+	
+func display_next():
+	if Global.NEXT == Global.GridType.ENEMY:
+		$Panel2/lbl_next/sprite.animation = "enemies"
+	elif Global.NEXT == Global.GridType.WEAPON:
+		$Panel2/lbl_next/sprite.animation = "weapons"
+	elif Global.NEXT == Global.GridType.ITEM:
+		$Panel2/lbl_next/sprite.animation = "items"
 
 func spawn_weapon(level: int = 1):
 	var weapon = weapon_scenes.instantiate()

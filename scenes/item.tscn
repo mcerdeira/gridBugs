@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://brvyqwbe4gg74"]
+[gd_scene load_steps=7 format=3 uid="uid://brvyqwbe4gg74"]
 
 [ext_resource type="Script" uid="uid://drkuosn7vknnh" path="res://scenes/item.gd" id="1_s8enn"]
 [ext_resource type="Texture2D" uid="uid://e4nwg5jfqlu6" path="res://sprites/medikit1.png" id="2_vljjh"]
@@ -22,8 +22,16 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="Item" type="Node2D"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vljjh"]
+size = Vector2(32, 32)
+
+[node name="Item" type="Area2D"]
 script = ExtResource("1_s8enn")
 
 [node name="sprite" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_4gq7n")
+
+[node name="collider" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_vljjh")
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]

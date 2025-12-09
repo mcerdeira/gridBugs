@@ -82,3 +82,5 @@ libraries = {
 &"": SubResource("AnimationLibrary_cvxa1")
 }
 speed_scale = 5.0
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]

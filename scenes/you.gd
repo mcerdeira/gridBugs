@@ -2,6 +2,7 @@ extends Area2D
 var hit_tll = 0.0
 var facing = "up"
 var type = Global.GridType.PLAYER
+var text = "It's you."
 
 func _ready():
 	add_to_group("player")
@@ -15,11 +16,15 @@ func hit(dmg):
 	$sprite.material.set_shader_parameter("on", 1)
 	hit_tll = 1.2
 	Global.life -= dmg
+	Global.play_sound(Global.HurtSFX)
 	if Global.life <= 0:
 		Global.life = 0
 		die()
 	
 	Global.Main.update_life()
+
+func get_texture():
+	return $sprite.texture
 	
 func _physics_process(delta: float) -> void:
 	if !Global.GAME_OVER:
@@ -32,3 +37,7 @@ func _physics_process(delta: float) -> void:
 				
 			if hit_tll <= 0:
 				$sprite.material.set_shader_parameter("on", 0)
+
+
+func _on_mouse_entered() -> void:
+	Global.Main.set_item_inspect(self)

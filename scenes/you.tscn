@@ -24,3 +24,5 @@ texture = ExtResource("1_0hrdx")
 
 [node name="collider" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_g0cpx")
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]

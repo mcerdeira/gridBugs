@@ -16,6 +16,11 @@ var seconds = 0
 var player = null
 var life = 3
 var DMG = 1
+var NEXT = null
+
+var HurtSFX = null
+var WalkSFX1 = null
+var WalkSFX2 = null
 
 enum GridType { 
 	ENEMY,
@@ -40,6 +45,13 @@ func _ready() -> void:
 		for j in 5:
 			row.append(null)
 		GRID_ELEMENTS.append(row)
+		
+	load_sfx()
+	
+func load_sfx():
+	HurtSFX = load("res://sfx/hurt_snd.ogg")
+	WalkSFX1 = load("res://sfx/walk_snd.wav")
+	WalkSFX2 = load("res://sfx/walk2_snd.wav")
 
 #func emit(_global_position, count, particle_obj = null, size = 1):
 	#var part = particle
