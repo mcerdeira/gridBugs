@@ -15,12 +15,15 @@ var minutes = 0
 var seconds = 0
 var player = null
 var life = 3
-var DMG = 1
+var DMG = 0
 var NEXT = null
 
 var HurtSFX = null
 var WalkSFX1 = null
 var WalkSFX2 = null
+var BeepSFX = null
+var WeaponSFX = null
+var HealSFX = null
 
 enum GridType { 
 	ENEMY,
@@ -50,8 +53,10 @@ func _ready() -> void:
 	
 func load_sfx():
 	HurtSFX = load("res://sfx/hurt_snd.ogg")
-	WalkSFX1 = load("res://sfx/walk_snd.wav")
-	WalkSFX2 = load("res://sfx/walk2_snd.wav")
+	WalkSFX1 = load("res://sfx/walk.mp3")
+	BeepSFX = load("res://sfx/beep.mp3")
+	WeaponSFX = load("res://sfx/sword.5.ogg")
+	HealSFX = load("res://sfx/heal.wav")
 
 #func emit(_global_position, count, particle_obj = null, size = 1):
 	#var part = particle

@@ -12,6 +12,12 @@ func die():
 	Global.GAME_OVER = true
 	visible = false
 	
+func heal(points):
+	Global.life += points
+	Global.play_sound(Global.HealSFX)
+	if Global.life > 3:
+		Global.life = 3
+	
 func hit(dmg):
 	$sprite.material.set_shader_parameter("on", 1)
 	hit_tll = 1.2
@@ -38,6 +44,10 @@ func _physics_process(delta: float) -> void:
 			if hit_tll <= 0:
 				$sprite.material.set_shader_parameter("on", 0)
 
-
 func _on_mouse_entered() -> void:
 	Global.Main.set_item_inspect(self)
+	if !$anim.is_playing():
+		$anim.play("new_animation")
+
+func _on_mouse_exited() -> void:
+	$anim.stop()

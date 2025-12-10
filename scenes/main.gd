@@ -44,9 +44,9 @@ func update_life():
 		%Life2.frame = 1
 		%Life3.frame = 1
 		
-		
 func _physics_process(delta: float) -> void:
-	%lbl_dmg.text = "dmg " + str(Global.DMG)
+	$lbl_gameover.visible = Global.GAME_OVER
+	%lbl_dmg.text = "dmg " + str(Global.DMG + 1)
 	
 	if Input.is_action_just_pressed("pause"):
 		var pause = pause_scene.instantiate()
@@ -73,14 +73,15 @@ func _physics_process(delta: float) -> void:
 		if direction != "":
 			var change = process_direction(direction)
 			if change:
-				var walk = Global.pick_random([Global.WalkSFX1, Global.WalkSFX2])
-				Global.play_sound(walk)
+				Global.play_sound(Global.WalkSFX1)
 				cputurn_ttl = 0.3
-				%weapon_sprite.frame = Global.DMG - 1
+				%weapon_sprite.frame = Global.DMG
 				render_grid()
 				
 func set_item_inspect(node):
 	if node:
+		Global.play_sound(Global.BeepSFX)
+		%ficha.visible = true
 		%item.texture = node.get_texture()
 		%description.text = node.text
 							
@@ -101,22 +102,38 @@ func process_direction(direction):
 					Global.GRID_ELEMENTS[r][c] = null
 					movement = true
 				elif type == Global.LegalMoves.ATTACK:
-					var player = get_cell_by_type(Global.GRID_ELEMENTS[r][c + 1], Global.GRID_ELEMENTS[r][c], Global.GridType.PLAYER)
-					var enemy =  get_cell_by_type(Global.GRID_ELEMENTS[r][c + 1], Global.GRID_ELEMENTS[r][c], Global.GridType.ENEMY)
-					if Global.DMG <= enemy.level:
-						player.hit(1)
-					enemy.queue_free()
-					enemy = null
+					var player = get_cell_by_type(r, c + 1, r, c, Global.GridType.PLAYER)
+					var enemy =  get_cell_by_type(r, c + 1, r, c, Global.GridType.ENEMY)
+					if Global.DMG <= enemy.node.level:
+						player.node.hit(enemy.node.level)
+					
+					Global.GRID_ELEMENTS[enemy.r][enemy.c].queue_free()
+					Global.GRID_ELEMENTS[enemy.r][enemy.c] = null
+					Global.GRID_ELEMENTS[player.r][player.c] = null
+					Global.GRID_ELEMENTS[r][c + 1] = player.node
 					movement = true
 				elif type == Global.LegalMoves.GET_WEAPON:
-					var player = get_cell_by_type(Global.GRID_ELEMENTS[r][c + 1], Global.GRID_ELEMENTS[r][c], Global.GridType.PLAYER)
-					var weapon = get_cell_by_type(Global.GRID_ELEMENTS[r][c + 1], Global.GRID_ELEMENTS[r][c], Global.GridType.WEAPON)
-					Global.GRID_ELEMENTS[r][c + 1] = player
-					Global.GRID_ELEMENTS[r][c] = null
+					var player = get_cell_by_type(r, c + 1, r, c, Global.GridType.PLAYER)
+					var weapon = get_cell_by_type(r, c + 1, r, c, Global.GridType.WEAPON)
+					Global.DMG = weapon.node.level
+					Global.play_sound(Global.WeaponSFX)
+
+					Global.GRID_ELEMENTS[weapon.r][weapon.c].queue_free()
+					Global.GRID_ELEMENTS[weapon.r][weapon.c] = null
+					Global.GRID_ELEMENTS[player.r][player.c] = null
+					Global.GRID_ELEMENTS[r][c + 1] = player.node
 					movement = true
-					
 				elif type == Global.LegalMoves.GET_ITEM:
-					pass
+					var player = get_cell_by_type(r, c + 1, r, c, Global.GridType.PLAYER)
+					var item = get_cell_by_type(r, c + 1, r, c, Global.GridType.ITEM)
+					player.node.heal(item.node.level)
+					Global.play_sound(Global.HealSFX)
+					
+					Global.GRID_ELEMENTS[item.r][item.c].queue_free()
+					Global.GRID_ELEMENTS[item.r][item.c] = null
+					Global.GRID_ELEMENTS[player.r][player.c] = null
+					Global.GRID_ELEMENTS[r][c + 1] = player.node
+					movement = true
 				elif type == Global.LegalMoves.EXIT:
 					pass
 					
@@ -135,17 +152,37 @@ func process_direction(direction):
 					Global.GRID_ELEMENTS[r][c] = null
 					movement = true
 				elif type == Global.LegalMoves.ATTACK:
-					var player = get_cell_by_type(Global.GRID_ELEMENTS[r][c - 1], Global.GRID_ELEMENTS[r][c], Global.GridType.PLAYER)
-					var enemy =  get_cell_by_type(Global.GRID_ELEMENTS[r][c - 1], Global.GRID_ELEMENTS[r][c], Global.GridType.ENEMY)
-					if Global.DMG <= enemy.level:
-						player.hit(1)
-					enemy.queue_free()
-					enemy = null
+					var player = get_cell_by_type(r, c - 1, r, c, Global.GridType.PLAYER)
+					var enemy =  get_cell_by_type(r, c - 1, r, c, Global.GridType.ENEMY)
+					if Global.DMG <= enemy.node.level:
+						player.node.hit(enemy.node.level)
+					
+					Global.GRID_ELEMENTS[enemy.r][enemy.c].queue_free()
+					Global.GRID_ELEMENTS[enemy.r][enemy.c] = null
+					Global.GRID_ELEMENTS[player.r][player.c] = null
+					Global.GRID_ELEMENTS[r][c - 1] = player.node
 					movement = true
 				elif type == Global.LegalMoves.GET_WEAPON:
-					pass
+					var player = get_cell_by_type(r, c - 1, r, c, Global.GridType.PLAYER)
+					var weapon = get_cell_by_type(r, c - 1, r, c, Global.GridType.WEAPON)
+					Global.DMG = weapon.node.level
+					Global.play_sound(Global.WeaponSFX)
+					
+					Global.GRID_ELEMENTS[weapon.r][weapon.c].queue_free()
+					Global.GRID_ELEMENTS[weapon.r][weapon.c] = null
+					Global.GRID_ELEMENTS[player.r][player.c] = null
+					Global.GRID_ELEMENTS[r][c - 1] = player.node
+					movement = true
 				elif type == Global.LegalMoves.GET_ITEM:
-					pass
+					var player = get_cell_by_type(r, c - 1, r, c, Global.GridType.PLAYER)
+					var item = get_cell_by_type(r, c - 1, r, c, Global.GridType.ITEM)
+					player.node.heal(item.node.level)
+					
+					Global.GRID_ELEMENTS[item.r][item.c].queue_free()
+					Global.GRID_ELEMENTS[item.r][item.c] = null
+					Global.GRID_ELEMENTS[player.r][player.c] = null
+					Global.GRID_ELEMENTS[r][c - 1] = player.node
+					movement = true
 				elif type == Global.LegalMoves.EXIT:
 					pass
 					
@@ -164,19 +201,38 @@ func process_direction(direction):
 					Global.GRID_ELEMENTS[r][c] = null
 					movement = true
 				elif type == Global.LegalMoves.ATTACK:
-					var player = get_cell_by_type(Global.GRID_ELEMENTS[r - 1][c], Global.GRID_ELEMENTS[r][c], Global.GridType.PLAYER)
-					var enemy =  get_cell_by_type(Global.GRID_ELEMENTS[r - 1][c], Global.GRID_ELEMENTS[r][c], Global.GridType.ENEMY)
-					print(r)
-					print(c)
-					if Global.DMG <= enemy.level:
-						player.hit(1)
-					enemy.queue_free()
-					enemy = null
+					var player = get_cell_by_type(r - 1, c, r, c, Global.GridType.PLAYER)
+					var enemy =  get_cell_by_type(r - 1, c, r, c, Global.GridType.ENEMY)
+					if Global.DMG <= enemy.node.level:
+						player.node.hit(enemy.node.level)
+					
+					Global.GRID_ELEMENTS[enemy.r][enemy.c].queue_free()
+					Global.GRID_ELEMENTS[enemy.r][enemy.c] = null
+					Global.GRID_ELEMENTS[player.r][player.c] = null
+					Global.GRID_ELEMENTS[r - 1][c] = player.node
 					movement = true
 				elif type == Global.LegalMoves.GET_WEAPON:
-					pass
+					var player = get_cell_by_type(r - 1, c, r, c, Global.GridType.PLAYER)
+					var weapon = get_cell_by_type(r - 1, c, r, c, Global.GridType.WEAPON)
+					Global.DMG = weapon.node.level
+					Global.play_sound(Global.WeaponSFX)
+					
+					Global.GRID_ELEMENTS[weapon.r][weapon.c].queue_free()
+					Global.GRID_ELEMENTS[weapon.r][weapon.c] = null
+					Global.GRID_ELEMENTS[player.r][player.c] = null
+					Global.GRID_ELEMENTS[r - 1][c] = player.node
+					movement = true
 				elif type == Global.LegalMoves.GET_ITEM:
-					pass
+					var player = get_cell_by_type(r - 1, c, r, c, Global.GridType.PLAYER)
+					var item = get_cell_by_type(r - 1, c, r, c, Global.GridType.ITEM)
+					player.node.heal(item.node.level)
+					Global.play_sound(Global.HealSFX)
+					
+					Global.GRID_ELEMENTS[item.r][item.c].queue_free()
+					Global.GRID_ELEMENTS[item.r][item.c] = null
+					Global.GRID_ELEMENTS[player.r][player.c] = null
+					Global.GRID_ELEMENTS[r - 1][c] = player.node
+					movement = true
 				elif type == Global.LegalMoves.EXIT:
 					pass
 		
@@ -195,27 +251,48 @@ func process_direction(direction):
 					Global.GRID_ELEMENTS[r][c] = null
 					movement = true
 				elif type == Global.LegalMoves.ATTACK:
-					var player = get_cell_by_type(Global.GRID_ELEMENTS[r + 1][c], Global.GRID_ELEMENTS[r][c], Global.GridType.PLAYER)
-					var enemy =  get_cell_by_type(Global.GRID_ELEMENTS[r + 1][c], Global.GRID_ELEMENTS[r][c], Global.GridType.ENEMY)
-					if Global.DMG <= enemy.level:
-						player.hit(1)
-					enemy.queue_free()
-					enemy = null
+					var player = get_cell_by_type(r + 1, c, r, c, Global.GridType.PLAYER)
+					var enemy =  get_cell_by_type(r + 1, c, r, c, Global.GridType.ENEMY)
+					if Global.DMG <= enemy.node.level:
+						player.node.hit(enemy.node.level)
+					
+					Global.GRID_ELEMENTS[enemy.r][enemy.c].queue_free()
+					Global.GRID_ELEMENTS[enemy.r][enemy.c] = null
+					Global.GRID_ELEMENTS[player.r][player.c] = null
+					Global.GRID_ELEMENTS[r + 1][c] = player.node
 					movement = true
 				elif type == Global.LegalMoves.GET_WEAPON:
-					pass
+					var player = get_cell_by_type(r + 1, c, r, c, Global.GridType.PLAYER)
+					var weapon = get_cell_by_type(r + 1, c, r, c, Global.GridType.WEAPON)
+					Global.DMG = weapon.node.level
+					Global.play_sound(Global.WeaponSFX)
+					
+					Global.GRID_ELEMENTS[weapon.r][weapon.c].queue_free()
+					Global.GRID_ELEMENTS[weapon.r][weapon.c] = null
+					Global.GRID_ELEMENTS[player.r][player.c] = null
+					Global.GRID_ELEMENTS[r + 1][c] = player.node
+					movement = true
 				elif type == Global.LegalMoves.GET_ITEM:
-					pass
+					var player = get_cell_by_type(r + 1, c, r, c, Global.GridType.PLAYER)
+					var item = get_cell_by_type(r + 1, c, r, c, Global.GridType.ITEM)
+					player.node.heal(item.node.level)
+					Global.play_sound(Global.HealSFX)
+					
+					Global.GRID_ELEMENTS[item.r][item.c].queue_free()
+					Global.GRID_ELEMENTS[item.r][item.c] = null
+					Global.GRID_ELEMENTS[player.r][player.c] = null
+					Global.GRID_ELEMENTS[r + 1][c] = player.node
+					movement = true
 				elif type == Global.LegalMoves.EXIT:
 					pass
 	
 	return movement
 		
-func get_cell_by_type(cell_from, cell_to, type):
-	if cell_from.type == type:
-		return cell_from
-	elif cell_to.type == type:
-		return cell_to
+func get_cell_by_type(r1, c1, r2, c2, type):
+	if Global.GRID_ELEMENTS[r1][c1].type == type:
+		return {"node": Global.GRID_ELEMENTS[r1][c1], "r": r1, "c": c1}
+	elif Global.GRID_ELEMENTS[r2][c2].type == type:
+		return {"node": Global.GRID_ELEMENTS[r2][c2], "r": r2, "c": c2}
 	else:
 		return null
 		

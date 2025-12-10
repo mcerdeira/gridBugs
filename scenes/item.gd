@@ -18,3 +18,8 @@ func get_texture():
 	
 func _on_mouse_entered() -> void:
 	Global.Main.set_item_inspect(self)
+	if !$anim.is_playing():
+		$anim.play("new_animation")
+		
+func _on_mouse_exited() -> void:
+	$anim.stop()
