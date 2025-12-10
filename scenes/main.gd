@@ -4,6 +4,7 @@ var pause_scene = load("res://scenes/Pause.tscn")
 var enemy_scenes = preload("res://scenes/Enemy1x1.tscn")
 var weapon_scenes = preload("res://scenes/weapon.tscn")
 var item_scenes = preload("res://scenes/item.tscn")
+var key_scenes = preload("res://scenes/key.tscn")
 var cputurn_ttl = 0
 
 func _ready() -> void:
@@ -14,7 +15,7 @@ func _ready() -> void:
 	Global.GRID_ELEMENTS[2][2] = player
 	add_child(player)
 	for i in range(9):
-		turn()
+		turn(true)
 		
 	%weapon_sprite.frame = Global.DMG - 1
 	update_life()
@@ -134,8 +135,6 @@ func process_direction(direction):
 					Global.GRID_ELEMENTS[player.r][player.c] = null
 					Global.GRID_ELEMENTS[r][c + 1] = player.node
 					movement = true
-				elif type == Global.LegalMoves.EXIT:
-					pass
 					
 	if direction == "left":
 		for r in range(Global.ROWS):
@@ -183,8 +182,6 @@ func process_direction(direction):
 					Global.GRID_ELEMENTS[player.r][player.c] = null
 					Global.GRID_ELEMENTS[r][c - 1] = player.node
 					movement = true
-				elif type == Global.LegalMoves.EXIT:
-					pass
 					
 	if direction == "up":
 		for r in range(1, Global.ROWS):
@@ -233,8 +230,6 @@ func process_direction(direction):
 					Global.GRID_ELEMENTS[player.r][player.c] = null
 					Global.GRID_ELEMENTS[r - 1][c] = player.node
 					movement = true
-				elif type == Global.LegalMoves.EXIT:
-					pass
 		
 	if direction == "down":
 		for r in range(Global.ROWS - 2, -1, -1):
@@ -283,8 +278,6 @@ func process_direction(direction):
 					Global.GRID_ELEMENTS[player.r][player.c] = null
 					Global.GRID_ELEMENTS[r + 1][c] = player.node
 					movement = true
-				elif type == Global.LegalMoves.EXIT:
-					pass
 	
 	return movement
 		
@@ -311,19 +304,30 @@ func legal_movement(cell_to, cell_from):
 		or (cell_from.type == Global.GridType.ITEM and cell_to.type == Global.GridType.PLAYER)):
 			return Global.LegalMoves.GET_ITEM
 	elif cell_from != null and cell_to != null \
+	 	and ((cell_from.type == Global.GridType.PLAYER and cell_to.type == Global.GridType.KEY) \
+		or (cell_from.type == Global.GridType.KEY and cell_to.type == Global.GridType.PLAYER)):
+			return Global.LegalMoves.GET_KEY
+	elif cell_from != null and cell_to != null \
 	 	and ((cell_from.type == Global.GridType.PLAYER and cell_to.type == Global.GridType.WEAPON) \
 		or (cell_from.type == Global.GridType.WEAPON and cell_to.type == Global.GridType.PLAYER)):
 			return Global.LegalMoves.GET_WEAPON
 	else:
 		return Global.LegalMoves.NON
 		
-func turn():
+func turn(nokeys = false):
 	if Global.NEXT == null:
-		Global.NEXT = Global.pick_random([Global.GridType.ENEMY, Global.GridType.WEAPON, Global.GridType.ITEM])
+		if Global.KeyAppeared or nokeys:
+			Global.NEXT = Global.pick_random([Global.GridType.ENEMY, Global.GridType.WEAPON, Global.GridType.ITEM])
+		else:
+			Global.NEXT = Global.pick_random([Global.GridType.KEY, Global.GridType.ENEMY, Global.GridType.WEAPON, Global.GridType.ITEM])
 	
 	var what = Global.NEXT
 	get_random_free_cell(what)
-	Global.NEXT = Global.pick_random([Global.GridType.ENEMY, Global.GridType.WEAPON, Global.GridType.ITEM])
+	if Global.KeyAppeared or nokeys:
+		Global.NEXT = Global.pick_random([Global.GridType.ENEMY, Global.GridType.WEAPON, Global.GridType.ITEM])
+	else:
+		Global.NEXT = Global.pick_random([Global.GridType.KEY, Global.GridType.ENEMY, Global.GridType.WEAPON, Global.GridType.ITEM])
+
 	display_next()
 	
 func display_next():
@@ -333,6 +337,8 @@ func display_next():
 		$Panel2/lbl_next/sprite.animation = "weapons"
 	elif Global.NEXT == Global.GridType.ITEM:
 		$Panel2/lbl_next/sprite.animation = "items"
+	elif Global.NEXT == Global.GridType.KEY:
+		$Panel2/lbl_next/sprite.animation = "keys"
 
 func spawn_weapon(level: int = 1):
 	var weapon = weapon_scenes.instantiate()
@@ -352,6 +358,12 @@ func spawn_enemy(level: int = 1):
 	add_child(enemy)
 	return enemy
 	
+func spawn_key():
+	Global.KeyAppeared = true
+	var key = key_scenes.instantiate()
+	add_child(key)
+	return key
+	
 func is_space_available():
 	for r in range(Global.ROWS):
 		for c in range(Global.COLS):
@@ -370,6 +382,8 @@ func get_random_free_cell(what):
 					Global.GRID_ELEMENTS[r][c] = spawn_weapon()
 				elif what == Global.GridType.ITEM:
 					Global.GRID_ELEMENTS[r][c] = spawn_item()
+				elif what == Global.GridType.KEY:
+					Global.GRID_ELEMENTS[r][c] = spawn_key()
 					
 				break
 

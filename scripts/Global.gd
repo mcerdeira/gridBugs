@@ -16,6 +16,7 @@ var seconds = 0
 var player = null
 var life = 3
 var DMG = 0
+var KeyAppeared = false
 var NEXT = null
 
 var HurtSFX = null
@@ -30,6 +31,7 @@ enum GridType {
 	WEAPON,
 	ITEM,
 	PLAYER,
+	KEY,
 }
 
 enum LegalMoves {
@@ -39,7 +41,7 @@ enum LegalMoves {
 	ATTACK,
 	GET_WEAPON,
 	GET_ITEM,
-	EXIT,
+	GET_KEY,
 }
 
 func _ready() -> void:
