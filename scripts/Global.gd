@@ -25,6 +25,10 @@ var WalkSFX2 = null
 var BeepSFX = null
 var WeaponSFX = null
 var HealSFX = null
+var DoorSFX = null
+var KeysSFX = null
+var EnemyHitSFX = null
+var PlayerDieSFX = null
 
 enum GridType { 
 	ENEMY,
@@ -32,6 +36,19 @@ enum GridType {
 	ITEM,
 	PLAYER,
 	KEY,
+}
+
+var spawn_weights := {
+	GridType.ENEMY: 60,
+	GridType.WEAPON: 20,
+	GridType.ITEM: 20,
+}
+
+var spawn_weights_full := {
+	GridType.ENEMY: 50,
+	GridType.WEAPON: 23,
+	GridType.ITEM: 30,
+	GridType.KEY: 2,
 }
 
 enum LegalMoves {
@@ -59,6 +76,10 @@ func load_sfx():
 	BeepSFX = load("res://sfx/beep.mp3")
 	WeaponSFX = load("res://sfx/sword.5.ogg")
 	HealSFX = load("res://sfx/heal.wav")
+	KeysSFX = load("res://sfx/keys_01.ogg")
+	DoorSFX = load("res://sfx/door_open.wav")
+	PlayerDieSFX = load("res://sfx/PlayerDieSfx.wav")
+	EnemyHitSFX = load("res://sfx/EnemyHit.wav")	
 
 #func emit(_global_position, count, particle_obj = null, size = 1):
 	#var part = particle

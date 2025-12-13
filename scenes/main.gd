@@ -14,7 +14,7 @@ func _ready() -> void:
 	var player = player_scene.instantiate()
 	Global.GRID_ELEMENTS[2][2] = player
 	add_child(player)
-	for i in range(9):
+	for i in range(7):
 		turn(true)
 		
 	%weapon_sprite.frame = Global.DMG - 1
@@ -79,10 +79,13 @@ func _physics_process(delta: float) -> void:
 				%weapon_sprite.frame = Global.DMG
 				render_grid()
 				
-func set_item_inspect(node):
+func set_item_inspect(node, is_door = false):
 	if node:
 		Global.play_sound(Global.BeepSFX)
-		%ficha.visible = true
+		if is_door:
+			%ficha.visible = false
+		else:
+			%ficha.visible = true
 		%item.texture = node.get_texture()
 		%description.text = node.text
 							
@@ -105,8 +108,9 @@ func process_direction(direction):
 				elif type == Global.LegalMoves.ATTACK:
 					var player = get_cell_by_type(r, c + 1, r, c, Global.GridType.PLAYER)
 					var enemy =  get_cell_by_type(r, c + 1, r, c, Global.GridType.ENEMY)
-					if Global.DMG <= enemy.node.level:
+					if Global.DMG < enemy.node.level:
 						player.node.hit(enemy.node.level)
+					player.node.attack()
 					
 					Global.GRID_ELEMENTS[enemy.r][enemy.c].queue_free()
 					Global.GRID_ELEMENTS[enemy.r][enemy.c] = null
@@ -135,6 +139,17 @@ func process_direction(direction):
 					Global.GRID_ELEMENTS[player.r][player.c] = null
 					Global.GRID_ELEMENTS[r][c + 1] = player.node
 					movement = true
+				elif type == Global.LegalMoves.GET_KEY:
+					var player = get_cell_by_type(r, c + 1, r, c, Global.GridType.PLAYER)
+					var item = get_cell_by_type(r, c + 1, r, c, Global.GridType.KEY)
+					Global.play_sound(Global.KeysSFX)
+					open_door()
+					
+					Global.GRID_ELEMENTS[item.r][item.c].queue_free()
+					Global.GRID_ELEMENTS[item.r][item.c] = null
+					Global.GRID_ELEMENTS[player.r][player.c] = null
+					Global.GRID_ELEMENTS[r][c + 1] = player.node
+					movement = true
 					
 	if direction == "left":
 		for r in range(Global.ROWS):
@@ -153,8 +168,9 @@ func process_direction(direction):
 				elif type == Global.LegalMoves.ATTACK:
 					var player = get_cell_by_type(r, c - 1, r, c, Global.GridType.PLAYER)
 					var enemy =  get_cell_by_type(r, c - 1, r, c, Global.GridType.ENEMY)
-					if Global.DMG <= enemy.node.level:
+					if Global.DMG < enemy.node.level:
 						player.node.hit(enemy.node.level)
+					player.node.attack()
 					
 					Global.GRID_ELEMENTS[enemy.r][enemy.c].queue_free()
 					Global.GRID_ELEMENTS[enemy.r][enemy.c] = null
@@ -182,6 +198,17 @@ func process_direction(direction):
 					Global.GRID_ELEMENTS[player.r][player.c] = null
 					Global.GRID_ELEMENTS[r][c - 1] = player.node
 					movement = true
+				elif type == Global.LegalMoves.GET_KEY:
+					var player = get_cell_by_type(r, c - 1, r, c, Global.GridType.PLAYER)
+					var item = get_cell_by_type(r, c - 1, r, c, Global.GridType.KEY)
+					Global.play_sound(Global.KeysSFX)
+					open_door()
+					
+					Global.GRID_ELEMENTS[item.r][item.c].queue_free()
+					Global.GRID_ELEMENTS[item.r][item.c] = null
+					Global.GRID_ELEMENTS[player.r][player.c] = null
+					Global.GRID_ELEMENTS[r][c - 1] = player.node
+					movement = true
 					
 	if direction == "up":
 		for r in range(1, Global.ROWS):
@@ -200,8 +227,9 @@ func process_direction(direction):
 				elif type == Global.LegalMoves.ATTACK:
 					var player = get_cell_by_type(r - 1, c, r, c, Global.GridType.PLAYER)
 					var enemy =  get_cell_by_type(r - 1, c, r, c, Global.GridType.ENEMY)
-					if Global.DMG <= enemy.node.level:
+					if Global.DMG < enemy.node.level:
 						player.node.hit(enemy.node.level)
+					player.node.attack()
 					
 					Global.GRID_ELEMENTS[enemy.r][enemy.c].queue_free()
 					Global.GRID_ELEMENTS[enemy.r][enemy.c] = null
@@ -230,6 +258,17 @@ func process_direction(direction):
 					Global.GRID_ELEMENTS[player.r][player.c] = null
 					Global.GRID_ELEMENTS[r - 1][c] = player.node
 					movement = true
+				elif type == Global.LegalMoves.GET_KEY:
+					var player = get_cell_by_type(r - 1, c, r, c, Global.GridType.PLAYER)
+					var item = get_cell_by_type(r - 1, c, r, c, Global.GridType.KEY)
+					Global.play_sound(Global.KeysSFX)
+					open_door()
+					
+					Global.GRID_ELEMENTS[item.r][item.c].queue_free()
+					Global.GRID_ELEMENTS[item.r][item.c] = null
+					Global.GRID_ELEMENTS[player.r][player.c] = null
+					Global.GRID_ELEMENTS[r - 1][c] = player.node
+					movement = true
 		
 	if direction == "down":
 		for r in range(Global.ROWS - 2, -1, -1):
@@ -248,8 +287,9 @@ func process_direction(direction):
 				elif type == Global.LegalMoves.ATTACK:
 					var player = get_cell_by_type(r + 1, c, r, c, Global.GridType.PLAYER)
 					var enemy =  get_cell_by_type(r + 1, c, r, c, Global.GridType.ENEMY)
-					if Global.DMG <= enemy.node.level:
+					if Global.DMG < enemy.node.level:
 						player.node.hit(enemy.node.level)
+					player.node.attack()
 					
 					Global.GRID_ELEMENTS[enemy.r][enemy.c].queue_free()
 					Global.GRID_ELEMENTS[enemy.r][enemy.c] = null
@@ -278,8 +318,26 @@ func process_direction(direction):
 					Global.GRID_ELEMENTS[player.r][player.c] = null
 					Global.GRID_ELEMENTS[r + 1][c] = player.node
 					movement = true
+				elif type == Global.LegalMoves.GET_KEY:
+					var player = get_cell_by_type(r + 1, c, r, c, Global.GridType.PLAYER)
+					var item = get_cell_by_type(r + 1, c, r, c, Global.GridType.KEY)
+					Global.play_sound(Global.KeysSFX)
+					open_door()
+					
+					Global.GRID_ELEMENTS[item.r][item.c].queue_free()
+					Global.GRID_ELEMENTS[item.r][item.c] = null
+					Global.GRID_ELEMENTS[player.r][player.c] = null
+					Global.GRID_ELEMENTS[r + 1][c] = player.node
+					movement = true
 	
 	return movement
+	
+func open_door():
+	await get_tree().create_timer(0.5).timeout
+	%door.animation = "open"
+	Global.play_sound(Global.DoorSFX)
+	await get_tree().create_timer(0.5).timeout
+	%door.material.set_shader_parameter("maxLineWidth", 10.0)
 		
 func get_cell_by_type(r1, c1, r2, c2, type):
 	if Global.GRID_ELEMENTS[r1][c1].type == type:
@@ -314,19 +372,34 @@ func legal_movement(cell_to, cell_from):
 	else:
 		return Global.LegalMoves.NON
 		
+func weighted_random_enum(table: Dictionary) -> int:
+	var total := 0.0
+	for w in table.values():
+		total += w
+
+	var r := randf() * total
+	var acc := 0.0
+
+	for key in table.keys():
+		acc += table[key]
+		if r <= acc:
+			return key
+
+	return table.keys()[-1]
+		
 func turn(nokeys = false):
 	if Global.NEXT == null:
 		if Global.KeyAppeared or nokeys:
-			Global.NEXT = Global.pick_random([Global.GridType.ENEMY, Global.GridType.WEAPON, Global.GridType.ITEM])
+			Global.NEXT = weighted_random_enum(Global.spawn_weights)
 		else:
-			Global.NEXT = Global.pick_random([Global.GridType.KEY, Global.GridType.ENEMY, Global.GridType.WEAPON, Global.GridType.ITEM])
+			Global.NEXT = weighted_random_enum(Global.spawn_weights_full)
 	
 	var what = Global.NEXT
 	get_random_free_cell(what)
 	if Global.KeyAppeared or nokeys:
-		Global.NEXT = Global.pick_random([Global.GridType.ENEMY, Global.GridType.WEAPON, Global.GridType.ITEM])
+		Global.NEXT = weighted_random_enum(Global.spawn_weights)
 	else:
-		Global.NEXT = Global.pick_random([Global.GridType.KEY, Global.GridType.ENEMY, Global.GridType.WEAPON, Global.GridType.ITEM])
+		Global.NEXT = weighted_random_enum(Global.spawn_weights_full)
 
 	display_next()
 	

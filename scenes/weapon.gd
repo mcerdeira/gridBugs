@@ -12,9 +12,14 @@ func get_texture():
 	return anim.sprite_frames.get_frame_texture(anim.animation, anim.frame)
 	
 func set_level(lvl):
+	fusion()
 	level = lvl
 	$sprite.frame = lvl - 1
+	$sprite/lvl.text = str(lvl)
 	text = "Weapon lvl: " + str(level)
+	
+func fusion():
+	$fusion_anim.play("new_animation")
 	
 func _on_mouse_entered() -> void:
 	Global.Main.set_item_inspect(self)

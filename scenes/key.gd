@@ -7,7 +7,11 @@ func _ready():
 	add_to_group("key")
 	set_level(level)
 	
+func fusion():
+	$fusion_anim.play("new_animation")
+	
 func set_level(lvl):
+	fusion()
 	level = lvl
 	$sprite.frame = lvl - 1
 	text = "Floor Key"

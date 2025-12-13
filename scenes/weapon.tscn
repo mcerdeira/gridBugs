@@ -1,10 +1,11 @@
-[gd_scene load_steps=11 format=3 uid="uid://c870gerw1gudv"]
+[gd_scene load_steps=15 format=3 uid="uid://c870gerw1gudv"]
 
 [ext_resource type="Script" uid="uid://do42lcdpqy1l3" path="res://scenes/weapon.gd" id="1_bmw2d"]
 [ext_resource type="Texture2D" uid="uid://ds7634ji0ch46" path="res://sprites/weapon1.png" id="1_uxn4k"]
 [ext_resource type="Texture2D" uid="uid://cr7f138myab8m" path="res://sprites/weapon2.png" id="2_bmw2d"]
 [ext_resource type="Texture2D" uid="uid://gv33171265y0" path="res://sprites/ficha.png" id="2_cjr6y"]
 [ext_resource type="Texture2D" uid="uid://ctjbjgcfge2is" path="res://sprites/weapon3.png" id="4_8fp1k"]
+[ext_resource type="FontFile" uid="uid://baufptafjkcp6" path="res://fonts/prstartk.ttf" id="6_xrduv"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_6nu22"]
 animations = [{
@@ -87,6 +88,42 @@ _data = {
 &"new_animation": SubResource("Animation_ytgif")
 }
 
+[sub_resource type="Animation" id="Animation_ips3a"]
+resource_name = "new_animation"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(1.8, 1.8), Vector2(1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_rhaxm"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_rhaxm"]
+_data = {
+&"RESET": SubResource("Animation_rhaxm"),
+&"new_animation": SubResource("Animation_ips3a")
+}
+
 [node name="Weapon" type="Area2D"]
 collision_layer = 8193
 collision_mask = 8193
@@ -98,6 +135,16 @@ texture = ExtResource("2_cjr6y")
 [node name="sprite" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_6nu22")
 
+[node name="lvl" type="Label" parent="sprite"]
+offset_left = 6.0
+offset_top = 6.0
+offset_right = 14.0
+offset_bottom = 14.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("6_xrduv")
+theme_override_font_sizes/font_size = 8
+text = "3"
+
 [node name="collider" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_uxn4k")
 
@@ -105,6 +152,12 @@ shape = SubResource("RectangleShape2D_uxn4k")
 libraries = {
 &"": SubResource("AnimationLibrary_ips3a")
 }
+
+[node name="fusion_anim" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_rhaxm")
+}
+speed_scale = 10.0
 
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

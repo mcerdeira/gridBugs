@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://bg16dstvdoald"]
+[gd_scene load_steps=12 format=3 uid="uid://bg16dstvdoald"]
 
 [ext_resource type="Script" uid="uid://b1hoiy8iuhuuh" path="res://scenes/key.gd" id="1_jcln5"]
 [ext_resource type="Texture2D" uid="uid://gv33171265y0" path="res://sprites/ficha.png" id="2_b4qnb"]
@@ -79,6 +79,42 @@ _data = {
 &"new_animation": SubResource("Animation_ytgif")
 }
 
+[sub_resource type="Animation" id="Animation_ips3a"]
+resource_name = "new_animation"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(1.8, 1.8), Vector2(1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_rhaxm"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_rhaxm"]
+_data = {
+&"RESET": SubResource("Animation_rhaxm"),
+&"new_animation": SubResource("Animation_ips3a")
+}
+
 [node name="Key" type="Area2D"]
 script = ExtResource("1_jcln5")
 
@@ -95,6 +131,12 @@ shape = SubResource("RectangleShape2D_vljjh")
 libraries = {
 &"": SubResource("AnimationLibrary_ips3a")
 }
+
+[node name="fusion_anim" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_rhaxm")
+}
+speed_scale = 10.0
 
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

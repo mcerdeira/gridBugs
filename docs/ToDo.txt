@@ -1,14 +1,14 @@
 =============== TODO ========================================
-	
 - Cambiar el setting (cocina de monstruos)
-- Hacer funcion para tener un "peso" en spawn de items
-- El armado inicial del nivel tiene que ser menos poblado
 - Los items tienen que spawnear con nivel +1 (depende de nuestro nivel)
 - Hacer funcionar llave/puerta
 - Niveles que tengan objetivos (para llave)
-- Hacer rooms espaciales: una ficha que solo ocupa lugar o una ficha insta kill 
+- Hacer rooms especiales: una ficha que solo ocupa lugar o una ficha insta kill 
+- Pensar nombre
+
+=============== HECHO ========================================
+- Hacer funcion para tener un "peso" en spawn de items
+- El armado inicial del nivel tiene que ser menos poblado
 - Sumar en la ficha un indicador con el numero de nivel en las fichas
 - Cuando hay una fusion, hacer una animacion
 - Cuando se suma una ficha nueva, hacer que caiga del cielo
-- Sumar un shader de brillito a las fichas
-- Pensar nombre

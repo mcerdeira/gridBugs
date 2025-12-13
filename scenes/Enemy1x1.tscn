@@ -1,16 +1,11 @@
-[gd_scene load_steps=12 format=3 uid="uid://do0a72qfb601h"]
+[gd_scene load_steps=15 format=3 uid="uid://do0a72qfb601h"]
 
 [ext_resource type="Script" uid="uid://burdtbb0pl37p" path="res://scenes/enemy_1x_1.gd" id="1_jk6cw"]
-[ext_resource type="Shader" uid="uid://dunkwwb3ilskm" path="res://scenes/hit.gdshader" id="2_cshi6"]
 [ext_resource type="Texture2D" uid="uid://26xg3de8xqlr" path="res://sprites/enemy1.png" id="3_jh2ei"]
 [ext_resource type="Texture2D" uid="uid://brptd1kienj1d" path="res://sprites/enemy2.png" id="4_ytgif"]
 [ext_resource type="Texture2D" uid="uid://gv33171265y0" path="res://sprites/ficha.png" id="5_ytgif"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_jh2ei"]
-resource_local_to_scene = true
-shader = ExtResource("2_cshi6")
-shader_parameter/on = false
-shader_parameter/color = Color(1, 1, 1, 1)
+[ext_resource type="Texture2D" uid="uid://dyqwfnf4vjeyd" path="res://sprites/enemy3.png" id="6_cvxa1"]
+[ext_resource type="FontFile" uid="uid://baufptafjkcp6" path="res://fonts/prstartk.ttf" id="6_ips3a"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_jk6cw"]
 animations = [{
@@ -20,6 +15,9 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": ExtResource("4_ytgif")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_cvxa1")
 }],
 "loop": true,
 "name": &"default",
@@ -90,6 +88,42 @@ _data = {
 &"new_animation": SubResource("Animation_ytgif")
 }
 
+[sub_resource type="Animation" id="Animation_ips3a"]
+resource_name = "new_animation"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(1.8, 1.8), Vector2(1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_rhaxm"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_rhaxm"]
+_data = {
+&"RESET": SubResource("Animation_rhaxm"),
+&"new_animation": SubResource("Animation_ips3a")
+}
+
 [node name="Enemy1x1" type="Area2D"]
 collision_layer = 8193
 collision_mask = 8193
@@ -99,8 +133,17 @@ script = ExtResource("1_jk6cw")
 texture = ExtResource("5_ytgif")
 
 [node name="sprite" type="AnimatedSprite2D" parent="."]
-material = SubResource("ShaderMaterial_jh2ei")
 sprite_frames = SubResource("SpriteFrames_jk6cw")
+
+[node name="lvl" type="Label" parent="sprite"]
+offset_left = 6.0
+offset_top = 6.0
+offset_right = 14.0
+offset_bottom = 14.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("6_ips3a")
+theme_override_font_sizes/font_size = 8
+text = "3"
 
 [node name="collider" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_0uo27")
@@ -109,6 +152,12 @@ shape = SubResource("RectangleShape2D_0uo27")
 libraries = {
 &"": SubResource("AnimationLibrary_ips3a")
 }
+
+[node name="fusion_anim" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_rhaxm")
+}
+speed_scale = 10.0
 
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

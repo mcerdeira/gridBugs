@@ -14,21 +14,20 @@ func _ready():
 	set_level(level)
 	
 func set_level(lvl):
+	fusion()
 	level = lvl
 	$sprite.frame = lvl - 1
+	$sprite/lvl.text = str(lvl)
 	text = "Enemy lvl: " + str(level)
 	
-func _physics_process(delta: float) -> void:
-	if hit_tll >= 0:
-		hit_tll -= 1 * delta
-		if hit_tll <= 0:
-			$sprite.material.set_shader_parameter("on", 0)
-			
 func die():
 	if notify_death != null and is_instance_valid(notify_death):
 		notify_death.notify()
 	
 	queue_free()
+	
+func fusion():
+	$fusion_anim.play("new_animation")
 	
 func get_texture():
 	var anim = $sprite

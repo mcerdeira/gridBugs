@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://iwiu7dw0oln6"]
+[gd_scene load_steps=31 format=3 uid="uid://iwiu7dw0oln6"]
 
 [ext_resource type="Shader" uid="uid://dt6660j0fsfwi" path="res://scenes/f.gdshader" id="1_o5qli"]
 [ext_resource type="Script" uid="uid://cl0j1ius1hif0" path="res://scenes/main.gd" id="1_sugp2"]
@@ -17,8 +17,10 @@
 [ext_resource type="Texture2D" uid="uid://e4nwg5jfqlu6" path="res://sprites/medikit1.png" id="10_jkv2x"]
 [ext_resource type="Texture2D" uid="uid://gv33171265y0" path="res://sprites/ficha.png" id="15_dp3eg"]
 [ext_resource type="Texture2D" uid="uid://c3nb53l7v2v5j" path="res://sprites/door1.png" id="15_jbj1t"]
+[ext_resource type="Shader" uid="uid://doqmhg8pvsh53" path="res://scenes/fire.gdshader" id="16_gqmmt"]
 [ext_resource type="Texture2D" uid="uid://0u11ywtlwidn" path="res://sprites/door2.png" id="16_muem4"]
 [ext_resource type="Texture2D" uid="uid://6tw7qmrl0x23" path="res://sprites/key_item.png" id="18_0ld40"]
+[ext_resource type="Script" uid="uid://cwm0xcj6gubub" path="res://scenes/door_area.gd" id="19_yc10j"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_0wfyh"]
 shader = ExtResource("1_o5qli")
@@ -105,6 +107,16 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0ld40"]
+resource_local_to_scene = true
+shader = ExtResource("16_gqmmt")
+shader_parameter/maxLineWidth = 0.0
+shader_parameter/minLineWidth = 0.0
+shader_parameter/speed = 10.0
+shader_parameter/blockSize = 1.0
+shader_parameter/color = Color(1, 1, 1, 1)
+shader_parameter/tolerance = 0.0
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_dp3eg"]
 animations = [{
 "frames": [{
@@ -123,6 +135,9 @@ animations = [{
 "name": &"open",
 "speed": 5.0
 }]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gqmmt"]
+size = Vector2(32, 33)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_0ld40"]
 animations = [{
@@ -177,10 +192,10 @@ anchor_mode = 0
 [node name="FX" type="ColorRect" parent="."]
 z_index = 4096
 material = SubResource("ShaderMaterial_0wfyh")
-offset_left = -73.0
-offset_top = -48.0
-offset_right = 572.0
-offset_bottom = 384.0
+offset_left = -66.0
+offset_top = -62.0
+offset_right = 579.0
+offset_bottom = 370.0
 mouse_filter = 1
 
 [node name="Timer" type="Timer" parent="."]
@@ -192,6 +207,7 @@ script = ExtResource("7_o6xl0")
 [node name="Panel1" type="ColorRect" parent="."]
 offset_right = 140.0
 offset_bottom = 320.0
+mouse_filter = 2
 color = Color(0.14902, 0.145098, 0.168627, 1)
 
 [node name="You" type="Label" parent="Panel1"]
@@ -287,12 +303,13 @@ horizontal_alignment = 1
 offset_left = 372.0
 offset_right = 512.0
 offset_bottom = 320.0
+mouse_filter = 2
 color = Color(0.14902, 0.145098, 0.168627, 1)
 
 [node name="lbl_floor" type="Label" parent="Panel2"]
 layout_mode = 0
 offset_right = 140.0
-offset_bottom = 23.0
+offset_bottom = 19.0
 theme_override_fonts/font = ExtResource("6_tefeu")
 theme_override_font_sizes/font_size = 8
 text = "Floor #1"
@@ -300,9 +317,21 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="door" type="AnimatedSprite2D" parent="Panel2/lbl_floor"]
+unique_name_in_owner = true
+material = SubResource("ShaderMaterial_0ld40")
 position = Vector2(69, 40)
 sprite_frames = SubResource("SpriteFrames_dp3eg")
 animation = &"closed"
+
+[node name="door_area" type="Area2D" parent="Panel2"]
+position = Vector2(69, 40)
+collision_layer = 8193
+collision_mask = 8193
+script = ExtResource("19_yc10j")
+
+[node name="collider" type="CollisionShape2D" parent="Panel2/door_area"]
+position = Vector2(0, -0.5)
+shape = SubResource("RectangleShape2D_gqmmt")
 
 [node name="time_elpased" type="Label" parent="Panel2"]
 unique_name_in_owner = true
@@ -363,3 +392,4 @@ text = "GAME OVER"
 horizontal_alignment = 1
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="mouse_entered" from="Panel2/door_area" to="Panel2/door_area" method="_on_mouse_entered"]

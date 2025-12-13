@@ -8,9 +8,14 @@ func _ready():
 	set_level(level)
 	
 func set_level(lvl):
+	fusion()
 	level = lvl
 	$sprite.frame = lvl - 1
+	$sprite/lvl.text = str(lvl)
 	text = "MedKit lvl: " + str(level)
+	
+func fusion():
+	$fusion_anim.play("new_animation")
 	
 func get_texture():
 	var anim = $sprite
