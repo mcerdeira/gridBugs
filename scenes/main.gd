@@ -8,6 +8,7 @@ var key_scenes = preload("res://scenes/key.tscn")
 var cputurn_ttl = 0
 
 func _ready() -> void:
+	set_main_quest()
 	calc_time()
 	randomize()
 	Global.Main = self
@@ -20,6 +21,30 @@ func _ready() -> void:
 	%weapon_sprite.frame = Global.DMG - 1
 	update_life()
 	render_grid()
+
+func set_main_quest():
+	var objs = Global.pick_random(Global.Objetives[0])
+	Global.MainQuest = {
+		"objetives": objs,
+		"status": false
+	}
+	render_mainquest()
+	
+func render_mainquest():
+	var objs = Global.MainQuest.objetives
+	
+	$Panel2/lbl_quest/quest1.animation = trad_enum_animation(objs[0].what)
+	$Panel2/lbl_quest/quest1.frame = objs[0].lvl - 1 
+	$Panel2/lbl_quest/quest1/lbl_cant.text = str(objs[0].cant)
+	
+	$Panel2/lbl_quest/quest2.animation = trad_enum_animation(objs[1].what)
+	$Panel2/lbl_quest/quest2.frame = objs[1].lvl - 1 
+	$Panel2/lbl_quest/quest2/lbl_cant.text = str(objs[1].cant)
+	
+	$Panel2/lbl_quest/quest3.animation = trad_enum_animation(objs[2].what)
+	$Panel2/lbl_quest/quest3.frame = objs[2].lvl - 1 
+	$Panel2/lbl_quest/quest3/lbl_cant.text = str(objs[2].cant)
+		
 
 func render_grid():
 	for r in range(Global.ROWS):
@@ -47,7 +72,7 @@ func update_life():
 		
 func _physics_process(delta: float) -> void:
 	$lbl_gameover.visible = Global.GAME_OVER
-	%lbl_dmg.text = "dmg " + str(Global.DMG + 1)
+	%lbl_dmg.text = "dmg " + str(Global.DMG)
 	
 	if Input.is_action_just_pressed("pause"):
 		var pause = pause_scene.instantiate()
@@ -372,31 +397,55 @@ func legal_movement(cell_to, cell_from):
 	else:
 		return Global.LegalMoves.NON
 		
-func weighted_random_enum(table: Dictionary) -> int:
+func weighted_random_enum(table: Dictionary) -> Dictionary:
 	var total := 0.0
 	for w in table.values():
 		total += w
 
 	var r := randf() * total
 	var acc := 0.0
+	var what = null
+	
+	what = table.keys()[-1]
 
 	for key in table.keys():
 		acc += table[key]
 		if r <= acc:
-			return key
+			what = key
+			break
+			
+	var lvl = get_rng_max_level(what)
+	return {"what": what, "level": lvl}
+		
+func get_rng_max_level(what):
+	var obj = []
+	var lvl = 1
+	if what == Global.GridType.ENEMY:
+		obj = get_tree().get_nodes_in_group("enemy")
+	elif what == Global.GridType.WEAPON:
+		obj = get_tree().get_nodes_in_group("weapon")
+	elif what == Global.GridType.ITEM:
+		obj = get_tree().get_nodes_in_group("item")
+	elif what == Global.GridType.KEY:
+		return 1
+		
+	for o in obj:
+		if o.level > lvl:
+			lvl = o.level
+			
+	return randi_range(1, lvl)
 
-	return table.keys()[-1]
 		
 func turn(nokeys = false):
 	if Global.NEXT == null:
-		if Global.KeyAppeared or nokeys:
+		if Global.KeyAppeared or nokeys or !Global.MainQuest.status:
 			Global.NEXT = weighted_random_enum(Global.spawn_weights)
 		else:
 			Global.NEXT = weighted_random_enum(Global.spawn_weights_full)
 	
 	var what = Global.NEXT
 	get_random_free_cell(what)
-	if Global.KeyAppeared or nokeys:
+	if Global.KeyAppeared or nokeys or !Global.MainQuest.status:
 		Global.NEXT = weighted_random_enum(Global.spawn_weights)
 	else:
 		Global.NEXT = weighted_random_enum(Global.spawn_weights_full)
@@ -404,14 +453,18 @@ func turn(nokeys = false):
 	display_next()
 	
 func display_next():
-	if Global.NEXT == Global.GridType.ENEMY:
-		$Panel2/lbl_next/sprite.animation = "enemies"
-	elif Global.NEXT == Global.GridType.WEAPON:
-		$Panel2/lbl_next/sprite.animation = "weapons"
-	elif Global.NEXT == Global.GridType.ITEM:
-		$Panel2/lbl_next/sprite.animation = "items"
-	elif Global.NEXT == Global.GridType.KEY:
-		$Panel2/lbl_next/sprite.animation = "keys"
+	$Panel2/lbl_next/sprite.animation = trad_enum_animation(Global.NEXT.what)
+	$Panel2/lbl_next/sprite.frame = Global.NEXT.level - 1
+		
+func trad_enum_animation(type):
+	if type == Global.GridType.ENEMY:
+		return "enemies"
+	elif type  == Global.GridType.WEAPON:
+		return "weapons"
+	elif type  == Global.GridType.ITEM:
+		return "items"
+	elif type == Global.GridType.KEY:
+		return "keys"
 
 func spawn_weapon(level: int = 1):
 	var weapon = weapon_scenes.instantiate()
@@ -449,13 +502,13 @@ func get_random_free_cell(what):
 			var r = randi() % Global.ROWS
 			var c = randi() % Global.COLS
 			if Global.GRID_ELEMENTS[r][c] == null:
-				if what == Global.GridType.ENEMY:
-					Global.GRID_ELEMENTS[r][c] = spawn_enemy()
-				elif what == Global.GridType.WEAPON:
-					Global.GRID_ELEMENTS[r][c] = spawn_weapon()
-				elif what == Global.GridType.ITEM:
-					Global.GRID_ELEMENTS[r][c] = spawn_item()
-				elif what == Global.GridType.KEY:
+				if what.what == Global.GridType.ENEMY:
+					Global.GRID_ELEMENTS[r][c] = spawn_enemy(what.level)
+				elif what.what == Global.GridType.WEAPON:
+					Global.GRID_ELEMENTS[r][c] = spawn_weapon(what.level)
+				elif what.what == Global.GridType.ITEM:
+					Global.GRID_ELEMENTS[r][c] = spawn_item(what.level)
+				elif what.what == Global.GridType.KEY:
 					Global.GRID_ELEMENTS[r][c] = spawn_key()
 					
 				break

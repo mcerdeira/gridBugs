@@ -11,7 +11,7 @@ func _ready():
 func die():
 	Global.play_sound(Global.PlayerDieSFX)
 	Global.GAME_OVER = true
-	visible = false
+	$sprite.animation = "dead"
 	
 func heal(points):
 	Global.life += points
@@ -20,10 +20,14 @@ func heal(points):
 		Global.life = 3
 		
 	Global.Main.update_life()
+	show_damage()
 	
 func attack():
 	$attack_a.play("new_animation")
 	Global.play_sound(Global.EnemyHitSFX)
+	
+func show_damage():
+	$sprite.frame = 3 - Global.life
 	
 func hit(dmg):
 	$sprite.material.set_shader_parameter("on", 1)
@@ -35,22 +39,23 @@ func hit(dmg):
 		die()
 	
 	Global.Main.update_life()
+	show_damage()
 
 func get_texture():
-	return $sprite.texture
+	var anim = $sprite
+	return anim.sprite_frames.get_frame_texture(anim.animation, anim.frame)
 	
 func _physics_process(delta: float) -> void:
 	$sprite/lvl.text = str(Global.DMG)
-	if !Global.GAME_OVER:
-		if hit_tll >= 0:
-			hit_tll -= 1 * delta
-			if hit_tll < 0.9:
-				$sprite.material.set_shader_parameter("on", 0)
-			elif hit_tll < 0.5:
-				$sprite.material.set_shader_parameter("on", 1)
-				
-			if hit_tll <= 0:
-				$sprite.material.set_shader_parameter("on", 0)
+	if hit_tll >= 0:
+		hit_tll -= 1 * delta
+		if hit_tll < 0.9:
+			$sprite.material.set_shader_parameter("on", 0)
+		elif hit_tll < 0.5:
+			$sprite.material.set_shader_parameter("on", 1)
+			
+		if hit_tll <= 0:
+			$sprite.material.set_shader_parameter("on", 0)
 
 func _on_mouse_entered() -> void:
 	Global.Main.set_item_inspect(self)

@@ -1,17 +1,45 @@
-[gd_scene load_steps=15 format=3 uid="uid://dsicdj3g23ub2"]
+[gd_scene load_steps=19 format=3 uid="uid://dsicdj3g23ub2"]
 
-[ext_resource type="Texture2D" uid="uid://bhy1v5877xlcd" path="res://sprites/you.png" id="1_0hrdx"]
 [ext_resource type="Script" uid="uid://c1k8ydwnaapva" path="res://scenes/you.gd" id="1_acr6o"]
 [ext_resource type="Shader" uid="uid://dunkwwb3ilskm" path="res://scenes/hit.gdshader" id="1_noupt"]
 [ext_resource type="Texture2D" uid="uid://gv33171265y0" path="res://sprites/ficha.png" id="2_g0cpx"]
+[ext_resource type="Texture2D" uid="uid://b0jnx7a2r0aj4" path="res://sprites/you4.png" id="4_ikq0e"]
+[ext_resource type="Texture2D" uid="uid://bq02mpm58qnfq" path="res://sprites/you1.png" id="4_wi0bb"]
 [ext_resource type="FontFile" uid="uid://baufptafjkcp6" path="res://fonts/prstartk.ttf" id="5_ia5of"]
+[ext_resource type="Texture2D" uid="uid://bqktnf6ityi4j" path="res://sprites/you2.png" id="5_ikq0e"]
 [ext_resource type="Texture2D" uid="uid://bilc14b6gfldn" path="res://sprites/attack.png" id="5_rgsx2"]
+[ext_resource type="Texture2D" uid="uid://dur8fxgp0s3g1" path="res://sprites/you3.png" id="6_l2m7f"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_g0cpx"]
 resource_local_to_scene = true
 shader = ExtResource("1_noupt")
 shader_parameter/on = false
 shader_parameter/color = Color(1, 0, 0, 1)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_u53yl"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_ikq0e")
+}],
+"loop": true,
+"name": &"dead",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_wi0bb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_ikq0e")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_l2m7f")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_g0cpx"]
 size = Vector2(32, 32)
@@ -77,33 +105,6 @@ _data = {
 &"new_animation": SubResource("Animation_ytgif")
 }
 
-[sub_resource type="Animation" id="Animation_rgsx2"]
-resource_name = "new_animation"
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("attack:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.933333),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [0.0, 6.26573]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("attack:visible")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.1, 1),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 1,
-"values": [false, true, false]
-}
-
 [sub_resource type="Animation" id="Animation_ia5of"]
 length = 0.001
 tracks/0/type = "value"
@@ -131,6 +132,33 @@ tracks/1/keys = {
 "values": [false]
 }
 
+[sub_resource type="Animation" id="Animation_rgsx2"]
+resource_name = "new_animation"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("attack:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.933333),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 6.26573]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("attack:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_ps16c"]
 _data = {
 &"RESET": SubResource("Animation_ia5of"),
@@ -146,16 +174,16 @@ script = ExtResource("1_acr6o")
 use_parent_material = true
 texture = ExtResource("2_g0cpx")
 
-[node name="sprite" type="Sprite2D" parent="."]
+[node name="sprite" type="AnimatedSprite2D" parent="."]
 material = SubResource("ShaderMaterial_g0cpx")
-texture = ExtResource("1_0hrdx")
+sprite_frames = SubResource("SpriteFrames_u53yl")
 
 [node name="lvl" type="Label" parent="sprite"]
 offset_left = 6.0
 offset_top = 6.0
 offset_right = 14.0
 offset_bottom = 14.0
-theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0.501961, 0.0431373, 0.0470588, 1)
 theme_override_fonts/font = ExtResource("5_ia5of")
 theme_override_font_sizes/font_size = 8
 text = "3"

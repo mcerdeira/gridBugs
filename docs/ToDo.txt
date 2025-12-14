@@ -1,6 +1,5 @@
 =============== TODO ========================================
 - Cambiar el setting (cocina de monstruos)
-- Los items tienen que spawnear con nivel +1 (depende de nuestro nivel)
 - Hacer funcionar llave/puerta
 - Niveles que tengan objetivos (para llave)
 - Hacer rooms especiales: una ficha que solo ocupa lugar o una ficha insta kill 
@@ -12,3 +11,5 @@
 - Sumar en la ficha un indicador con el numero de nivel en las fichas
 - Cuando hay una fusion, hacer una animacion
 - Cuando se suma una ficha nueva, hacer que caiga del cielo
+- Los items tienen que spawnear con nivel +1 (depende de nuestro nivel)
+- Mostrar daño en el personaje tambien

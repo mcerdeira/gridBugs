@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://iwiu7dw0oln6"]
+[gd_scene load_steps=33 format=3 uid="uid://iwiu7dw0oln6"]
 
 [ext_resource type="Shader" uid="uid://dt6660j0fsfwi" path="res://scenes/f.gdshader" id="1_o5qli"]
 [ext_resource type="Script" uid="uid://cl0j1ius1hif0" path="res://scenes/main.gd" id="1_sugp2"]
@@ -21,6 +21,8 @@
 [ext_resource type="Texture2D" uid="uid://0u11ywtlwidn" path="res://sprites/door2.png" id="16_muem4"]
 [ext_resource type="Texture2D" uid="uid://6tw7qmrl0x23" path="res://sprites/key_item.png" id="18_0ld40"]
 [ext_resource type="Script" uid="uid://cwm0xcj6gubub" path="res://scenes/door_area.gd" id="19_yc10j"]
+[ext_resource type="Texture2D" uid="uid://dyqwfnf4vjeyd" path="res://sprites/enemy3.png" id="20_jscy8"]
+[ext_resource type="Texture2D" uid="uid://eepcgamnuuf8" path="res://sprites/medikit3.png" id="21_pm3ni"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_0wfyh"]
 shader = ExtResource("1_o5qli")
@@ -147,6 +149,9 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": ExtResource("6_o6xl0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_jscy8")
 }],
 "loop": true,
 "name": &"enemies",
@@ -155,6 +160,9 @@ animations = [{
 "frames": [{
 "duration": 1.0,
 "texture": ExtResource("10_jkv2x")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_pm3ni")
 }],
 "loop": true,
 "name": &"items",
@@ -364,23 +372,80 @@ texture = ExtResource("15_dp3eg")
 [node name="sprite" type="AnimatedSprite2D" parent="Panel2/lbl_next"]
 position = Vector2(70, 35)
 sprite_frames = SubResource("SpriteFrames_0ld40")
-animation = &"items"
+animation = &"weapons"
 
-[node name="lbl_map" type="Label" parent="Panel2"]
+[node name="lbl_quest" type="Label" parent="Panel2"]
 layout_mode = 0
-offset_top = 151.0
+offset_top = 162.0
 offset_right = 140.0
-offset_bottom = 162.0
+offset_bottom = 173.0
 theme_override_fonts/font = ExtResource("6_tefeu")
 theme_override_font_sizes/font_size = 8
-text = "Map"
+text = "Main Quest"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Map" type="Sprite2D" parent="Panel2/lbl_map"]
-position = Vector2(71, 75)
-scale = Vector2(3.65625, 3.65625)
+[node name="Map" type="Sprite2D" parent="Panel2/lbl_quest"]
+position = Vector2(71, 48.25)
+scale = Vector2(3.65625, 1.98437)
 texture = ExtResource("10_choun")
+
+[node name="quest1" type="AnimatedSprite2D" parent="Panel2/lbl_quest"]
+position = Vector2(32, 41)
+sprite_frames = SubResource("SpriteFrames_0ld40")
+animation = &"items"
+
+[node name="ficha" type="Sprite2D" parent="Panel2/lbl_quest/quest1"]
+show_behind_parent = true
+texture = ExtResource("15_dp3eg")
+
+[node name="lbl_cant" type="Label" parent="Panel2/lbl_quest/quest1"]
+offset_left = -9.0
+offset_top = 17.0
+offset_right = 7.0
+offset_bottom = 25.0
+theme_override_fonts/font = ExtResource("6_tefeu")
+theme_override_font_sizes/font_size = 8
+text = "x1"
+horizontal_alignment = 1
+
+[node name="quest2" type="AnimatedSprite2D" parent="Panel2/lbl_quest"]
+position = Vector2(73, 41)
+sprite_frames = SubResource("SpriteFrames_0ld40")
+animation = &"weapons"
+
+[node name="ficha" type="Sprite2D" parent="Panel2/lbl_quest/quest2"]
+show_behind_parent = true
+texture = ExtResource("15_dp3eg")
+
+[node name="lbl_cant" type="Label" parent="Panel2/lbl_quest/quest2"]
+offset_left = -9.0
+offset_top = 17.0
+offset_right = 7.0
+offset_bottom = 25.0
+theme_override_fonts/font = ExtResource("6_tefeu")
+theme_override_font_sizes/font_size = 8
+text = "x1"
+horizontal_alignment = 1
+
+[node name="quest3" type="AnimatedSprite2D" parent="Panel2/lbl_quest"]
+position = Vector2(112, 41)
+sprite_frames = SubResource("SpriteFrames_0ld40")
+animation = &"enemies"
+
+[node name="ficha" type="Sprite2D" parent="Panel2/lbl_quest/quest3"]
+show_behind_parent = true
+texture = ExtResource("15_dp3eg")
+
+[node name="lbl_cant" type="Label" parent="Panel2/lbl_quest/quest3"]
+offset_left = -9.0
+offset_top = 17.0
+offset_right = 7.0
+offset_bottom = 25.0
+theme_override_fonts/font = ExtResource("6_tefeu")
+theme_override_font_sizes/font_size = 8
+text = "x1"
+horizontal_alignment = 1
 
 [node name="lbl_gameover" type="Label" parent="."]
 visible = false
@@ -392,4 +457,5 @@ text = "GAME OVER"
 horizontal_alignment = 1
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="input_event" from="Panel2/door_area" to="Panel2/door_area" method="_on_input_event"]
 [connection signal="mouse_entered" from="Panel2/door_area" to="Panel2/door_area" method="_on_mouse_entered"]

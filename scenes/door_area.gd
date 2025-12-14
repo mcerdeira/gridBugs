@@ -12,3 +12,8 @@ func _on_mouse_entered() -> void:
 		text = "Exit floor?"
 	
 	Global.Main.set_item_inspect(self, true)
+
+func _on_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
+	if %door.animation == "open":
+		if Input.is_action_just_pressed("mouseLeft"):
+			get_tree().reload_current_scene()

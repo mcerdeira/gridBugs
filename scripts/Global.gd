@@ -18,6 +18,8 @@ var life = 3
 var DMG = 0
 var KeyAppeared = false
 var NEXT = null
+var MainQuest = {}
+var Objetives = []
 
 var HurtSFX = null
 var WalkSFX1 = null
@@ -62,6 +64,49 @@ enum LegalMoves {
 }
 
 func _ready() -> void:
+	var easy = [
+		[
+			{"what": Global.GridType.ENEMY, "lvl": 1, "cant": 1},
+			{"what": Global.GridType.WEAPON, "lvl": 1, "cant": 3},
+			{"what": Global.GridType.ITEM, "lvl": 2, "cant": 1}
+		],
+		[
+			{"what": Global.GridType.ENEMY, "lvl": 1, "cant": 2},
+			{"what": Global.GridType.ENEMY, "lvl": 2, "cant": 1},
+			{"what": Global.GridType.WEAPON, "lvl": 2, "cant": 2},
+		]
+	]
+	
+	var medium = [
+		[
+			{"what": null, "lvl": 0, "cant": 0},
+			{"what": null, "lvl": 0, "cant": 0},
+			{"what": null, "lvl": 0, "cant": 0}
+		],
+		[
+			{"what": null, "lvl": 0, "cant": 0},
+			{"what": null, "lvl": 0, "cant": 0},
+			{"what": null, "lvl": 0, "cant": 0},
+		]
+	]
+	
+	var hard = [
+		[
+			{"what": null, "lvl": 0, "cant": 0},
+			{"what": null, "lvl": 0, "cant": 0},
+			{"what": null, "lvl": 0, "cant": 0}
+		],
+		[
+			{"what": null, "lvl": 0, "cant": 0},
+			{"what": null, "lvl": 0, "cant": 0},
+			{"what": null, "lvl": 0, "cant": 0},
+		]
+	]
+	
+	
+	Objetives = [easy, medium, hard]
+	
+	
 	for i in 5:
 		var row = []
 		for j in 5:
