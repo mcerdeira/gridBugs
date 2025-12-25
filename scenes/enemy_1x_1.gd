@@ -1,7 +1,6 @@
 extends Area2D
 var life = 1
 var hit_tll = 0.0
-var notify_death = null
 var crystal_scene = load("res://scenes/crystal.tscn")
 var lbl_scene = load("res://scenes/dmg_lbl.tscn")
 var dead = false
@@ -21,8 +20,9 @@ func set_level(lvl):
 	text = "Enemy lvl: " + str(level)
 	
 func die():
-	if notify_death != null and is_instance_valid(notify_death):
-		notify_death.notify()
+	for obj in Global.MainQuest.objetives:
+		if obj.what == type and obj.lvl == level and obj.got < obj.cant:
+			obj.got += 1
 	
 	queue_free()
 	

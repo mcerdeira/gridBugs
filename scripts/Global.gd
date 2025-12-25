@@ -4,6 +4,7 @@ const ROWS = 5
 const COLS = 5
 const OFFSET = Vector2(192, 96)
 
+var FLOOR = 1
 var GRID_ELEMENTS = [] #rows,cols
 var GAME_OVER = false
 var Main = null
@@ -47,10 +48,10 @@ var spawn_weights := {
 }
 
 var spawn_weights_full := {
-	GridType.ENEMY: 50,
+	GridType.ENEMY: 49,
 	GridType.WEAPON: 23,
-	GridType.ITEM: 30,
-	GridType.KEY: 2,
+	GridType.ITEM: 29,
+	GridType.KEY: 3,
 }
 
 enum LegalMoves {
@@ -64,56 +65,56 @@ enum LegalMoves {
 }
 
 func _ready() -> void:
+	define_objetives()
+	load_sfx()
+	
+func define_objetives():
 	var easy = [
 		[
-			{"what": Global.GridType.ENEMY, "lvl": 1, "cant": 1},
-			{"what": Global.GridType.WEAPON, "lvl": 1, "cant": 3},
-			{"what": Global.GridType.ITEM, "lvl": 2, "cant": 1}
+			{"what": Global.GridType.ENEMY, "lvl": 1, "cant": 1, "got": 0},
+			{"what": Global.GridType.WEAPON, "lvl": 1, "cant": 3, "got": 0},
+			{"what": Global.GridType.ITEM, "lvl": 2, "cant": 1, "got": 0}
 		],
 		[
-			{"what": Global.GridType.ENEMY, "lvl": 1, "cant": 2},
-			{"what": Global.GridType.ENEMY, "lvl": 2, "cant": 1},
-			{"what": Global.GridType.WEAPON, "lvl": 2, "cant": 2},
+			{"what": Global.GridType.ENEMY, "lvl": 1, "cant": 2, "got": 0},
+			{"what": Global.GridType.ENEMY, "lvl": 2, "cant": 1, "got": 0},
+			{"what": Global.GridType.WEAPON, "lvl": 2, "cant": 2, "got": 0},
 		]
 	]
 	
 	var medium = [
 		[
-			{"what": null, "lvl": 0, "cant": 0},
-			{"what": null, "lvl": 0, "cant": 0},
-			{"what": null, "lvl": 0, "cant": 0}
+			{"what": null, "lvl": 0, "cant": 0, "got": 0},
+			{"what": null, "lvl": 0, "cant": 0, "got": 0},
+			{"what": null, "lvl": 0, "cant": 0, "got": 0}
 		],
 		[
-			{"what": null, "lvl": 0, "cant": 0},
-			{"what": null, "lvl": 0, "cant": 0},
-			{"what": null, "lvl": 0, "cant": 0},
+			{"what": null, "lvl": 0, "cant": 0, "got": 0},
+			{"what": null, "lvl": 0, "cant": 0, "got": 0},
+			{"what": null, "lvl": 0, "cant": 0, "got": 0},
 		]
 	]
 	
 	var hard = [
 		[
-			{"what": null, "lvl": 0, "cant": 0},
-			{"what": null, "lvl": 0, "cant": 0},
-			{"what": null, "lvl": 0, "cant": 0}
+			{"what": null, "lvl": 0, "cant": 0, "got": 0},
+			{"what": null, "lvl": 0, "cant": 0, "got": 0},
+			{"what": null, "lvl": 0, "cant": 0, "got": 0}
 		],
 		[
-			{"what": null, "lvl": 0, "cant": 0},
-			{"what": null, "lvl": 0, "cant": 0},
-			{"what": null, "lvl": 0, "cant": 0},
+			{"what": null, "lvl": 0, "cant": 0, "got": 0},
+			{"what": null, "lvl": 0, "cant": 0, "got": 0},
+			{"what": null, "lvl": 0, "cant": 0, "got": 0},
 		]
 	]
-	
-	
+
 	Objetives = [easy, medium, hard]
-	
 	
 	for i in 5:
 		var row = []
 		for j in 5:
 			row.append(null)
 		GRID_ELEMENTS.append(row)
-		
-	load_sfx()
 	
 func load_sfx():
 	HurtSFX = load("res://sfx/hurt_snd.ogg")

@@ -12,10 +12,17 @@ func set_level(lvl):
 	level = lvl
 	$sprite.frame = lvl - 1
 	$sprite/lvl.text = str(lvl)
-	text = "MedKit lvl: " + str(level)
+	text = "Potion lvl: " + str(level)
 	
 func fusion():
 	$fusion_anim.play("new_animation")
+	
+func die():
+	for obj in Global.MainQuest.objetives:
+		if obj.what == type and obj.lvl == level and obj.got < obj.cant:
+			obj.got += 1
+	
+	queue_free()
 	
 func get_texture():
 	var anim = $sprite

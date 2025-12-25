@@ -8,9 +8,12 @@ var key_scenes = preload("res://scenes/key.tscn")
 var cputurn_ttl = 0
 
 func _ready() -> void:
+	randomize()
+	Global.define_objetives()
+	Global.KeyAppeared = false
+	%lbl_floor.text = "Floor #" + str(Global.FLOOR)
 	set_main_quest()
 	calc_time()
-	randomize()
 	Global.Main = self
 	var player = player_scene.instantiate()
 	Global.GRID_ELEMENTS[2][2] = player
@@ -23,6 +26,8 @@ func _ready() -> void:
 	render_grid()
 
 func set_main_quest():
+	Global.MainQuest = {}
+	
 	var objs = Global.pick_random(Global.Objetives[0])
 	Global.MainQuest = {
 		"objetives": objs,
@@ -35,16 +40,18 @@ func render_mainquest():
 	
 	$Panel2/lbl_quest/quest1.animation = trad_enum_animation(objs[0].what)
 	$Panel2/lbl_quest/quest1.frame = objs[0].lvl - 1 
-	$Panel2/lbl_quest/quest1/lbl_cant.text = str(objs[0].cant)
+	$Panel2/lbl_quest/quest1/lbl_cant.text = str(objs[0].got) + "/" + str(objs[0].cant)
 	
 	$Panel2/lbl_quest/quest2.animation = trad_enum_animation(objs[1].what)
 	$Panel2/lbl_quest/quest2.frame = objs[1].lvl - 1 
-	$Panel2/lbl_quest/quest2/lbl_cant.text = str(objs[1].cant)
+	$Panel2/lbl_quest/quest2/lbl_cant.text = str(objs[1].got) + "/" + str(objs[1].cant)
 	
 	$Panel2/lbl_quest/quest3.animation = trad_enum_animation(objs[2].what)
 	$Panel2/lbl_quest/quest3.frame = objs[2].lvl - 1 
-	$Panel2/lbl_quest/quest3/lbl_cant.text = str(objs[2].cant)
-		
+	$Panel2/lbl_quest/quest3/lbl_cant.text = str(objs[2].got) + "/" + str(objs[2].cant)
+	
+	$Panel2/lbl_quest/lbl_quest_done.visible = Global.MainQuest.status
+
 
 func render_grid():
 	for r in range(Global.ROWS):
@@ -71,8 +78,13 @@ func update_life():
 		%Life3.frame = 1
 		
 func _physics_process(delta: float) -> void:
+	$Panel1/You/You.frame = 3 - Global.life
+	
 	$lbl_gameover.visible = Global.GAME_OVER
 	%lbl_dmg.text = "dmg " + str(Global.DMG)
+	
+	if Global.GAME_OVER:
+		$Panel1/You/You.animation = "dead"
 	
 	if Input.is_action_just_pressed("pause"):
 		var pause = pause_scene.instantiate()
@@ -102,7 +114,21 @@ func _physics_process(delta: float) -> void:
 				Global.play_sound(Global.WalkSFX1)
 				cputurn_ttl = 0.3
 				%weapon_sprite.frame = Global.DMG
+				check_main_quest()
 				render_grid()
+				render_mainquest()
+				
+func check_main_quest():
+	if !Global.MainQuest.status:
+		var quest = true
+		for obj in Global.MainQuest.objetives:
+			if obj.got < obj.cant:
+				quest = false
+				break
+				
+		Global.MainQuest.status = quest
+		if Global.MainQuest.status:
+			open_door()
 				
 func set_item_inspect(node, is_door = false):
 	if node:
@@ -137,7 +163,7 @@ func process_direction(direction):
 						player.node.hit(enemy.node.level)
 					player.node.attack()
 					
-					Global.GRID_ELEMENTS[enemy.r][enemy.c].queue_free()
+					Global.GRID_ELEMENTS[enemy.r][enemy.c].die()
 					Global.GRID_ELEMENTS[enemy.r][enemy.c] = null
 					Global.GRID_ELEMENTS[player.r][player.c] = null
 					Global.GRID_ELEMENTS[r][c + 1] = player.node
@@ -148,7 +174,7 @@ func process_direction(direction):
 					Global.DMG = weapon.node.level
 					Global.play_sound(Global.WeaponSFX)
 
-					Global.GRID_ELEMENTS[weapon.r][weapon.c].queue_free()
+					Global.GRID_ELEMENTS[weapon.r][weapon.c].die()
 					Global.GRID_ELEMENTS[weapon.r][weapon.c] = null
 					Global.GRID_ELEMENTS[player.r][player.c] = null
 					Global.GRID_ELEMENTS[r][c + 1] = player.node
@@ -159,7 +185,7 @@ func process_direction(direction):
 					player.node.heal(item.node.level)
 					Global.play_sound(Global.HealSFX)
 					
-					Global.GRID_ELEMENTS[item.r][item.c].queue_free()
+					Global.GRID_ELEMENTS[item.r][item.c].die()
 					Global.GRID_ELEMENTS[item.r][item.c] = null
 					Global.GRID_ELEMENTS[player.r][player.c] = null
 					Global.GRID_ELEMENTS[r][c + 1] = player.node
@@ -197,7 +223,7 @@ func process_direction(direction):
 						player.node.hit(enemy.node.level)
 					player.node.attack()
 					
-					Global.GRID_ELEMENTS[enemy.r][enemy.c].queue_free()
+					Global.GRID_ELEMENTS[enemy.r][enemy.c].die()
 					Global.GRID_ELEMENTS[enemy.r][enemy.c] = null
 					Global.GRID_ELEMENTS[player.r][player.c] = null
 					Global.GRID_ELEMENTS[r][c - 1] = player.node
@@ -208,7 +234,7 @@ func process_direction(direction):
 					Global.DMG = weapon.node.level
 					Global.play_sound(Global.WeaponSFX)
 					
-					Global.GRID_ELEMENTS[weapon.r][weapon.c].queue_free()
+					Global.GRID_ELEMENTS[weapon.r][weapon.c].die()
 					Global.GRID_ELEMENTS[weapon.r][weapon.c] = null
 					Global.GRID_ELEMENTS[player.r][player.c] = null
 					Global.GRID_ELEMENTS[r][c - 1] = player.node
@@ -218,7 +244,7 @@ func process_direction(direction):
 					var item = get_cell_by_type(r, c - 1, r, c, Global.GridType.ITEM)
 					player.node.heal(item.node.level)
 					
-					Global.GRID_ELEMENTS[item.r][item.c].queue_free()
+					Global.GRID_ELEMENTS[item.r][item.c].die()
 					Global.GRID_ELEMENTS[item.r][item.c] = null
 					Global.GRID_ELEMENTS[player.r][player.c] = null
 					Global.GRID_ELEMENTS[r][c - 1] = player.node
@@ -256,7 +282,7 @@ func process_direction(direction):
 						player.node.hit(enemy.node.level)
 					player.node.attack()
 					
-					Global.GRID_ELEMENTS[enemy.r][enemy.c].queue_free()
+					Global.GRID_ELEMENTS[enemy.r][enemy.c].die()
 					Global.GRID_ELEMENTS[enemy.r][enemy.c] = null
 					Global.GRID_ELEMENTS[player.r][player.c] = null
 					Global.GRID_ELEMENTS[r - 1][c] = player.node
@@ -267,7 +293,7 @@ func process_direction(direction):
 					Global.DMG = weapon.node.level
 					Global.play_sound(Global.WeaponSFX)
 					
-					Global.GRID_ELEMENTS[weapon.r][weapon.c].queue_free()
+					Global.GRID_ELEMENTS[weapon.r][weapon.c].die()
 					Global.GRID_ELEMENTS[weapon.r][weapon.c] = null
 					Global.GRID_ELEMENTS[player.r][player.c] = null
 					Global.GRID_ELEMENTS[r - 1][c] = player.node
@@ -278,7 +304,7 @@ func process_direction(direction):
 					player.node.heal(item.node.level)
 					Global.play_sound(Global.HealSFX)
 					
-					Global.GRID_ELEMENTS[item.r][item.c].queue_free()
+					Global.GRID_ELEMENTS[item.r][item.c].die()
 					Global.GRID_ELEMENTS[item.r][item.c] = null
 					Global.GRID_ELEMENTS[player.r][player.c] = null
 					Global.GRID_ELEMENTS[r - 1][c] = player.node
@@ -316,7 +342,7 @@ func process_direction(direction):
 						player.node.hit(enemy.node.level)
 					player.node.attack()
 					
-					Global.GRID_ELEMENTS[enemy.r][enemy.c].queue_free()
+					Global.GRID_ELEMENTS[enemy.r][enemy.c].die()
 					Global.GRID_ELEMENTS[enemy.r][enemy.c] = null
 					Global.GRID_ELEMENTS[player.r][player.c] = null
 					Global.GRID_ELEMENTS[r + 1][c] = player.node
@@ -327,7 +353,7 @@ func process_direction(direction):
 					Global.DMG = weapon.node.level
 					Global.play_sound(Global.WeaponSFX)
 					
-					Global.GRID_ELEMENTS[weapon.r][weapon.c].queue_free()
+					Global.GRID_ELEMENTS[weapon.r][weapon.c].die()
 					Global.GRID_ELEMENTS[weapon.r][weapon.c] = null
 					Global.GRID_ELEMENTS[player.r][player.c] = null
 					Global.GRID_ELEMENTS[r + 1][c] = player.node
@@ -338,7 +364,7 @@ func process_direction(direction):
 					player.node.heal(item.node.level)
 					Global.play_sound(Global.HealSFX)
 					
-					Global.GRID_ELEMENTS[item.r][item.c].queue_free()
+					Global.GRID_ELEMENTS[item.r][item.c].die()
 					Global.GRID_ELEMENTS[item.r][item.c] = null
 					Global.GRID_ELEMENTS[player.r][player.c] = null
 					Global.GRID_ELEMENTS[r + 1][c] = player.node
@@ -438,14 +464,14 @@ func get_rng_max_level(what):
 		
 func turn(nokeys = false):
 	if Global.NEXT == null:
-		if Global.KeyAppeared or nokeys or !Global.MainQuest.status:
+		if Global.KeyAppeared or nokeys:
 			Global.NEXT = weighted_random_enum(Global.spawn_weights)
 		else:
 			Global.NEXT = weighted_random_enum(Global.spawn_weights_full)
 	
 	var what = Global.NEXT
 	get_random_free_cell(what)
-	if Global.KeyAppeared or nokeys or !Global.MainQuest.status:
+	if Global.KeyAppeared or nokeys:
 		Global.NEXT = weighted_random_enum(Global.spawn_weights)
 	else:
 		Global.NEXT = weighted_random_enum(Global.spawn_weights_full)

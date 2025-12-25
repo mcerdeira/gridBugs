@@ -1,11 +1,11 @@
 =============== TODO ========================================
-- Cambiar el setting (cocina de monstruos)
-- Hacer funcionar llave/puerta
-- Niveles que tengan objetivos (para llave)
 - Hacer rooms especiales: una ficha que solo ocupa lugar o una ficha insta kill 
+- Cambiar el setting
 - Pensar nombre
 
 =============== HECHO ========================================
+- Hacer funcionar llave/puerta
+- Niveles que tengan objetivos (para llave)
 - Hacer funcion para tener un "peso" en spawn de items
 - El armado inicial del nivel tiene que ser menos poblado
 - Sumar en la ficha un indicador con el numero de nivel en las fichas

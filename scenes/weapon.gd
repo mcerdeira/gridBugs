@@ -11,6 +11,13 @@ func get_texture():
 	var anim = $sprite
 	return anim.sprite_frames.get_frame_texture(anim.animation, anim.frame)
 	
+func die():
+	for obj in Global.MainQuest.objetives:
+		if obj.what == type and obj.lvl == level and obj.got < obj.cant:
+			obj.got += 1
+	
+	queue_free()
+	
 func set_level(lvl):
 	fusion()
 	level = lvl

@@ -1,20 +1,24 @@
-[gd_scene load_steps=33 format=3 uid="uid://iwiu7dw0oln6"]
+[gd_scene load_steps=40 format=3 uid="uid://iwiu7dw0oln6"]
 
 [ext_resource type="Shader" uid="uid://dt6660j0fsfwi" path="res://scenes/f.gdshader" id="1_o5qli"]
 [ext_resource type="Script" uid="uid://cl0j1ius1hif0" path="res://scenes/main.gd" id="1_sugp2"]
 [ext_resource type="Texture2D" uid="uid://26xg3de8xqlr" path="res://sprites/enemy1.png" id="5_tefeu"]
-[ext_resource type="Texture2D" uid="uid://c1d8itkn4cvxd" path="res://sprites/player_spr_0.png" id="5_trceg"]
 [ext_resource type="Texture2D" uid="uid://dmyknjisbp8r" path="res://sprites/life.png" id="6_eb6dy"]
 [ext_resource type="Texture2D" uid="uid://brptd1kienj1d" path="res://sprites/enemy2.png" id="6_o6xl0"]
 [ext_resource type="FontFile" uid="uid://baufptafjkcp6" path="res://fonts/prstartk.ttf" id="6_tefeu"]
 [ext_resource type="Texture2D" uid="uid://ds7634ji0ch46" path="res://sprites/weapon1.png" id="7_85g3d"]
 [ext_resource type="Texture2D" uid="uid://bvljh7btbpqjc" path="res://sprites/life_empty.png" id="7_muem4"]
 [ext_resource type="Script" uid="uid://537fs1np4mg3" path="res://scenes/grid.gd" id="7_o6xl0"]
+[ext_resource type="Shader" uid="uid://dunkwwb3ilskm" path="res://scenes/hit.gdshader" id="8_2f3dj"]
 [ext_resource type="Texture2D" uid="uid://cr7f138myab8m" path="res://sprites/weapon2.png" id="8_choun"]
 [ext_resource type="Texture2D" uid="uid://c0xm3ct4vvdhy" path="res://sprites/no_weapon.png" id="9_trceg"]
 [ext_resource type="Texture2D" uid="uid://ctjbjgcfge2is" path="res://sprites/weapon3.png" id="9_ya4ey"]
+[ext_resource type="Texture2D" uid="uid://b0jnx7a2r0aj4" path="res://sprites/you4.png" id="9_yq6so"]
 [ext_resource type="Texture2D" uid="uid://r5356rg237cd" path="res://sprites/map.png" id="10_choun"]
+[ext_resource type="Texture2D" uid="uid://bq02mpm58qnfq" path="res://sprites/you1.png" id="10_fv21b"]
 [ext_resource type="Texture2D" uid="uid://e4nwg5jfqlu6" path="res://sprites/medikit1.png" id="10_jkv2x"]
+[ext_resource type="Texture2D" uid="uid://bqktnf6ityi4j" path="res://sprites/you2.png" id="11_tel4y"]
+[ext_resource type="Texture2D" uid="uid://dur8fxgp0s3g1" path="res://sprites/you3.png" id="12_qkpxi"]
 [ext_resource type="Texture2D" uid="uid://gv33171265y0" path="res://sprites/ficha.png" id="15_dp3eg"]
 [ext_resource type="Texture2D" uid="uid://c3nb53l7v2v5j" path="res://sprites/door1.png" id="15_jbj1t"]
 [ext_resource type="Shader" uid="uid://doqmhg8pvsh53" path="res://scenes/fire.gdshader" id="16_gqmmt"]
@@ -23,10 +27,42 @@
 [ext_resource type="Script" uid="uid://cwm0xcj6gubub" path="res://scenes/door_area.gd" id="19_yc10j"]
 [ext_resource type="Texture2D" uid="uid://dyqwfnf4vjeyd" path="res://sprites/enemy3.png" id="20_jscy8"]
 [ext_resource type="Texture2D" uid="uid://eepcgamnuuf8" path="res://sprites/medikit3.png" id="21_pm3ni"]
+[ext_resource type="Texture2D" uid="uid://db8du8sljmnj7" path="res://sprites/medikit2.png" id="25_2f3dj"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_0wfyh"]
 shader = ExtResource("1_o5qli")
 shader_parameter/amount = 0.1
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5q0nq"]
+resource_local_to_scene = true
+shader = ExtResource("8_2f3dj")
+shader_parameter/on = false
+shader_parameter/color = Color(1, 0, 0, 1)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_dgi5k"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("9_yq6so")
+}],
+"loop": true,
+"name": &"dead",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("10_fv21b")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_tel4y")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_qkpxi")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_jkv2x"]
 animations = [{
@@ -162,6 +198,9 @@ animations = [{
 "texture": ExtResource("10_jkv2x")
 }, {
 "duration": 1.0,
+"texture": ExtResource("25_2f3dj")
+}, {
+"duration": 1.0,
 "texture": ExtResource("21_pm3ni")
 }],
 "loop": true,
@@ -229,9 +268,10 @@ text = "Victor"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="You" type="Sprite2D" parent="Panel1/You"]
+[node name="You" type="AnimatedSprite2D" parent="Panel1/You"]
+material = SubResource("ShaderMaterial_5q0nq")
 position = Vector2(69, 32)
-texture = ExtResource("5_trceg")
+sprite_frames = SubResource("SpriteFrames_dgi5k")
 
 [node name="Life" type="AnimatedSprite2D" parent="Panel1/You"]
 unique_name_in_owner = true
@@ -315,12 +355,13 @@ mouse_filter = 2
 color = Color(0.14902, 0.145098, 0.168627, 1)
 
 [node name="lbl_floor" type="Label" parent="Panel2"]
+unique_name_in_owner = true
 layout_mode = 0
 offset_right = 140.0
 offset_bottom = 19.0
 theme_override_fonts/font = ExtResource("6_tefeu")
 theme_override_font_sizes/font_size = 8
-text = "Floor #1"
+text = "Floor ##"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -372,7 +413,7 @@ texture = ExtResource("15_dp3eg")
 [node name="sprite" type="AnimatedSprite2D" parent="Panel2/lbl_next"]
 position = Vector2(70, 35)
 sprite_frames = SubResource("SpriteFrames_0ld40")
-animation = &"weapons"
+animation = &"items"
 
 [node name="lbl_quest" type="Label" parent="Panel2"]
 layout_mode = 0
@@ -386,27 +427,27 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Map" type="Sprite2D" parent="Panel2/lbl_quest"]
-position = Vector2(71, 48.25)
-scale = Vector2(3.65625, 1.98437)
+position = Vector2(71, 51.25)
+scale = Vector2(3.65625, 2.17187)
 texture = ExtResource("10_choun")
 
 [node name="quest1" type="AnimatedSprite2D" parent="Panel2/lbl_quest"]
 position = Vector2(32, 41)
 sprite_frames = SubResource("SpriteFrames_0ld40")
-animation = &"items"
+animation = &"enemies"
 
 [node name="ficha" type="Sprite2D" parent="Panel2/lbl_quest/quest1"]
 show_behind_parent = true
 texture = ExtResource("15_dp3eg")
 
 [node name="lbl_cant" type="Label" parent="Panel2/lbl_quest/quest1"]
-offset_left = -9.0
+offset_left = -16.0
 offset_top = 17.0
-offset_right = 7.0
+offset_right = 16.0
 offset_bottom = 25.0
 theme_override_fonts/font = ExtResource("6_tefeu")
 theme_override_font_sizes/font_size = 8
-text = "x1"
+text = "0/2"
 horizontal_alignment = 1
 
 [node name="quest2" type="AnimatedSprite2D" parent="Panel2/lbl_quest"]
@@ -419,9 +460,9 @@ show_behind_parent = true
 texture = ExtResource("15_dp3eg")
 
 [node name="lbl_cant" type="Label" parent="Panel2/lbl_quest/quest2"]
-offset_left = -9.0
+offset_left = -16.0
 offset_top = 17.0
-offset_right = 7.0
+offset_right = 16.0
 offset_bottom = 25.0
 theme_override_fonts/font = ExtResource("6_tefeu")
 theme_override_font_sizes/font_size = 8
@@ -438,13 +479,24 @@ show_behind_parent = true
 texture = ExtResource("15_dp3eg")
 
 [node name="lbl_cant" type="Label" parent="Panel2/lbl_quest/quest3"]
-offset_left = -9.0
+offset_left = -16.0
 offset_top = 17.0
-offset_right = 7.0
+offset_right = 16.0
 offset_bottom = 25.0
 theme_override_fonts/font = ExtResource("6_tefeu")
 theme_override_font_sizes/font_size = 8
 text = "x1"
+horizontal_alignment = 1
+
+[node name="lbl_quest_done" type="Label" parent="Panel2/lbl_quest"]
+offset_left = 13.0
+offset_top = 74.0
+offset_right = 129.0
+offset_bottom = 82.0
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_fonts/font = ExtResource("6_tefeu")
+theme_override_font_sizes/font_size = 8
+text = "COMPLETED!"
 horizontal_alignment = 1
 
 [node name="lbl_gameover" type="Label" parent="."]
