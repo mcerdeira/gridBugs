@@ -1,0 +1,18 @@
+Thanks for purchasing this dungeon pack!
+Feel free to use it on any commercial or non-commercial game. You can not redistribute or resell this pack, though. Credit is not necessary, but very much appreciated (you can add a link to my Instagram/Twitter or itch page) :)
+---
+Included are all the tiles and spritesheets for each asset, in .png format, transparent background. You should be able to recreate anything you see on the example images.
+The tiles are 16x16px (1x), 32x32 (2x) or 48x48 (3x).
+---
+All art was made by me (Franuka).
+Contact: franukai@gmail.com
+Twitter: https://twitter.com/franuka_art
+Instagram: https://www.instagram.com/franuka.art/
+Other projects and games: https://franuka.itch.io/
+
+If you like what I do, consider supporting me by donating, sharing, or sending your feedback.
+Have a good time making your games :)
+
+Changelog
+-----------
+1.1: Added 32x32 and 48x48px versions, and natural cave floors and walls. Credits to Ron for the commissioned changes.
