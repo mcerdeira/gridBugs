@@ -22,6 +22,10 @@ var NEXT = null
 var MainQuest = {}
 var Objetives = []
 
+var TutorialLevel = true
+var TutorialMovements = 6
+var MainTheme = null
+
 var HurtSFX = null
 var WalkSFX1 = null
 var WalkSFX2 = null
@@ -33,12 +37,18 @@ var KeysSFX = null
 var EnemyHitSFX = null
 var PlayerDieSFX = null
 
+var PotionMergeSFX = null
+var MonsterMergeSFX = null
+var WeaponMergeSFX = null
+var PlayerAttack = null
+
 enum GridType { 
 	ENEMY,
 	WEAPON,
 	ITEM,
 	PLAYER,
 	KEY,
+	LETTER
 }
 
 var spawn_weights := {
@@ -66,7 +76,16 @@ enum LegalMoves {
 
 func _ready() -> void:
 	define_objetives()
+	load_music()
 	load_sfx()
+	game_reset()
+	
+func game_reset():
+	FLOOR = 1
+	GAME_OVER = false
+	life = 3
+	DMG = 0
+	KeyAppeared = false
 	
 func define_objetives():
 	var easy = [
@@ -115,9 +134,13 @@ func define_objetives():
 		for j in 5:
 			row.append(null)
 		GRID_ELEMENTS.append(row)
+		
+	
+func load_music():
+	MainTheme = load("res://music/Dungeon Synth.mp3")
 	
 func load_sfx():
-	HurtSFX = load("res://sfx/hurt_snd.ogg")
+	HurtSFX = load("res://sfx/hurt_snd.wav")
 	WalkSFX1 = load("res://sfx/walk.mp3")
 	BeepSFX = load("res://sfx/beep.mp3")
 	WeaponSFX = load("res://sfx/sword.5.ogg")
@@ -126,6 +149,10 @@ func load_sfx():
 	DoorSFX = load("res://sfx/door_open.wav")
 	PlayerDieSFX = load("res://sfx/PlayerDieSfx.wav")
 	EnemyHitSFX = load("res://sfx/EnemyHit.wav")	
+	PotionMergeSFX = load("res://sfx/potionmerge.wav")
+	MonsterMergeSFX = load("res://sfx/monstermerge.wav")
+	WeaponMergeSFX = load("res://sfx/weaponmerge.wav")
+	PlayerAttack = load("res://sfx/Attack.wav")
 
 #func emit(_global_position, count, particle_obj = null, size = 1):
 	#var part = particle

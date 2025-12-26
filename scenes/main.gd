@@ -5,23 +5,47 @@ var enemy_scenes = preload("res://scenes/Enemy1x1.tscn")
 var weapon_scenes = preload("res://scenes/weapon.tscn")
 var item_scenes = preload("res://scenes/item.tscn")
 var key_scenes = preload("res://scenes/key.tscn")
+var letter_scenes = preload("res://scenes/letter.tscn")
 var cputurn_ttl = 0
 
 func _ready() -> void:
 	randomize()
+	if !Music.is_playing():
+		Music.play(Global.MainTheme)
+		
 	Global.define_objetives()
 	Global.KeyAppeared = false
 	%lbl_floor.text = "Floor #" + str(Global.FLOOR)
 	set_main_quest()
 	calc_time()
 	Global.Main = self
-	var player = player_scene.instantiate()
-	Global.GRID_ELEMENTS[2][2] = player
-	add_child(player)
-	for i in range(7):
-		turn(true)
+	if !Global.TutorialLevel:
+		var player = player_scene.instantiate()
+		Global.GRID_ELEMENTS[2][2] = player
+		add_child(player)
+		for i in range(7):
+			turn(true)
+		%weapon_sprite.frame = Global.DMG
+		$Panel1/lbl_tutorial.visible = false
+		$Panel2/lbl_tutorial.visible = false
+	else:
+		var player = player_scene.instantiate()
+		Global.GRID_ELEMENTS[0][4] = player
+		add_child(player)
+		%weapon_sprite.visible = false
+		$Panel1/lbl_inspect.visible = false
+		$Panel1/lbl_weapon.visible = false
+		%lbl_floor.text = "Floor #0"
+		$Panel2/lbl_next.visible = false
+		$Panel2/lbl_quest.visible = false
+		$Panel1/lbl_tutorial.visible = true
+		$Panel2/lbl_tutorial.visible = true
 		
-	%weapon_sprite.frame = Global.DMG - 1
+		Global.GRID_ELEMENTS[3][1] = spawn_letter("W")
+		Global.GRID_ELEMENTS[4][2] = spawn_letter("D")
+		Global.GRID_ELEMENTS[4][1] = spawn_letter("S")
+		Global.GRID_ELEMENTS[4][0] = spawn_letter("A")
+		
 	update_life()
 	render_grid()
 
@@ -85,6 +109,11 @@ func _physics_process(delta: float) -> void:
 	
 	if Global.GAME_OVER:
 		$Panel1/You/You.animation = "dead"
+		
+	if Global.GAME_OVER:
+		if Input.is_action_just_pressed("restart"):
+			Global.game_reset()
+			get_tree().reload_current_scene()
 	
 	if Input.is_action_just_pressed("pause"):
 		var pause = pause_scene.instantiate()
@@ -94,7 +123,12 @@ func _physics_process(delta: float) -> void:
 	if cputurn_ttl > 0:
 		cputurn_ttl -= 1 * delta
 		if cputurn_ttl <= 0:
-			turn()
+			if !Global.TutorialLevel:
+				turn()
+			else:
+				if Global.TutorialMovements <= 0:
+					turn()
+				
 			render_grid()
 		
 	if !Global.GAME_OVER and cputurn_ttl <= 0:
@@ -139,8 +173,19 @@ func set_item_inspect(node, is_door = false):
 			%ficha.visible = true
 		%item.texture = node.get_texture()
 		%description.text = node.text
+		
+func merge_sound(type):
+	if type == Global.GridType.ITEM:
+		Global.play_sound(Global.PotionMergeSFX)
+	elif type == Global.GridType.ENEMY:
+		Global.play_sound(Global.MonsterMergeSFX)
+	elif type == Global.GridType.WEAPON:
+		Global.play_sound(Global.WeaponMergeSFX)
 							
 func process_direction(direction):
+	if Global.TutorialLevel:
+		Global.TutorialMovements -= 1
+	
 	var movement = false
 	if direction == "right":
 		for r in range(Global.ROWS):
@@ -152,6 +197,7 @@ func process_direction(direction):
 					movement = true
 				elif type == Global.LegalMoves.MERGE:
 					var level = Global.GRID_ELEMENTS[r][c + 1].level
+					merge_sound(Global.GRID_ELEMENTS[r][c].type)
 					Global.GRID_ELEMENTS[r][c + 1].set_level(level+1)
 					Global.GRID_ELEMENTS[r][c].queue_free()
 					Global.GRID_ELEMENTS[r][c] = null
@@ -212,6 +258,7 @@ func process_direction(direction):
 					movement = true
 				elif type == Global.LegalMoves.MERGE:
 					var level = Global.GRID_ELEMENTS[r][c - 1].level
+					merge_sound(Global.GRID_ELEMENTS[r][c].type)
 					Global.GRID_ELEMENTS[r][c - 1].set_level(level+1)
 					Global.GRID_ELEMENTS[r][c].queue_free()
 					Global.GRID_ELEMENTS[r][c] = null
@@ -271,6 +318,7 @@ func process_direction(direction):
 					movement = true
 				elif type == Global.LegalMoves.MERGE:
 					var level = Global.GRID_ELEMENTS[r - 1][c].level
+					merge_sound(Global.GRID_ELEMENTS[r][c].type)
 					Global.GRID_ELEMENTS[r - 1][c].set_level(level+1)
 					Global.GRID_ELEMENTS[r][c].queue_free()
 					Global.GRID_ELEMENTS[r][c] = null
@@ -331,6 +379,7 @@ func process_direction(direction):
 					movement = true
 				elif type == Global.LegalMoves.MERGE:
 					var level = Global.GRID_ELEMENTS[r + 1][c].level
+					merge_sound(Global.GRID_ELEMENTS[r][c].type)
 					Global.GRID_ELEMENTS[r + 1][c].set_level(level+1)
 					Global.GRID_ELEMENTS[r][c].queue_free()
 					Global.GRID_ELEMENTS[r][c] = null
@@ -463,20 +512,26 @@ func get_rng_max_level(what):
 
 		
 func turn(nokeys = false):
-	if Global.NEXT == null:
+	if Global.TutorialLevel:
+		if !Global.KeyAppeared:
+			Global.KeyAppeared = true
+			var what = {"what": Global.GridType.KEY, "level": 1} 
+			get_random_free_cell(what)
+	else:
+		if Global.NEXT == null:
+			if Global.KeyAppeared or nokeys:
+				Global.NEXT = weighted_random_enum(Global.spawn_weights)
+			else:
+				Global.NEXT = weighted_random_enum(Global.spawn_weights_full)
+		
+		var what = Global.NEXT
+		get_random_free_cell(what)
 		if Global.KeyAppeared or nokeys:
 			Global.NEXT = weighted_random_enum(Global.spawn_weights)
 		else:
 			Global.NEXT = weighted_random_enum(Global.spawn_weights_full)
-	
-	var what = Global.NEXT
-	get_random_free_cell(what)
-	if Global.KeyAppeared or nokeys:
-		Global.NEXT = weighted_random_enum(Global.spawn_weights)
-	else:
-		Global.NEXT = weighted_random_enum(Global.spawn_weights_full)
 
-	display_next()
+		display_next()
 	
 func display_next():
 	$Panel2/lbl_next/sprite.animation = trad_enum_animation(Global.NEXT.what)
@@ -501,6 +556,12 @@ func spawn_weapon(level: int = 1):
 func spawn_item(level: int = 1):
 	var item = item_scenes.instantiate()
 	item.level = level
+	add_child(item)
+	return item
+	
+func spawn_letter(letter):
+	var item = letter_scenes.instantiate()
+	item.letter = letter
 	add_child(item)
 	return item
 		

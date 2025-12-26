@@ -9,6 +9,7 @@ func _ready():
 	Global.player = self
 	
 func die():
+	Global.shaker_obj.shake(3.5, 2.5)
 	Global.play_sound(Global.PlayerDieSFX)
 	Global.GAME_OVER = true
 	$sprite.animation = "dead"
@@ -24,16 +25,18 @@ func heal(points):
 	
 func attack():
 	$attack_a.play("new_animation")
+	Global.play_sound(Global.PlayerAttack)
 	Global.play_sound(Global.EnemyHitSFX)
 	
 func show_damage():
 	$sprite.frame = 3 - Global.life
 	
 func hit(dmg):
+	Global.shaker_obj.shake(2.0, 1.1)
 	$sprite.material.set_shader_parameter("on", 1)
 	hit_tll = 1.2
 	Global.life -= (dmg - Global.DMG)
-	Global.play_sound(Global.HurtSFX)
+	Global.play_sound(Global.HurtSFX, {}, null, 0.3)
 	if Global.life <= 0:
 		Global.life = 0
 		die()

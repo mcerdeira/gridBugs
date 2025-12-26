@@ -16,5 +16,8 @@ func _on_mouse_entered() -> void:
 func _on_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
 	if %door.animation == "open":
 		if Input.is_action_just_pressed("mouseLeft"):
-			Global.FLOOR += 1 
+			if Global.TutorialLevel:
+				Global.TutorialLevel = false
+			else:
+				Global.FLOOR += 1 
 			get_tree().reload_current_scene()
