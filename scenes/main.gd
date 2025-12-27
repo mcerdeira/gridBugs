@@ -1,6 +1,5 @@
 extends Node2D
 var player_scene = load("res://scenes/you.tscn")
-var pause_scene = load("res://scenes/Pause.tscn")
 var enemy_scenes = preload("res://scenes/Enemy1x1.tscn")
 var weapon_scenes = preload("res://scenes/weapon.tscn")
 var item_scenes = preload("res://scenes/item.tscn")
@@ -114,12 +113,7 @@ func _physics_process(delta: float) -> void:
 		if Input.is_action_just_pressed("restart"):
 			Global.game_reset()
 			get_tree().reload_current_scene()
-	
-	if Input.is_action_just_pressed("pause"):
-		var pause = pause_scene.instantiate()
-		pause.global_position = Vector2(0, 60)
-		add_child(pause)
-		
+			
 	if cputurn_ttl > 0:
 		cputurn_ttl -= 1 * delta
 		if cputurn_ttl <= 0:

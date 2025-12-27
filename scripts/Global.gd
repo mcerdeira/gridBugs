@@ -137,7 +137,7 @@ func define_objetives():
 		
 	
 func load_music():
-	MainTheme = load("res://music/Dungeon Synth.mp3")
+	MainTheme = load("res://music/dungeon.wav")
 	
 func load_sfx():
 	HurtSFX = load("res://sfx/hurt_snd.wav")

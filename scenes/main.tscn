@@ -381,21 +381,21 @@ unique_name_in_owner = true
 position = Vector2(36, 65)
 sprite_frames = SubResource("SpriteFrames_jkv2x")
 autoplay = "default"
-frame_progress = 0.0884639
+frame_progress = 0.322852
 
 [node name="Life2" type="AnimatedSprite2D" parent="Panel1/You"]
 unique_name_in_owner = true
 position = Vector2(68, 65)
 sprite_frames = SubResource("SpriteFrames_jbj1t")
 autoplay = "default"
-frame_progress = 0.147158
+frame_progress = 0.381545
 
 [node name="Life3" type="AnimatedSprite2D" parent="Panel1/You"]
 unique_name_in_owner = true
 position = Vector2(100, 65)
 sprite_frames = SubResource("SpriteFrames_muem4")
 autoplay = "default"
-frame_progress = 0.878727
+frame_progress = 0.113112
 
 [node name="lbl_weapon" type="Label" parent="Panel1"]
 layout_mode = 0
