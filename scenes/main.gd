@@ -85,21 +85,21 @@ func render_grid():
 
 func update_life():
 	if Global.life == 3:
-		%Life.frame = 0
-		%Life2.frame = 0
-		%Life3.frame = 0
+		%Life.animation = "default"
+		%Life2.animation = "default"
+		%Life3.animation = "default"
 	elif Global.life == 2:
-		%Life.frame = 0
-		%Life2.frame = 0
-		%Life3.frame = 1
+		%Life.animation = "default"
+		%Life2.animation = "default"
+		%Life3.animation = "off"
 	elif Global.life == 1:
-		%Life.frame = 0
-		%Life2.frame = 1
-		%Life3.frame = 1
+		%Life.animation = "default"
+		%Life2.animation = "off"
+		%Life3.animation = "off"
 	elif Global.life == 0:
-		%Life.frame = 1
-		%Life2.frame = 1
-		%Life3.frame = 1
+		%Life.animation = "off"
+		%Life2.animation = "off"
+		%Life3.animation = "off"
 		
 func _physics_process(delta: float) -> void:
 	$Panel1/You/You.frame = 3 - Global.life

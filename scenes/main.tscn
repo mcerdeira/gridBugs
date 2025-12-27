@@ -1,11 +1,10 @@
-[gd_scene load_steps=44 format=4 uid="uid://iwiu7dw0oln6"]
+[gd_scene load_steps=47 format=4 uid="uid://iwiu7dw0oln6"]
 
 [ext_resource type="Shader" uid="uid://dt6660j0fsfwi" path="res://scenes/f.gdshader" id="1_o5qli"]
 [ext_resource type="Script" uid="uid://cl0j1ius1hif0" path="res://scenes/main.gd" id="1_sugp2"]
 [ext_resource type="PackedScene" uid="uid://5c1rdsa17mah" path="res://scenes/shaker.tscn" id="2_fv21b"]
 [ext_resource type="Texture2D" uid="uid://bcwwpxcqiyy6r" path="res://sprites/floortiles.png" id="2_yq6so"]
 [ext_resource type="Texture2D" uid="uid://26xg3de8xqlr" path="res://sprites/enemy1.png" id="5_tefeu"]
-[ext_resource type="Texture2D" uid="uid://dmyknjisbp8r" path="res://sprites/life.png" id="6_eb6dy"]
 [ext_resource type="Texture2D" uid="uid://brptd1kienj1d" path="res://sprites/enemy2.png" id="6_o6xl0"]
 [ext_resource type="FontFile" uid="uid://baufptafjkcp6" path="res://fonts/prstartk.ttf" id="6_tefeu"]
 [ext_resource type="Texture2D" uid="uid://ds7634ji0ch46" path="res://sprites/weapon1.png" id="7_85g3d"]
@@ -20,8 +19,12 @@
 [ext_resource type="Texture2D" uid="uid://bq02mpm58qnfq" path="res://sprites/you1.png" id="10_fv21b"]
 [ext_resource type="Texture2D" uid="uid://e4nwg5jfqlu6" path="res://sprites/medikit1.png" id="10_jkv2x"]
 [ext_resource type="Texture2D" uid="uid://bqktnf6ityi4j" path="res://sprites/you2.png" id="11_tel4y"]
+[ext_resource type="Texture2D" uid="uid://mv7qe7nagq13" path="res://sprites/life1.png" id="12_dgi5k"]
 [ext_resource type="Texture2D" uid="uid://dur8fxgp0s3g1" path="res://sprites/you3.png" id="12_qkpxi"]
+[ext_resource type="Texture2D" uid="uid://chjta487kiv8v" path="res://sprites/life2.png" id="13_j8jky"]
+[ext_resource type="Texture2D" uid="uid://cx6350mc53p8w" path="res://sprites/life3.png" id="14_kmb1v"]
 [ext_resource type="Texture2D" uid="uid://gv33171265y0" path="res://sprites/ficha.png" id="15_dp3eg"]
+[ext_resource type="Texture2D" uid="uid://nuricygn1gwx" path="res://sprites/life4.png" id="15_fuf3a"]
 [ext_resource type="Texture2D" uid="uid://c3nb53l7v2v5j" path="res://sprites/door1.png" id="15_jbj1t"]
 [ext_resource type="Shader" uid="uid://doqmhg8pvsh53" path="res://scenes/fire.gdshader" id="16_gqmmt"]
 [ext_resource type="Texture2D" uid="uid://0u11ywtlwidn" path="res://sprites/door2.png" id="16_muem4"]
@@ -102,13 +105,27 @@ animations = [{
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("6_eb6dy")
+"texture": ExtResource("12_dgi5k")
 }, {
+"duration": 1.0,
+"texture": ExtResource("13_j8jky")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_kmb1v")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_fuf3a")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
 "duration": 1.0,
 "texture": ExtResource("7_muem4")
 }],
 "loop": true,
-"name": &"default",
+"name": &"off",
 "speed": 5.0
 }]
 
@@ -116,13 +133,27 @@ animations = [{
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("6_eb6dy")
+"texture": ExtResource("12_dgi5k")
 }, {
+"duration": 1.0,
+"texture": ExtResource("13_j8jky")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_kmb1v")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_fuf3a")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
 "duration": 1.0,
 "texture": ExtResource("7_muem4")
 }],
 "loop": true,
-"name": &"default",
+"name": &"off",
 "speed": 5.0
 }]
 
@@ -130,13 +161,27 @@ animations = [{
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("6_eb6dy")
+"texture": ExtResource("12_dgi5k")
 }, {
+"duration": 1.0,
+"texture": ExtResource("13_j8jky")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_kmb1v")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_fuf3a")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
 "duration": 1.0,
 "texture": ExtResource("7_muem4")
 }],
 "loop": true,
-"name": &"default",
+"name": &"off",
 "speed": 5.0
 }]
 
@@ -300,6 +345,7 @@ mouse_filter = 2
 color = Color(0.14902, 0.145098, 0.168627, 1)
 
 [node name="lbl_tutorial" type="Label" parent="Panel1"]
+layout_mode = 0
 offset_left = 9.0
 offset_top = 109.0
 offset_right = 131.0
@@ -334,16 +380,22 @@ sprite_frames = SubResource("SpriteFrames_dgi5k")
 unique_name_in_owner = true
 position = Vector2(36, 65)
 sprite_frames = SubResource("SpriteFrames_jkv2x")
+autoplay = "default"
+frame_progress = 0.0884639
 
 [node name="Life2" type="AnimatedSprite2D" parent="Panel1/You"]
 unique_name_in_owner = true
 position = Vector2(68, 65)
 sprite_frames = SubResource("SpriteFrames_jbj1t")
+autoplay = "default"
+frame_progress = 0.147158
 
 [node name="Life3" type="AnimatedSprite2D" parent="Panel1/You"]
 unique_name_in_owner = true
 position = Vector2(100, 65)
 sprite_frames = SubResource("SpriteFrames_muem4")
+autoplay = "default"
+frame_progress = 0.878727
 
 [node name="lbl_weapon" type="Label" parent="Panel1"]
 layout_mode = 0
@@ -474,6 +526,7 @@ sprite_frames = SubResource("SpriteFrames_0ld40")
 animation = &"items"
 
 [node name="lbl_tutorial" type="Label" parent="Panel2"]
+layout_mode = 0
 offset_left = 9.0
 offset_top = 69.0
 offset_right = 131.0
