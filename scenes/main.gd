@@ -136,6 +136,10 @@ func _physics_process(delta: float) -> void:
 		elif Input.is_action_just_pressed("right"):
 			direction = "right"
 		
+		receive_direction(direction)
+				
+func receive_direction(direction):
+	if !Global.GAME_OVER and cputurn_ttl <= 0:
 		if direction != "":
 			var change = process_direction(direction)
 			if change:

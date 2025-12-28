@@ -26,6 +26,7 @@ Music="*res://scripts/Music.gd"
 window/size/viewport_width=512
 window/size/viewport_height=320
 window/stretch/mode="canvas_items"
+mouse_cursor/custom_image="uid://b5cmmcf3bxslk"
 
 [input]
 
