@@ -14,10 +14,7 @@ func _ready() -> void:
 		
 	Global.define_objetives()
 	Global.KeyAppeared = false
-	%lbl_floor.text = "Floor #" + str(Global.FLOOR)
-	set_main_quest()
-	calc_time()
-	Global.Main = self
+	Global.Main = self	
 	if !Global.TutorialLevel:
 		var player = player_scene.instantiate()
 		Global.GRID_ELEMENTS[2][2] = player
@@ -28,6 +25,9 @@ func _ready() -> void:
 		$Panel1/lbl_tutorial.visible = false
 		$Panel2/lbl_tutorial.visible = false
 	else:
+		%lbl_floor.text = "Floor #" + str(Global.FLOOR)
+		set_main_quest()
+		
 		var player = player_scene.instantiate()
 		Global.GRID_ELEMENTS[0][4] = player
 		add_child(player)
@@ -39,11 +39,10 @@ func _ready() -> void:
 		$Panel2/lbl_quest.visible = false
 		$Panel1/lbl_tutorial.visible = true
 		$Panel2/lbl_tutorial.visible = true
-		
-		Global.GRID_ELEMENTS[3][1] = spawn_letter("W")
+		Global.GRID_ELEMENTS[0][0] = spawn_letter("W")
 		Global.GRID_ELEMENTS[4][2] = spawn_letter("D")
-		Global.GRID_ELEMENTS[4][1] = spawn_letter("S")
-		Global.GRID_ELEMENTS[4][0] = spawn_letter("A")
+		Global.GRID_ELEMENTS[3][1] = spawn_letter("S")
+		Global.GRID_ELEMENTS[2][0] = spawn_letter("A")
 		
 	update_life()
 	render_grid()
@@ -103,7 +102,11 @@ func update_life():
 func _physics_process(delta: float) -> void:
 	$Panel1/You/You.frame = 3 - Global.life
 	
-	$lbl_gameover.visible = Global.GAME_OVER
+	if !Global.TutorialLevel:
+		$lbl_gameover.visible = Global.GAME_OVER
+	else:
+		$lbl_gameover.visible = true
+		
 	%lbl_dmg.text = "dmg " + str(Global.DMG)
 	
 	if Global.GAME_OVER:
@@ -120,7 +123,8 @@ func _physics_process(delta: float) -> void:
 			if !Global.TutorialLevel:
 				turn()
 			else:
-				if Global.TutorialMovements <= 0:
+				check_all_letters()
+				if Global.Wok and Global.Aok and Global.Sok and Global.Dok:
 					turn()
 				
 			render_grid()
@@ -137,6 +141,30 @@ func _physics_process(delta: float) -> void:
 			direction = "right"
 		
 		receive_direction(direction)
+				
+func check_all_letters():
+	var letters = get_tree().get_nodes_in_group("letters")
+	for letter in letters:
+		if letter.letter == "W":
+			if letter.global_position == Global.WPos:
+				Global.Wok = true
+			else:
+				Global.Wok = false
+		if letter.letter == "A":
+			if letter.global_position == Global.APos:
+				Global.Aok = true
+			else:
+				Global.Aok = false
+		if letter.letter == "S":
+			if letter.global_position == Global.SPos:
+				Global.Sok = true
+			else:
+				Global.Sok = false
+		if letter.letter == "D":
+			if letter.global_position == Global.DPos:
+				Global.Dok = true
+			else:
+				Global.Dok = false
 				
 func receive_direction(direction):
 	if !Global.GAME_OVER and cputurn_ttl <= 0:
@@ -181,9 +209,6 @@ func merge_sound(type):
 		Global.play_sound(Global.WeaponMergeSFX)
 							
 func process_direction(direction):
-	if Global.TutorialLevel:
-		Global.TutorialMovements -= 1
-	
 	var movement = false
 	if direction == "right":
 		for r in range(Global.ROWS):
@@ -446,6 +471,9 @@ func get_cell_by_type(r1, c1, r2, c2, type):
 		return null
 		
 func legal_movement(cell_to, cell_from):
+	if cell_from != null and cell_to != null and cell_from.type == Global.GridType.LETTER and cell_to.type == Global.GridType.LETTER:
+		return Global.LegalMoves.NON
+	
 	if cell_to == null:
 		return Global.LegalMoves.MOVEMENT
 	elif cell_from != null and cell_to != null and cell_from.type == cell_to.type \

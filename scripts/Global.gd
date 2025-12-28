@@ -23,7 +23,6 @@ var MainQuest = {}
 var Objetives = []
 
 var TutorialLevel = true
-var TutorialMovements = 6
 var MainTheme = null
 
 var HurtSFX = null
@@ -41,6 +40,14 @@ var PotionMergeSFX = null
 var MonsterMergeSFX = null
 var WeaponMergeSFX = null
 var PlayerAttack = null
+var Wok = false
+var Aok = false
+var Sok = false
+var Dok = false
+var WPos = Vector2(256, 192)
+var APos = Vector2(224, 224)
+var SPos = Vector2(256, 224)
+var DPos = Vector2(288, 224)
 
 enum GridType { 
 	ENEMY,
@@ -81,6 +88,11 @@ func _ready() -> void:
 	game_reset()
 	
 func game_reset():
+	Wok = false
+	Aok = false
+	Sok = false
+	Dok = false
+	
 	FLOOR = 1
 	GAME_OVER = false
 	life = 3

@@ -18,6 +18,10 @@ func fusion():
 func die():
 	queue_free()
 	
+func _physics_process(delta: float) -> void:			
+	if Global.Wok and Global.Aok and Global.Sok and Global.Dok:
+		queue_free()
+	
 func get_texture():
 	return null
 	
