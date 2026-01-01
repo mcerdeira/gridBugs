@@ -18,6 +18,7 @@ func _on_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
 		if Input.is_action_just_pressed("mouseLeft"):
 			if Global.TutorialLevel:
 				Global.TutorialLevel = false
+				Global.FLOOR = 1
 			else:
 				Global.FLOOR += 1 
 			get_tree().reload_current_scene()

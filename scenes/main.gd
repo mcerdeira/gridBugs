@@ -14,8 +14,10 @@ func _ready() -> void:
 		
 	Global.define_objetives()
 	Global.KeyAppeared = false
-	Global.Main = self	
+	Global.Main = self
 	if !Global.TutorialLevel:
+		%lbl_floor.text = "Floor #" + str(Global.FLOOR)
+		set_main_quest()
 		var player = player_scene.instantiate()
 		Global.GRID_ELEMENTS[2][2] = player
 		add_child(player)
@@ -25,9 +27,6 @@ func _ready() -> void:
 		$Panel1/lbl_tutorial.visible = false
 		$Panel2/lbl_tutorial.visible = false
 	else:
-		%lbl_floor.text = "Floor #" + str(Global.FLOOR)
-		set_main_quest()
-		
 		var player = player_scene.instantiate()
 		Global.GRID_ELEMENTS[0][4] = player
 		add_child(player)
@@ -58,21 +57,22 @@ func set_main_quest():
 	render_mainquest()
 	
 func render_mainquest():
-	var objs = Global.MainQuest.objetives
-	
-	$Panel2/lbl_quest/quest1.animation = trad_enum_animation(objs[0].what)
-	$Panel2/lbl_quest/quest1.frame = objs[0].lvl - 1 
-	$Panel2/lbl_quest/quest1/lbl_cant.text = str(objs[0].got) + "/" + str(objs[0].cant)
-	
-	$Panel2/lbl_quest/quest2.animation = trad_enum_animation(objs[1].what)
-	$Panel2/lbl_quest/quest2.frame = objs[1].lvl - 1 
-	$Panel2/lbl_quest/quest2/lbl_cant.text = str(objs[1].got) + "/" + str(objs[1].cant)
-	
-	$Panel2/lbl_quest/quest3.animation = trad_enum_animation(objs[2].what)
-	$Panel2/lbl_quest/quest3.frame = objs[2].lvl - 1 
-	$Panel2/lbl_quest/quest3/lbl_cant.text = str(objs[2].got) + "/" + str(objs[2].cant)
-	
-	$Panel2/lbl_quest/lbl_quest_done.visible = Global.MainQuest.status
+	if !Global.TutorialLevel:
+		var objs = Global.MainQuest.objetives
+		
+		$Panel2/lbl_quest/quest1.animation = trad_enum_animation(objs[0].what)
+		$Panel2/lbl_quest/quest1.frame = objs[0].lvl - 1 
+		$Panel2/lbl_quest/quest1/lbl_cant.text = str(objs[0].got) + "/" + str(objs[0].cant)
+		
+		$Panel2/lbl_quest/quest2.animation = trad_enum_animation(objs[1].what)
+		$Panel2/lbl_quest/quest2.frame = objs[1].lvl - 1 
+		$Panel2/lbl_quest/quest2/lbl_cant.text = str(objs[1].got) + "/" + str(objs[1].cant)
+		
+		$Panel2/lbl_quest/quest3.animation = trad_enum_animation(objs[2].what)
+		$Panel2/lbl_quest/quest3.frame = objs[2].lvl - 1 
+		$Panel2/lbl_quest/quest3/lbl_cant.text = str(objs[2].got) + "/" + str(objs[2].cant)
+		
+		$Panel2/lbl_quest/lbl_quest_done.visible = Global.MainQuest.status
 
 
 func render_grid():
@@ -179,16 +179,17 @@ func receive_direction(direction):
 				render_mainquest()
 				
 func check_main_quest():
-	if !Global.MainQuest.status:
-		var quest = true
-		for obj in Global.MainQuest.objetives:
-			if obj.got < obj.cant:
-				quest = false
-				break
-				
-		Global.MainQuest.status = quest
-		if Global.MainQuest.status:
-			open_door()
+	if !Global.TutorialLevel:
+		if !Global.MainQuest.status:
+			var quest = true
+			for obj in Global.MainQuest.objetives:
+				if obj.got < obj.cant:
+					quest = false
+					break
+					
+			Global.MainQuest.status = quest
+			if Global.MainQuest.status:
+				open_door()
 				
 func set_item_inspect(node, is_door = false):
 	if node:
@@ -534,9 +535,12 @@ func get_rng_max_level(what):
 		if o.level > lvl:
 			lvl = o.level
 			
+	if Global.FLOOR > 1:
+		if randi() % 4 == 0:
+			lvl += randi_range(1, Global.FLOOR)
+			
 	return randi_range(1, lvl)
 
-		
 func turn(nokeys = false):
 	if Global.TutorialLevel:
 		if !Global.KeyAppeared:

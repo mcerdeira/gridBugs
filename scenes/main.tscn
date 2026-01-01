@@ -397,7 +397,7 @@ theme_override_fonts/font = ExtResource("6_tefeu")
 theme_override_font_sizes/font_size = 8
 text = "Welcome to TOWER OF DOWNFALL
 
-Your goal is to explore this tower and defeat the great evil that lurks inside.
+Your goal is to explore the tower and defeat the great evil that lurks inside.
 
 "
 horizontal_alignment = 1

@@ -183,12 +183,15 @@ offset_left = 6.0
 offset_top = 6.0
 offset_right = 14.0
 offset_bottom = 14.0
-theme_override_colors/font_color = Color(0.501961, 0.0431373, 0.0470588, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0.160784, 0.113725, 0.168627, 1)
+theme_override_constants/outline_size = 5
 theme_override_fonts/font = ExtResource("5_ia5of")
 theme_override_font_sizes/font_size = 8
 text = "3"
 
 [node name="collider" type="CollisionShape2D" parent="."]
+visible = false
 shape = SubResource("RectangleShape2D_g0cpx")
 
 [node name="anim" type="AnimationPlayer" parent="."]

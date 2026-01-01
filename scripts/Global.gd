@@ -110,32 +110,47 @@ func define_objetives():
 			{"what": Global.GridType.ENEMY, "lvl": 1, "cant": 2, "got": 0},
 			{"what": Global.GridType.ENEMY, "lvl": 2, "cant": 1, "got": 0},
 			{"what": Global.GridType.WEAPON, "lvl": 2, "cant": 2, "got": 0},
+		],
+		[
+			{"what": Global.GridType.ENEMY, "lvl": 1, "cant": 2, "got": 0},
+			{"what": Global.GridType.ENEMY, "lvl": 2, "cant": 1, "got": 0},
+			{"what": Global.GridType.ENEMY, "lvl": 3, "cant": 1, "got": 0},
 		]
 	]
 	
 	var medium = [
 		[
-			{"what": null, "lvl": 0, "cant": 0, "got": 0},
-			{"what": null, "lvl": 0, "cant": 0, "got": 0},
-			{"what": null, "lvl": 0, "cant": 0, "got": 0}
+			{"what": Global.GridType.ENEMY, "lvl": 1, "cant": 1, "got": 0},
+			{"what": Global.GridType.WEAPON, "lvl": 1, "cant": 3, "got": 0},
+			{"what": Global.GridType.ITEM, "lvl": 2, "cant": 1, "got": 0}
 		],
 		[
-			{"what": null, "lvl": 0, "cant": 0, "got": 0},
-			{"what": null, "lvl": 0, "cant": 0, "got": 0},
-			{"what": null, "lvl": 0, "cant": 0, "got": 0},
+			{"what": Global.GridType.ENEMY, "lvl": 1, "cant": 2, "got": 0},
+			{"what": Global.GridType.ENEMY, "lvl": 2, "cant": 1, "got": 0},
+			{"what": Global.GridType.WEAPON, "lvl": 2, "cant": 2, "got": 0},
+		],
+		[
+			{"what": Global.GridType.ENEMY, "lvl": 1, "cant": 2, "got": 0},
+			{"what": Global.GridType.ENEMY, "lvl": 2, "cant": 1, "got": 0},
+			{"what": Global.GridType.ENEMY, "lvl": 3, "cant": 1, "got": 0},
 		]
 	]
 	
 	var hard = [
 		[
-			{"what": null, "lvl": 0, "cant": 0, "got": 0},
-			{"what": null, "lvl": 0, "cant": 0, "got": 0},
-			{"what": null, "lvl": 0, "cant": 0, "got": 0}
+			{"what": Global.GridType.ENEMY, "lvl": 1, "cant": 1, "got": 0},
+			{"what": Global.GridType.WEAPON, "lvl": 1, "cant": 3, "got": 0},
+			{"what": Global.GridType.ITEM, "lvl": 2, "cant": 1, "got": 0}
 		],
 		[
-			{"what": null, "lvl": 0, "cant": 0, "got": 0},
-			{"what": null, "lvl": 0, "cant": 0, "got": 0},
-			{"what": null, "lvl": 0, "cant": 0, "got": 0},
+			{"what": Global.GridType.ENEMY, "lvl": 1, "cant": 2, "got": 0},
+			{"what": Global.GridType.ENEMY, "lvl": 2, "cant": 1, "got": 0},
+			{"what": Global.GridType.WEAPON, "lvl": 2, "cant": 2, "got": 0},
+		],
+		[
+			{"what": Global.GridType.ENEMY, "lvl": 1, "cant": 2, "got": 0},
+			{"what": Global.GridType.ENEMY, "lvl": 2, "cant": 1, "got": 0},
+			{"what": Global.GridType.ENEMY, "lvl": 3, "cant": 1, "got": 0},
 		]
 	]
 
