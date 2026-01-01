@@ -397,7 +397,7 @@ theme_override_fonts/font = ExtResource("6_tefeu")
 theme_override_font_sizes/font_size = 8
 text = "Welcome to TOWER OF DOWNFALL
 
-Your goal is to explore the tower and defeat the great evil that lurks inside.
+Your goal is to explore the tower and defeat the great evil that lurks within.
 
 "
 horizontal_alignment = 1
@@ -576,15 +576,14 @@ offset_right = 131.0
 offset_bottom = 308.0
 theme_override_fonts/font = ExtResource("6_tefeu")
 theme_override_font_sizes/font_size = 8
-text = "Move to merge tiles
+text = "Move to merge tiles  
 
-Get weapons
+Find weapons  
 
-Get potions
+Collect potions  
 
-Get the Key or Fulfill your quest
+Get the key or complete the quest to unlock the door to the next floor  
 
-Do not die
 
 
 
