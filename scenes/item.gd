@@ -18,9 +18,13 @@ func fusion():
 	$fusion_anim.play("new_animation")
 	
 func die():
+	var i = 1
 	for obj in Global.MainQuest.objetives:
 		if obj.what == type and obj.lvl == level and obj.got < obj.cant:
 			obj.got += 1
+			Global.QuestObj[i].play_anim()
+			
+		i += 1
 	
 	queue_free()
 	

@@ -1,4 +1,4 @@
-[gd_scene load_steps=54 format=4 uid="uid://iwiu7dw0oln6"]
+[gd_scene load_steps=59 format=4 uid="uid://iwiu7dw0oln6"]
 
 [ext_resource type="Shader" uid="uid://dt6660j0fsfwi" path="res://scenes/f.gdshader" id="1_o5qli"]
 [ext_resource type="Script" uid="uid://cl0j1ius1hif0" path="res://scenes/main.gd" id="1_sugp2"]
@@ -37,7 +37,9 @@
 [ext_resource type="Texture2D" uid="uid://eepcgamnuuf8" path="res://sprites/medikit3.png" id="21_pm3ni"]
 [ext_resource type="Texture2D" uid="uid://db8du8sljmnj7" path="res://sprites/medikit2.png" id="25_2f3dj"]
 [ext_resource type="Texture2D" uid="uid://b3gdxss4c2ojm" path="res://sprites/tile_0028.png" id="35_j8jky"]
+[ext_resource type="Script" uid="uid://cawysankh7or5" path="res://scenes/lbl_quest.gd" id="36_5he1u"]
 [ext_resource type="Script" uid="uid://c5148gy3g0den" path="res://scenes/retrybutton.gd" id="36_kmb1v"]
+[ext_resource type="Script" uid="uid://dql7jjyelary2" path="res://scenes/quest.gd" id="37_c6pm6"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_fv21b"]
 texture = ExtResource("2_yq6so")
@@ -314,6 +316,42 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="Animation" id="Animation_rhaxm"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_ips3a"]
+resource_name = "new_animation"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(1.8, 1.8), Vector2(1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_rhaxm"]
+_data = {
+&"RESET": SubResource("Animation_rhaxm"),
+&"new_animation": SubResource("Animation_ips3a")
+}
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_kmb1v"]
 animations = [{
 "frames": [{
@@ -387,21 +425,22 @@ offset_bottom = 469.0
 mouse_filter = 2
 color = Color(0.14902, 0.145098, 0.168627, 1)
 
-[node name="lbl_tutorial" type="Label" parent="Panel1"]
+[node name="lbl_tutorial" type="RichTextLabel" parent="Panel1"]
 layout_mode = 0
-offset_left = 9.0
+offset_left = 4.0
 offset_top = 109.0
-offset_right = 131.0
+offset_right = 139.0
 offset_bottom = 264.0
-theme_override_fonts/font = ExtResource("6_tefeu")
-theme_override_font_sizes/font_size = 8
+theme_override_fonts/normal_font = ExtResource("6_tefeu")
+theme_override_font_sizes/normal_font_size = 8
+bbcode_enabled = true
 text = "Welcome to TOWER OF DOWNFALL
 
-Your goal is to explore the tower and defeat the great evil that lurks within.
+Your [color=#e2665b]goal[/color] is to explore the tower and defeat the great evil that lurks within.
 
 "
-horizontal_alignment = 1
 autowrap_mode = 2
+horizontal_alignment = 1
 
 [node name="You" type="Label" parent="Panel1"]
 layout_mode = 0
@@ -548,7 +587,6 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="lbl_next" type="Label" parent="Panel2"]
-visible = false
 layout_mode = 0
 offset_top = 83.0
 offset_right = 140.0
@@ -568,28 +606,29 @@ position = Vector2(70, 35)
 sprite_frames = SubResource("SpriteFrames_0ld40")
 animation = &"items"
 
-[node name="lbl_tutorial" type="Label" parent="Panel2"]
+[node name="lbl_tutorial" type="RichTextLabel" parent="Panel2"]
 layout_mode = 0
-offset_left = 9.0
+offset_left = 4.0
 offset_top = 69.0
-offset_right = 131.0
+offset_right = 141.0
 offset_bottom = 308.0
-theme_override_fonts/font = ExtResource("6_tefeu")
-theme_override_font_sizes/font_size = 8
-text = "Move to merge tiles  
+theme_override_fonts/normal_font = ExtResource("6_tefeu")
+theme_override_font_sizes/normal_font_size = 8
+bbcode_enabled = true
+text = "Move to [color=#e2665b]merge[/color] tiles
 
-Find weapons  
+Find [color=#e2665b]weapons[/color]
 
-Collect potions  
+Collect [color=#2f5753]potions[/color]
 
-Get the key or complete the quest to unlock the door to the next floor  
+Get the [color=#cf752b]key[/color] or complete the [color=#e2665b]quest[/color] to unlock the door to the next floor
 
 
 
 
 FAREWELL!"
-horizontal_alignment = 1
 autowrap_mode = 2
+horizontal_alignment = 1
 
 [node name="lbl_quest" type="Label" parent="Panel2"]
 layout_mode = 0
@@ -601,6 +640,7 @@ theme_override_font_sizes/font_size = 8
 text = "Main Quest"
 horizontal_alignment = 1
 vertical_alignment = 1
+script = ExtResource("36_5he1u")
 
 [node name="Map" type="Sprite2D" parent="Panel2/lbl_quest"]
 position = Vector2(71, 51.25)
@@ -608,9 +648,11 @@ scale = Vector2(3.65625, 2.17187)
 texture = ExtResource("10_choun")
 
 [node name="quest1" type="AnimatedSprite2D" parent="Panel2/lbl_quest"]
+unique_name_in_owner = true
 position = Vector2(32, 41)
 sprite_frames = SubResource("SpriteFrames_0ld40")
 animation = &"enemies"
+script = ExtResource("37_c6pm6")
 
 [node name="ficha" type="Sprite2D" parent="Panel2/lbl_quest/quest1"]
 show_behind_parent = true
@@ -626,10 +668,18 @@ theme_override_font_sizes/font_size = 8
 text = "0/2"
 horizontal_alignment = 1
 
+[node name="fusion_anim" type="AnimationPlayer" parent="Panel2/lbl_quest/quest1"]
+libraries = {
+&"": SubResource("AnimationLibrary_rhaxm")
+}
+speed_scale = 10.0
+
 [node name="quest2" type="AnimatedSprite2D" parent="Panel2/lbl_quest"]
+unique_name_in_owner = true
 position = Vector2(73, 41)
 sprite_frames = SubResource("SpriteFrames_0ld40")
 animation = &"weapons"
+script = ExtResource("37_c6pm6")
 
 [node name="ficha" type="Sprite2D" parent="Panel2/lbl_quest/quest2"]
 show_behind_parent = true
@@ -645,10 +695,18 @@ theme_override_font_sizes/font_size = 8
 text = "x1"
 horizontal_alignment = 1
 
+[node name="fusion_anim" type="AnimationPlayer" parent="Panel2/lbl_quest/quest2"]
+libraries = {
+&"": SubResource("AnimationLibrary_rhaxm")
+}
+speed_scale = 10.0
+
 [node name="quest3" type="AnimatedSprite2D" parent="Panel2/lbl_quest"]
+unique_name_in_owner = true
 position = Vector2(112, 41)
 sprite_frames = SubResource("SpriteFrames_0ld40")
 animation = &"enemies"
+script = ExtResource("37_c6pm6")
 
 [node name="ficha" type="Sprite2D" parent="Panel2/lbl_quest/quest3"]
 show_behind_parent = true
@@ -664,13 +722,19 @@ theme_override_font_sizes/font_size = 8
 text = "x1"
 horizontal_alignment = 1
 
+[node name="fusion_anim" type="AnimationPlayer" parent="Panel2/lbl_quest/quest3"]
+libraries = {
+&"": SubResource("AnimationLibrary_rhaxm")
+}
+speed_scale = 10.0
+
 [node name="lbl_quest_done" type="Label" parent="Panel2/lbl_quest"]
 layout_mode = 0
 offset_left = 13.0
 offset_top = 74.0
 offset_right = 129.0
 offset_bottom = 82.0
-theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_colors/font_color = Color(0.886275, 0.4, 0.356863, 1)
 theme_override_fonts/font = ExtResource("6_tefeu")
 theme_override_font_sizes/font_size = 8
 text = "COMPLETED!"

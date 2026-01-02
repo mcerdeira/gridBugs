@@ -5,6 +5,7 @@ const COLS = 5
 const OFFSET = Vector2(192, 96)
 
 var FLOOR = 1
+var QuestObj = []
 var GRID_ELEMENTS = [] #rows,cols
 var GAME_OVER = false
 var Main = null
@@ -66,9 +67,9 @@ var spawn_weights := {
 
 var spawn_weights_full := {
 	GridType.ENEMY: 49,
-	GridType.WEAPON: 23,
-	GridType.ITEM: 29,
-	GridType.KEY: 3,
+	GridType.WEAPON: 24,
+	GridType.ITEM: 30,
+	GridType.KEY: 1,
 }
 
 enum LegalMoves {
@@ -98,6 +99,7 @@ func game_reset():
 	life = 3
 	DMG = 0
 	KeyAppeared = false
+	QuestObj = []
 	
 func define_objetives():
 	var easy = [
