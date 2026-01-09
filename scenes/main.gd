@@ -102,6 +102,11 @@ func update_life():
 func _physics_process(delta: float) -> void:
 	$Panel1/You/You.frame = 3 - Global.life
 	
+	if Global.TurnCountTotal != null:
+		$Panel2/lbl_next/lbl_turn.text = str(Global.TurnCount)
+	else:
+		$Panel2/lbl_next/lbl_turn.text = ""
+	
 	if !Global.TutorialLevel:
 		$lbl_gameover.visible = Global.GAME_OVER
 	else:
@@ -548,6 +553,13 @@ func turn(nokeys = false):
 			var what = {"what": Global.GridType.KEY, "level": 1} 
 			get_random_free_cell(what)
 	else:
+		if Global.TurnCountTotal != null and nokeys == false:
+			Global.TurnCount -= 1
+			if Global.TurnCount > 0:
+				return
+			else:
+				Global.TurnCount = Global.TurnCountTotal
+		
 		if Global.NEXT == null:
 			if Global.KeyAppeared or nokeys:
 				Global.NEXT = weighted_random_enum(Global.spawn_weights)

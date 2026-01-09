@@ -606,6 +606,18 @@ position = Vector2(70, 35)
 sprite_frames = SubResource("SpriteFrames_0ld40")
 animation = &"items"
 
+[node name="lbl_turn" type="Label" parent="Panel2/lbl_next"]
+layout_mode = 0
+offset_left = 59.0
+offset_top = 53.0
+offset_right = 82.0
+offset_bottom = 63.0
+theme_override_fonts/font = ExtResource("6_tefeu")
+theme_override_font_sizes/font_size = 8
+text = "3"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="lbl_tutorial" type="RichTextLabel" parent="Panel2"]
 layout_mode = 0
 offset_left = 4.0

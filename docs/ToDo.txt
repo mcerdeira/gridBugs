@@ -1,7 +1,11 @@
 =============== TODO ========================================
 - Hacer rooms especiales: una ficha que solo ocupa lugar o una ficha insta kill 
-- Cambiar el setting
+- Piso puzzle 100%
+- Piso con "timer" (si se ejecutan x turnos nos infectamos)
+
 - Pensar nombre
+- Cambiar el setting
+- Pisos con spawns cada x turno
 
 =============== HECHO ========================================
 - Hacer funcionar llave/puerta

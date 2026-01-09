@@ -4,6 +4,8 @@ const ROWS = 5
 const COLS = 5
 const OFFSET = Vector2(192, 96)
 
+var TurnCountTotal = 3
+var TurnCount = 3
 var FLOOR = 1
 var QuestObj = []
 var GRID_ELEMENTS = [] #rows,cols
