@@ -5,6 +5,7 @@ var weapon_scenes = preload("res://scenes/weapon.tscn")
 var item_scenes = preload("res://scenes/item.tscn")
 var key_scenes = preload("res://scenes/key.tscn")
 var letter_scenes = preload("res://scenes/letter.tscn")
+var static_scenes = preload("res://scenes/statictile.tscn")
 var cputurn_ttl = 0
 
 func _ready() -> void:
@@ -40,7 +41,7 @@ func _ready() -> void:
 		$Panel1/lbl_tutorial.visible = true
 		$Panel2/lbl_tutorial.visible = true
 		Global.GRID_ELEMENTS[0][0] = spawn_letter("W")
-		Global.GRID_ELEMENTS[4][2] = spawn_letter("D")
+		Global.GRID_ELEMENTS[4][2] = spawn_static(1)#spawn_letter("D")
 		Global.GRID_ELEMENTS[3][1] = spawn_letter("S")
 		Global.GRID_ELEMENTS[2][0] = spawn_letter("A")
 		
@@ -74,7 +75,6 @@ func render_mainquest():
 		$Panel2/lbl_quest/quest3/lbl_cant.text = str(objs[2].got) + "/" + str(objs[2].cant)
 		
 		$Panel2/lbl_quest/lbl_quest_done.visible = Global.MainQuest.status
-
 
 func render_grid():
 	for r in range(Global.ROWS):
@@ -478,6 +478,9 @@ func get_cell_by_type(r1, c1, r2, c2, type):
 		return null
 		
 func legal_movement(cell_to, cell_from):
+	if cell_from != null and cell_from.type == Global.GridType.STATIC:
+		return Global.LegalMoves.NON
+	
 	if cell_from != null and cell_to != null and cell_from.type == Global.GridType.LETTER and cell_to.type == Global.GridType.LETTER:
 		return Global.LegalMoves.NON
 	
@@ -605,6 +608,11 @@ func spawn_item(level: int = 1):
 func spawn_letter(letter):
 	var item = letter_scenes.instantiate()
 	item.letter = letter
+	add_child(item)
+	return item
+	
+func spawn_static(level: int = 1):
+	var item = static_scenes.instantiate()
 	add_child(item)
 	return item
 		

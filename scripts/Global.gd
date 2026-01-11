@@ -58,7 +58,8 @@ enum GridType {
 	ITEM,
 	PLAYER,
 	KEY,
-	LETTER
+	LETTER,
+	STATIC,
 }
 
 var spawn_weights := {
