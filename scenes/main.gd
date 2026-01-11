@@ -23,6 +23,7 @@ func _ready() -> void:
 		add_child(player)
 		for i in range(7):
 			turn(true)
+			
 		%weapon_sprite.frame = Global.DMG
 		$Panel1/lbl_tutorial.visible = false
 		$Panel2/lbl_tutorial.visible = false
