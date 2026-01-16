@@ -19,6 +19,8 @@ func _on_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
 			if Global.TutorialLevel:
 				Global.TutorialLevel = false
 				Global.FLOOR = 1
+				Global.LEVEL = 0
 			else:
 				Global.FLOOR += 1 
+				Global.LEVEL += 1
 			get_tree().reload_current_scene()

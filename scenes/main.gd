@@ -8,6 +8,23 @@ var letter_scenes = preload("res://scenes/letter.tscn")
 var static_scenes = preload("res://scenes/statictile.tscn")
 var cputurn_ttl = 0
 
+
+func spawn_cell_by_type(type, r, c):
+	if type == Global.GridType.ENEMY:
+		Global.GRID_ELEMENTS[r][c] = spawn_enemy(1)
+	elif type == Global.GridType.WEAPON:
+		Global.GRID_ELEMENTS[r][c] = spawn_weapon(1)
+	elif type == Global.GridType.ITEM:
+		Global.GRID_ELEMENTS[r][c] = spawn_item(1)
+	elif type == Global.GridType.KEY:
+		Global.GRID_ELEMENTS[r][c] = spawn_key()
+	elif type == Global.GridType.STATIC:
+		Global.GRID_ELEMENTS[r][c] = spawn_static(1)
+	elif type == Global.GridType.PLAYER:
+		var player = player_scene.instantiate()
+		Global.GRID_ELEMENTS[r][c] = player
+		add_child(player)
+
 func _ready() -> void:
 	randomize()
 	if !Music.is_playing():
@@ -19,11 +36,20 @@ func _ready() -> void:
 	if !Global.TutorialLevel:
 		%lbl_floor.text = "Floor #" + str(Global.FLOOR)
 		set_main_quest()
-		var player = player_scene.instantiate()
-		Global.GRID_ELEMENTS[2][2] = player
-		add_child(player)
-		for i in range(7):
-			turn(true)
+		$Panel2/lbl_next.visible = false
+		var level = Global.LEVELS[Global.LEVEL]
+		var level_rows = level.split("\n")
+		for r in range(level_rows.size()):
+			if level_rows[r] != "":
+				var level_cols = level_rows[r].split(",")
+				for c in range(level_cols.size()):
+					spawn_cell_by_type(int(level_cols[c]), r, c)
+					
+		#var player = player_scene.instantiate()
+		#Global.GRID_ELEMENTS[2][2] = player
+		#add_child(player)
+		#for i in range(7):
+			#turn(true)
 			
 		%weapon_sprite.frame = Global.DMG
 		$Panel1/lbl_tutorial.visible = false
@@ -41,7 +67,7 @@ func _ready() -> void:
 		$Panel1/lbl_tutorial.visible = true
 		$Panel2/lbl_tutorial.visible = true
 		Global.GRID_ELEMENTS[0][0] = spawn_letter("W")
-		Global.GRID_ELEMENTS[4][2] = spawn_static(1)#spawn_letter("D")
+		Global.GRID_ELEMENTS[4][2] = spawn_letter("D")
 		Global.GRID_ELEMENTS[3][1] = spawn_letter("S")
 		Global.GRID_ELEMENTS[2][0] = spawn_letter("A")
 		
@@ -51,7 +77,7 @@ func _ready() -> void:
 func set_main_quest():
 	Global.MainQuest = {}
 	
-	var objs = Global.pick_random(Global.Objetives[0])
+	var objs = Global.Objetives[Global.LEVEL]
 	Global.MainQuest = {
 		"objetives": objs,
 		"status": false
@@ -127,7 +153,8 @@ func _physics_process(delta: float) -> void:
 		cputurn_ttl -= 1 * delta
 		if cputurn_ttl <= 0:
 			if !Global.TutorialLevel:
-				turn()
+				pass
+				#turn()
 			else:
 				check_all_letters()
 				if Global.Wok and Global.Aok and Global.Sok and Global.Dok:

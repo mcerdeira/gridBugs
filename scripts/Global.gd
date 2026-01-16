@@ -9,6 +9,8 @@ var TurnCount = 3
 var FLOOR = 1
 var QuestObj = []
 var GRID_ELEMENTS = [] #rows,cols
+var LEVELS = []
+var LEVEL = 0
 var GAME_OVER = false
 var Main = null
 var FULLSCREEN = false
@@ -53,13 +55,14 @@ var SPos = Vector2(256, 224)
 var DPos = Vector2(288, 224)
 
 enum GridType { 
-	ENEMY,
-	WEAPON,
-	ITEM,
-	PLAYER,
-	KEY,
-	LETTER,
-	STATIC,
+	EMPTY = 0,
+	ENEMY = 1,
+	WEAPON = 2,
+	ITEM = 3,
+	PLAYER = 4,
+	KEY = 5,
+	LETTER = 6,
+	STATIC = 7,
 }
 
 var spawn_weights := {
@@ -105,71 +108,58 @@ func game_reset():
 	QuestObj = []
 	
 func define_objetives():
-	var easy = [
-		[
-			{"what": Global.GridType.ENEMY, "lvl": 1, "cant": 1, "got": 0},
-			{"what": Global.GridType.WEAPON, "lvl": 1, "cant": 3, "got": 0},
-			{"what": Global.GridType.ITEM, "lvl": 2, "cant": 1, "got": 0}
-		],
-		[
-			{"what": Global.GridType.ENEMY, "lvl": 1, "cant": 2, "got": 0},
-			{"what": Global.GridType.ENEMY, "lvl": 2, "cant": 1, "got": 0},
-			{"what": Global.GridType.WEAPON, "lvl": 2, "cant": 2, "got": 0},
-		],
-		[
-			{"what": Global.GridType.ENEMY, "lvl": 1, "cant": 2, "got": 0},
-			{"what": Global.GridType.ENEMY, "lvl": 2, "cant": 1, "got": 0},
-			{"what": Global.GridType.ENEMY, "lvl": 3, "cant": 1, "got": 0},
-		]
-	]
-	
-	var medium = [
-		[
-			{"what": Global.GridType.ENEMY, "lvl": 1, "cant": 1, "got": 0},
-			{"what": Global.GridType.WEAPON, "lvl": 1, "cant": 3, "got": 0},
-			{"what": Global.GridType.ITEM, "lvl": 2, "cant": 1, "got": 0}
-		],
-		[
-			{"what": Global.GridType.ENEMY, "lvl": 1, "cant": 2, "got": 0},
-			{"what": Global.GridType.ENEMY, "lvl": 2, "cant": 1, "got": 0},
-			{"what": Global.GridType.WEAPON, "lvl": 2, "cant": 2, "got": 0},
-		],
-		[
-			{"what": Global.GridType.ENEMY, "lvl": 1, "cant": 2, "got": 0},
-			{"what": Global.GridType.ENEMY, "lvl": 2, "cant": 1, "got": 0},
-			{"what": Global.GridType.ENEMY, "lvl": 3, "cant": 1, "got": 0},
-		]
-	]
-	
-	var hard = [
-		[
-			{"what": Global.GridType.ENEMY, "lvl": 1, "cant": 1, "got": 0},
-			{"what": Global.GridType.WEAPON, "lvl": 1, "cant": 3, "got": 0},
-			{"what": Global.GridType.ITEM, "lvl": 2, "cant": 1, "got": 0}
-		],
-		[
-			{"what": Global.GridType.ENEMY, "lvl": 1, "cant": 2, "got": 0},
-			{"what": Global.GridType.ENEMY, "lvl": 2, "cant": 1, "got": 0},
-			{"what": Global.GridType.WEAPON, "lvl": 2, "cant": 2, "got": 0},
-		],
-		[
-			{"what": Global.GridType.ENEMY, "lvl": 1, "cant": 2, "got": 0},
-			{"what": Global.GridType.ENEMY, "lvl": 2, "cant": 1, "got": 0},
-			{"what": Global.GridType.ENEMY, "lvl": 3, "cant": 1, "got": 0},
-		]
-	]
-
-	Objetives = [easy, medium, hard]
-	
+	var files = list_directory_contents("res://levels/")
+	for f in files:
+		var content = read_level("res://levels/" + f).split(";")
+		var layout = content[0]
+		var objetive = content[1]
+		
+		LEVELS.append(layout)
+		var lo = str_to_var(objetive)
+		Objetives.append(lo)
+		
 	for i in 5:
 		var row = []
 		for j in 5:
 			row.append(null)
 		GRID_ELEMENTS.append(row)
-		
 	
 func load_music():
 	MainTheme = load("res://music/dungeon.wav")
+	
+func list_directory_contents(path: String):
+	var files = []
+	var dir_access = DirAccess.open(path)
+
+	if dir_access:
+		dir_access.list_dir_begin()
+		var file_name = dir_access.get_next()
+		while file_name != "":
+			if dir_access.current_is_dir():
+				print("Found directory: " + file_name)
+			else:
+				files.append(file_name)
+			file_name = dir_access.get_next()
+		dir_access.list_dir_end()
+		
+		return files
+	else:
+		print("An error occurred when trying to access the path.")
+	
+func read_level(path: String):
+	if not FileAccess.file_exists(path):
+		print("Error: File not found at path ", path)
+		return
+
+	var file: FileAccess = FileAccess.open(path, FileAccess.READ)
+
+	if file == null:
+		print("Error opening file: ", FileAccess.get_open_error())
+		return
+		
+	var content: String = file.get_as_text()
+	file.close()
+	return content
 	
 func load_sfx():
 	HurtSFX = load("res://sfx/hurt_snd.wav")
